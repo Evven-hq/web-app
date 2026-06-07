@@ -21,7 +21,7 @@ export default function HomePage() {
           draggable={false}
         />
         <Image
-          src="/EvenUp-white.svg"
+          src="/EvenUp-black.svg"
           alt="EvenUp"
           width={80}
           height={80}

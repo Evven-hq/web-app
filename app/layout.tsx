@@ -2,12 +2,18 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 import { ThemeProvider } from "@/providers/theme-provider";
-import { JetBrains_Mono } from 'next/font/google';
+import { JetBrains_Mono , Xanh_Mono } from 'next/font/google';
 import AuthProvider from "@/components/shared/auth-provider";
 
 const jetBrains = JetBrains_Mono({
   subsets: ['latin'],
   weight: ['100','200','300','400','500','600','700','800'],
+  display: 'swap',
+});
+
+const xanh = Xanh_Mono({
+  subsets: ['latin'],
+  weight: ['400'],
   display: 'swap',
 });
 
@@ -29,7 +35,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${jetBrains.className} h-full antialiased`}
+      className={`${jetBrains.className} ${xanh.className} h-full antialiased`}
     >
       <head>
         <link 

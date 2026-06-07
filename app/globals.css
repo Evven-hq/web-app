@@ -29,8 +29,8 @@
   --font-mono: "JetBrains Mono", monospace;
 }
 
-.dark {
-  /* Dark Theme */
+/* .dark {
+ 
 
   --evenup-background: #070606;
   --evenup-surface: #1a1a1a;
@@ -43,7 +43,7 @@
   --evenup-accent-hero: #ffffff;
   --evenup-error: #e57373;
   --evenup-accent-slate: #9ca3af;
-}
+} */
 
 @theme inline {
   --color-background: var(--evenup-background);

@@ -1,65 +1,197 @@
-"use client"
+"use client";
 
-import React from 'react'
-import { useState} from 'react'
-import { useAuthStore } from "@/store/auth-store"
-import {useRouter} from 'next/navigation';
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { Eye, EyeOff, Mail } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
+import { useAuthStore } from "@/store/auth-store";
+import { CharacterAnimation } from "@/components/characters/CharacterAnimation";
 
+export default function Register() {
+  const router = useRouter();
+  const signup = useAuthStore((state) => state.signup);
 
-const Register = () => {
-  const signup = useAuthStore((state) => state.signup)
-  const router = useRouter()
+  // ── Form state ─────────────────────────────────────────────────────────────
+  const [name, setName]               = useState("");
+  const [email, setEmail]             = useState("");
+  const [password, setPassword]       = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError]             = useState("");
+  const [isLoading, setIsLoading]     = useState(false);
 
-  const [name, setName] = useState("")
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
+  // ── Focus state — drives the character animation ───────────────────────────
+  const [isNameFocused, setIsNameFocused]         = useState(false);
+  const [isEmailFocused, setIsEmailFocused]       = useState(false);
+  const [isPasswordFocused, setIsPasswordFocused] = useState(false);
 
-  async function handleSubmit(e : React.FormEvent<HTMLFormElement>) {
-    e.preventDefault()
-    await signup(name, email, password)
-    
-    router.push("/dashboard")
+  // ── Submit ─────────────────────────────────────────────────────────────────
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setError("");
+    setIsLoading(true);
+    try {
+      await signup(name, email, password);
+      router.push("/dashboard");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Something went wrong.");
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
-    <main>
-        <form onSubmit= {handleSubmit} >
-                <label htmlFor="name">Name</label>
-                <input
-                    type="text"
-                    id="name"
-                    placeholder="Name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    required
-                />
-            
-            
-                <label htmlFor="email">Email</label>
-                <input
-                    type="email"
-                    id="email"
-                    placeholder="Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                />
-            
-                <label htmlFor="password">Password</label>
-                <input
-                    type="password"
-                    id="password"
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                />
-            
-            <button type="submit">Sign Up</button>
-        </form>
-    </main>
-  )
-}
+    <div className="min-h-screen grid lg:grid-cols-2">
 
-export default Register
+      {/* ── LEFT – form panel ──────────────────────────────────────────────── */}
+      <div className="flex items-center justify-center p-8 bg-background">
+        <div className="w-full max-w-[420px]">
+
+          {/* Mobile logo */}
+          <div className="lg:hidden flex items-center justify-center gap-2 text-lg font-semibold mb-12">
+            <div className="size-8 rounded-lg bg-primary/10 flex items-center justify-center">
+              <Image src="/EvenUp-white.svg" alt="EvenUp" width={32} height={32} />
+            </div>
+          </div>
+
+          <div className="text-center mb-10">
+            <h1 className="text-3xl font-bold tracking-tight mb-2">Create an account</h1>
+            <p className="text-muted-foreground text-sm">Fill in your details to get started</p>
+          </div>
+
+          <form onSubmit={handleSubmit} className="space-y-5">
+
+            {/* Name */}
+            <div className="space-y-2">
+              <Label htmlFor="name" className="text-sm font-medium">Name</Label>
+              <Input
+                id="name"
+                type="text"
+                placeholder="Your name"
+                value={name}
+                autoComplete="off"
+                onChange={(e) => setName(e.target.value)}
+                onFocus={() => setIsNameFocused(true)}
+                onBlur={() => setIsNameFocused(false)}
+                required
+                className="h-12 bg-background border-border/60 focus:border-primary"
+              />
+            </div>
+
+            {/* Email */}
+            <div className="space-y-2">
+              <Label htmlFor="email" className="text-sm font-medium">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="you@example.com"
+                value={email}
+                autoComplete="off"
+                onChange={(e) => setEmail(e.target.value)}
+                onFocus={() => setIsEmailFocused(true)}
+                onBlur={() => setIsEmailFocused(false)}
+                required
+                className="h-12 bg-background border-border/60 focus:border-primary"
+              />
+            </div>
+
+            {/* Password */}
+            <div className="space-y-2">
+              <Label htmlFor="password" className="text-sm font-medium">Password</Label>
+              <div className="relative">
+                <Input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  onFocus={() => setIsPasswordFocused(true)}
+                  onBlur={() => setIsPasswordFocused(false)}
+                  required
+                  className="h-12 pr-10 bg-background border-border/60 focus:border-primary"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((v) => !v)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  {showPassword ? <EyeOff className="size-5" /> : <Eye className="size-5" />}
+                </button>
+              </div>
+            </div>
+
+            {/* Error */}
+            {error && (
+              <div className="p-3 text-sm text-red-400 bg-red-950/20 border border-red-900/30 rounded-lg">
+                {error}
+              </div>
+            )}
+
+            <Button
+              type="submit"
+              className="w-full h-12 text-base font-medium"
+              size="lg"
+              disabled={isLoading}
+            >
+              {isLoading ? "Creating account…" : "Sign up"}
+            </Button>
+          </form>
+
+          {/* Google */}
+          <div className="mt-6">
+            <Button
+              variant="outline"
+              className="w-full h-12 bg-background border-border/60 hover:bg-accent"
+              type="button"
+            >
+              <Mail className="mr-2 size-5" />
+              Sign up with Google
+            </Button>
+          </div>
+
+          <div className="text-center text-sm text-muted-foreground mt-8">
+            Already have an account?{" "}
+            <a href="/login" className="text-foreground font-medium hover:underline">
+              Log in
+            </a>
+          </div>
+        </div>
+      </div>
+
+      {/* ── RIGHT – animation panel ────────────────────────────────────────── */}
+      <div className="relative hidden lg:flex flex-col justify-between bg-gradient-to-br from-primary/90 via-primary to-primary/80 p-12 text-primary-foreground">
+        {/* Brand */}
+        <div className="relative z-20 flex items-center gap-2 text-lg font-semibold">
+          <Image src="/EvenUp-black.svg" alt="EvenUp" width={70} height={70} />
+        </div>
+
+        {/* Characters */}
+        <div className="relative z-20 flex items-end justify-center h-[500px]">
+          <CharacterAnimation
+            isEmailFocused={isEmailFocused || isNameFocused}
+            isPasswordFocused={isPasswordFocused}
+            password={password}
+            showPassword={showPassword}
+          />
+        </div>
+
+        {/* Footer links */}
+        <div className="relative z-20 flex items-center gap-8 text-sm text-primary-foreground/60">
+          {["Privacy Policy", "Terms of Service", "Contact"].map((l) => (
+            <a key={l} href="#" className="hover:text-primary-foreground transition-colors">
+              {l}
+            </a>
+          ))}
+        </div>
+
+        {/* Decorative blobs */}
+        <div className="absolute inset-0 bg-grid-white/[0.05] bg-[size:20px_20px]" />
+        <div className="absolute top-1/4 right-1/4 size-64 bg-primary-foreground/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 left-1/4 size-96 bg-primary-foreground/5 rounded-full blur-3xl" />
+      </div>
+    </div>
+  );
+}

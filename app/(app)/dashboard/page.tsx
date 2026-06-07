@@ -1,9 +1,23 @@
+"use client"
+
+import { useAuthStore } from '@/store/auth-store';
 import React from 'react'
 
-const dashboard = () => {
+const Dashboard = () => {
+  const user = useAuthStore(
+    (state) => state.user
+  );
+
   return (
-    <div>dashboard</div>
+    <div>
+      <h1>Welcome {user?.name}</h1>
+      <li>
+        <ul>User Tag : {user?.user_code}</ul>
+        <ul>Email : {user?.email}</ul>
+        <ul>Profile Picture : {user?.profile_picture ? user?.profile_picture : "No profile picture"}</ul>
+      </li>
+    </div>
   )
 }
 
-export default dashboard
+export default Dashboard

@@ -2,6 +2,14 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 import { ThemeProvider } from "@/providers/theme-provider";
+import { JetBrains_Mono } from 'next/font/google';
+import AuthProvider from "@/components/shared/auth-provider";
+
+const jetBrains = JetBrains_Mono({
+  subsets: ['latin'],
+  weight: ['100','200','300','400','500','600','700','800'],
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   title: "EvenUp Web",
@@ -21,21 +29,19 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className="h-full antialiased"
+      className={`${jetBrains.className} h-full antialiased`}
     >
       <head>
         <link 
           href="https://api.fontshare.com/v2/css?f[]=satoshi@300,301,400,401,500,501,700,701,900,901,1&display=swap" 
           rel="stylesheet" 
         />
-        <link 
-          href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Xanh+Mono:ital@0;1&display=swap" 
-          rel="stylesheet" 
-        />
       </head>
       <body className="min-h-full flex flex-col">
         <ThemeProvider>
-          {children}
+          <AuthProvider>
+            {children}
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

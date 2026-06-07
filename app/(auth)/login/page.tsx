@@ -3,6 +3,7 @@
 import React from 'react'
 import { useState} from 'react'
 import { useAuthStore } from "@/store/auth-store"
+import { redirect } from 'next/navigation'
 
 
 export default function Login() {
@@ -15,10 +16,8 @@ export default function Login() {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     await login(email, password)
-    console.log("logged in")
+    redirect("/dashboard")
   }
-
-  
 
   return (
     <div>

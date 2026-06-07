@@ -3,10 +3,13 @@
 import React from 'react'
 import { useState} from 'react'
 import { useAuthStore } from "@/store/auth-store"
+import {useRouter} from 'next/navigation';
+
 
 
 const Register = () => {
   const signup = useAuthStore((state) => state.signup)
+  const router = useRouter()
 
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
@@ -15,7 +18,8 @@ const Register = () => {
   async function handleSubmit(e : React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     await signup(name, email, password)
-    console.log("registered")
+    
+    router.push("/dashboard")
   }
 
   return (

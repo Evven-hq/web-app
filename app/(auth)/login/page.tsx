@@ -3,10 +3,11 @@
 import React from 'react'
 import { useState} from 'react'
 import { useAuthStore } from "@/store/auth-store"
-import { redirect } from 'next/navigation'
+import { useRouter} from 'next/navigation';
 
 
 export default function Login() {
+  const router = useRouter()
 
   const login = useAuthStore((state) => state.login)
 
@@ -16,7 +17,7 @@ export default function Login() {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     await login(email, password)
-    redirect("/dashboard")
+    router.push("/dashboard")
   }
 
   return (

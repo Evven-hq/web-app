@@ -78,8 +78,8 @@ const faqs = [
 export default function HomePage() {
   return (
     <main className="bg-[var(--evven-background)] text-[var(--evven-text-primary)]">
-      <header className="relative z-10 border-b border-[var(--evven-border)] bg-[rgba(250,248,245,.92)]/95 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-6">
+      <header className="fixed inset-x-0 top-0 z-50 px-6 py-5">
+        <div className="mx-auto flex max-w-6xl items-center justify-between rounded-2xl bg-white/20 backdrop-blur-2xl border border-white/30 px-8 py-4 shadow-lg">
           <Link href="/" className="flex items-center gap-2 text-lg font-semibold tracking-wide text-[var(--evven-text-primary)]">
             <div className="w-8 h-8 rounded-lg bg-[var(--evven-accent-primary)] flex items-center justify-center text-white text-sm font-bold">
               E
@@ -87,9 +87,9 @@ export default function HomePage() {
             Evven
           </Link>
 
-          <nav className="hidden items-center gap-12 md:flex">
+          <nav className="hidden items-center gap-10 md:flex">
             {navigation.map((item) => (
-              <a key={item.href} href={item.href} className="text-sm text-[var(--evven-text-muted)] transition hover:text-[var(--evven-text-primary)]">
+              <a key={item.href} href={item.href} className="text-sm text-[var(--evven-text-primary)] transition hover:text-[var(--evven-accent-primary)] font-medium">
                 {item.label}
               </a>
             ))}
@@ -97,13 +97,13 @@ export default function HomePage() {
 
           <div className="flex items-center gap-3">
             <Link href="/signup">
-              <Button className="rounded-full px-6 py-2.5 text-sm bg-[var(--evven-accent-primary)] hover:bg-[var(--evven-accent-primary)]/90 text-white">Start free</Button>
+              <Button className="rounded-full px-6 py-2.5 text-sm bg-[var(--evven-accent-primary)] hover:bg-[var(--evven-accent-primary)]/90 text-white font-semibold">Start free</Button>
             </Link>
           </div>
         </div>
       </header>
 
-      <section className="relative overflow-hidden px-6 py-32 sm:py-48 lg:py-56">
+      <section className="relative overflow-hidden px-6 pt-32 sm:pt-48 lg:pt-64 pb-32 sm:pb-48 lg:pb-56">
         <div className="mx-auto max-w-5xl">
           <div className="text-center space-y-8">
             <div className="space-y-6">

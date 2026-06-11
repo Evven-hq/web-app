@@ -1,26 +1,26 @@
 @import "tailwindcss";
 
 :root {
-  /* Light Theme */
+  /* Light Theme - Evven Premium Aesthetic */
 
-  /* using --evenup-... coz its colliding with the shadecn css idk why so just being safe*/
+  /* using --evven-... for consistent branding */
 
-  --evenup-background: #fffbf2;
-  --evenup-surface: #f9f9f9;
-  --evenup-border: #ebebeb;
+  --evven-background: #faf8f5;
+  --evven-surface: #f5f3f0;
+  --evven-border: #e8e5e0;
 
-  --evenup-text-primary: #111111;
-  --evenup-text-muted: #888888;
-  --evenup-text-inverse: #ffffff;
+  --evven-text-primary: #1a1816;
+  --evven-text-muted: #8b8480;
+  --evven-text-inverse: #ffffff;
 
-  --evenup-accent-hero: #111111;
-  --evenup-error: #c0392b;
-  --evenup-accent-slate: #6b7280;
+  --evven-accent-primary: #2d5a4f;
+  --evven-accent-secondary: #e8dcc8;
+  --evven-error: #c0392b;
 
   /* Radius */
 
-  --evenup-radius-card: 16px;
-  --evenup-radius-hero: 20px;
+  --evven-radius-card: 16px;
+  --evven-radius-hero: 20px;
 
   /* Fonts */
 
@@ -46,23 +46,23 @@
 } */
 
 @theme inline {
-  --color-background: var(--evenup-background);
-  --color-foreground: var(--evenup-text-primary);
+  --color-background: var(--evven-background);
+  --color-foreground: var(--evven-text-primary);
 
-  --color-border: var(--evenup-border);
-  --color-input: var(--evenup-border);
-  --color-ring: var(--evenup-accent-hero);
+  --color-border: var(--evven-border);
+  --color-input: var(--evven-border);
+  --color-ring: var(--evven-accent-primary);
 
-  --color-primary: var(--evenup-accent-hero);
-  --color-primary-foreground: var(--evenup-text-inverse);
+  --color-primary: var(--evven-accent-primary);
+  --color-primary-foreground: var(--evven-text-inverse);
 
-  --color-secondary: var(--evenup-surface);
-  --color-secondary-foreground: var(--evenup-text-primary);
+  --color-secondary: var(--evven-surface);
+  --color-secondary-foreground: var(--evven-text-primary);
 
-  --color-muted: var(--evenup-surface);
-  --color-muted-foreground: var(--evenup-text-muted);
+  --color-muted: var(--evven-surface);
+  --color-muted-foreground: var(--evven-text-muted);
 
-  --color-destructive: var(--evenup-error);
+  --color-destructive: var(--evven-error);
 
   --font-sans: "Satoshi", sans-serif;
   --font-heading: "Xanh Mono", monospace;
@@ -85,8 +85,8 @@
   body {
     width: 100%;
     min-height: 100%;
-    background: var(--evenup-background);
-    color: var(--evenup-text-primary);
+    background: var(--evven-background);
+    color: var(--evven-text-primary);
     font-family: var(--font-satoshi);
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
@@ -133,17 +133,17 @@
 /* Utility Classes */
 
 .text-muted {
-  color: var(--evenup-text-muted);
+  color: var(--evven-text-muted);
 }
 
 .surface {
-  background: var(--evenup-surface);
-  border: 1px solid var(--evenup-border);
+  background: var(--evven-surface);
+  border: 1px solid var(--evven-border);
 }
 
 .hero-surface {
-  background: var(--evenup-accent-hero);
-  color: var(--evenup-text-inverse);
+  background: var(--evven-accent-primary);
+  color: var(--evven-text-inverse);
 }
 
 .section-label {
@@ -151,5 +151,5 @@
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--evenup-text-muted);
+  color: var(--evven-text-muted);
 }

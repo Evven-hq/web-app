@@ -18,8 +18,8 @@ const xanh = Xanh_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "EvenUp Web",
-  description: "this is shit rn",
+  title: "Evven - Split Expenses Transparently",
+  description: "Keep shared costs fair, clear, and totally handled. Evven makes group expense tracking simple and automated.",
 
   icons: {
     icon: "/EvenUp-white.svg",

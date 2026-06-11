@@ -1,6 +1,13 @@
+"use client";
+
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import { useState, useEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const navigation = [
   { label: "Features", href: "#features" },
@@ -76,8 +83,99 @@ const faqs = [
 ];
 
 export default function HomePage() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const mainRef = useRef(null);
+  const menuRef = useRef(null);
+
+  useEffect(() => {
+    // Entrance animations
+    const tl = gsap.timeline();
+
+    // Animate hero heading
+    tl.fromTo(
+      ".hero-heading",
+      { opacity: 0, y: 30 },
+      { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" },
+      0
+    );
+
+    // Animate hero subheading
+    tl.fromTo(
+      ".hero-subheading",
+      { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" },
+      0.2
+    );
+
+    // Animate hero buttons
+    tl.fromTo(
+      ".hero-buttons",
+      { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" },
+      0.4
+    );
+
+    // Animate stats card
+    tl.fromTo(
+      ".stats-card",
+      { opacity: 0, scale: 0.95 },
+      { opacity: 1, scale: 1, duration: 0.8, ease: "power3.out" },
+      0.6
+    );
+
+    // Scroll trigger animations for sections
+    const sections = document.querySelectorAll(".section-animate");
+    sections.forEach((section, index) => {
+      gsap.fromTo(
+        section,
+        { opacity: 0, y: 40 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: section,
+            start: "top 80%",
+            once: true,
+          },
+        }
+      );
+    });
+
+    // Animate feature cards on scroll
+    const featureCards = document.querySelectorAll(".feature-card");
+    featureCards.forEach((card, index) => {
+      gsap.fromTo(
+        card,
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          ease: "power3.out",
+          delay: index * 0.1,
+          scrollTrigger: {
+            trigger: card,
+            start: "top 85%",
+            once: true,
+          },
+        }
+      );
+    });
+
+    return () => {
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+    };
+  }, []);
+
+  // Close mobile menu when link is clicked
+  const handleNavClick = () => {
+    setMobileMenuOpen(false);
+  };
+
   return (
-    <main className="bg-[var(--evven-background)] text-[var(--evven-text-primary)]">
+    <main ref={mainRef} className="bg-[var(--evven-background)] text-[var(--evven-text-primary)]">
       <header className="fixed inset-x-0 top-0 z-50 px-6 py-5">
         <div className="mx-auto flex max-w-6xl items-center justify-between rounded-2xl bg-white/20 backdrop-blur-2xl border border-white/30 px-8 py-4 shadow-lg">
           <Link href="/" className="flex items-center gap-2 text-lg font-semibold tracking-wide text-[var(--evven-text-primary)]">
@@ -95,27 +193,62 @@ export default function HomePage() {
             ))}
           </nav>
 
-          <div className="flex items-center gap-3">
+          <div className="hidden md:flex items-center gap-3">
             <Link href="/signup">
               <Button className="rounded-full px-6 py-2.5 text-sm bg-[var(--evven-accent-primary)] hover:bg-[var(--evven-accent-primary)]/90 text-white font-semibold">Start free</Button>
             </Link>
           </div>
+
+          {/* Mobile menu button */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden flex flex-col items-center justify-center gap-1.5 p-2"
+            aria-label="Toggle menu"
+          >
+            <span className={`h-0.5 w-5 bg-[var(--evven-text-primary)] transition-all duration-300 ${mobileMenuOpen ? 'rotate-45 translate-y-2' : ''}`} />
+            <span className={`h-0.5 w-5 bg-[var(--evven-text-primary)] transition-all duration-300 ${mobileMenuOpen ? 'opacity-0' : ''}`} />
+            <span className={`h-0.5 w-5 bg-[var(--evven-text-primary)] transition-all duration-300 ${mobileMenuOpen ? '-rotate-45 -translate-y-2' : ''}`} />
+          </button>
         </div>
+
+        {/* Mobile menu */}
+        {mobileMenuOpen && (
+          <div
+            ref={menuRef}
+            className="md:hidden absolute top-full left-6 right-6 mt-4 rounded-2xl bg-white/30 backdrop-blur-2xl border border-white/30 p-6 space-y-4 shadow-lg"
+          >
+            {navigation.map((item) => (
+              <a
+                key={item.href}
+                href={item.href}
+                onClick={handleNavClick}
+                className="block text-sm text-[var(--evven-text-primary)] hover:text-[var(--evven-accent-primary)] font-medium transition"
+              >
+                {item.label}
+              </a>
+            ))}
+            <Link href="/signup" onClick={handleNavClick}>
+              <Button className="w-full rounded-full bg-[var(--evven-accent-primary)] hover:bg-[var(--evven-accent-primary)]/90 text-white font-semibold">
+                Start free
+              </Button>
+            </Link>
+          </div>
+        )}
       </header>
 
       <section className="relative overflow-hidden px-6 pt-32 sm:pt-48 lg:pt-64 pb-32 sm:pb-48 lg:pb-56">
         <div className="mx-auto max-w-5xl">
           <div className="text-center space-y-8">
             <div className="space-y-6">
-              <h1 className="text-6xl sm:text-7xl lg:text-8xl font-heading tracking-tight leading-tight">
+              <h1 className="hero-heading text-6xl sm:text-7xl lg:text-8xl font-heading tracking-tight leading-tight">
                 Keep shared costs fair, clear, and totally handled.
               </h1>
-              <p className="mx-auto max-w-2xl text-xl sm:text-2xl text-[var(--evven-text-muted)] leading-relaxed">
+              <p className="hero-subheading mx-auto max-w-2xl text-xl sm:text-2xl text-[var(--evven-text-muted)] leading-relaxed">
                 Evven makes group expense tracking simple. Log costs, split automatically, and settle without the awkward conversations.
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+            <div className="hero-buttons flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
               <Link href="/signup">
                 <Button className="rounded-full px-10 py-3.5 text-base bg-[var(--evven-accent-primary)] hover:bg-[var(--evven-accent-primary)]/90 text-white">Get started free</Button>
               </Link>
@@ -125,7 +258,7 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="mt-28 sm:mt-32 rounded-2xl border border-[var(--evven-border)] bg-white p-8 sm:p-12 shadow-lg">
+          <div className="stats-card mt-28 sm:mt-32 rounded-2xl border border-[var(--evven-border)] bg-white p-8 sm:p-12 shadow-lg">
             <div className="grid gap-12 sm:grid-cols-3">
               <div className="text-center space-y-3">
                 <p className="text-4xl sm:text-5xl font-semibold text-[var(--evven-accent-primary)]">25%</p>
@@ -144,7 +277,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section id="features" className="border-t border-[var(--evven-border)] px-6 py-24 sm:py-32">
+      <section id="features" className="section-animate border-t border-[var(--evven-border)] px-6 py-24 sm:py-32">
         <div className="mx-auto max-w-5xl">
           <div className="space-y-6 mb-20">
             <p className="section-label">Core Features</p>
@@ -155,7 +288,7 @@ export default function HomePage() {
 
           <div className="grid gap-8 lg:grid-cols-3">
             {features.map((feature, idx) => (
-              <div key={feature.title} className="space-y-4 pt-8 pb-8 border-t border-[var(--evven-border)]">
+              <div key={feature.title} className="feature-card space-y-4 pt-8 pb-8 border-t border-[var(--evven-border)]">
                 <div className="w-12 h-12 rounded-lg bg-[var(--evven-accent-secondary)] flex items-center justify-center text-base font-semibold text-[var(--evven-accent-primary)]">
                   {idx + 1}
                 </div>
@@ -167,7 +300,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section id="how-it-works" className="bg-white px-6 py-24 sm:py-32">
+      <section id="how-it-works" className="section-animate bg-white px-6 py-24 sm:py-32">
         <div className="mx-auto max-w-5xl">
           <div className="space-y-6 mb-16">
             <p className="section-label">How It Works</p>
@@ -199,7 +332,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="px-6 py-24 sm:py-32 bg-[var(--evven-background)]">
+      <section className="section-animate px-6 py-24 sm:py-32 bg-[var(--evven-background)]">
         <div className="mx-auto max-w-5xl">
           <div className="space-y-6 mb-16">
             <p className="section-label">Use Cases</p>
@@ -219,7 +352,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="bg-white px-6 py-24 sm:py-32">
+      <section className="section-animate bg-white px-6 py-24 sm:py-32">
         <div className="mx-auto max-w-5xl">
           <div className="space-y-6 mb-16">
             <p className="section-label">Testimonials</p>
@@ -242,7 +375,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section id="pricing" className="px-6 py-24 sm:py-32 bg-[var(--evven-background)]">
+      <section id="pricing" className="section-animate px-6 py-24 sm:py-32 bg-[var(--evven-background)]">
         <div className="mx-auto max-w-5xl">
           <div className="space-y-6 mb-16">
             <p className="section-label">Pricing</p>
@@ -279,7 +412,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section id="faq" className="bg-white px-6 py-24 sm:py-32">
+      <section id="faq" className="section-animate bg-white px-6 py-24 sm:py-32">
         <div className="mx-auto max-w-5xl">
           <div className="space-y-6 mb-16">
             <p className="section-label">FAQ</p>
@@ -299,7 +432,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="px-6 py-24 sm:py-32 bg-[var(--evven-background)]">
+      <section className="section-animate px-6 py-24 sm:py-32 bg-[var(--evven-background)]">
         <div className="mx-auto max-w-5xl rounded-3xl bg-[var(--evven-accent-primary)] px-8 sm:px-12 py-16 sm:py-20 text-white">
           <div className="space-y-8">
             <div className="space-y-6">

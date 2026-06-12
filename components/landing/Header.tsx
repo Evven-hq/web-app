@@ -142,7 +142,7 @@ export default function Header() {
                 className="
                   rounded-[28px] md:rounded-[40px]
                   border border-white/10
-                  bg-white/5
+                  bg-white
                   backdrop-blur-[40px]
                   shadow-2xl
                   p-6 sm:p-8 md:p-10

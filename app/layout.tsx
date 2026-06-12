@@ -18,7 +18,7 @@ const xanh = Xanh_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Evven - Split Expenses Transparently",
+  title: "Evven",
   description: "Keep shared costs fair, clear, and totally handled. Evven makes group expense tracking simple and automated.",
 
   icons: {

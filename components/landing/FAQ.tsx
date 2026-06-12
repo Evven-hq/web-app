@@ -2,6 +2,11 @@
 
 const faqs = [
   {
+    question: "Do the other people in my group need to sign up too?",
+    answer:
+      "Nope — invite anyone to a group with a simple link. They can join in seconds and start tracking expenses right away, free.",
+  },
+  {
     question: "Can I use EvenUp for recurring expenses?",
     answer:
       "Yes. You can track subscriptions, monthly bills, and repeated payments with flexible split options.",
@@ -14,7 +19,7 @@ const faqs = [
   {
     question: "Do I need to pay to start?",
     answer:
-      "You can get started for free with the basic plan and upgrade only when your group needs advanced reporting.",
+      "No. The basic plan is free forever for unlimited groups — upgrade only if your group needs advanced reporting.",
   },
 ];
 

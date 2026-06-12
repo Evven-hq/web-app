@@ -3,15 +3,23 @@
 const useCases = [
   {
     title: "Roommates",
-    description: "Split rent, utilities, groceries, and shared subscriptions without confusion.",
+    description:
+      "Rent, wifi, groceries, and that one person who always 'forgets' their share — Evven keeps it all visible and fair.",
   },
   {
     title: "Trips",
-    description: "Manage travel costs, activity tickets, and shared meals with real-time clarity.",
+    description:
+      "Flights, hotels, that 2am taco run — track it as it happens so settling up after the trip takes minutes, not arguments.",
+  },
+  {
+    title: "Couples",
+    description:
+      "Shared rent, date nights, joint savings goals — keep your finances transparent without turning every dinner into a budget meeting.",
   },
   {
     title: "Events",
-    description: "Keep wedding gifts, dinners, and group outings balanced across every participant.",
+    description:
+      "Wedding gifts, group dinners, shared Airbnbs — keep every contribution clear without a single 'wait, did I already pay you back?'",
   },
 ];
 

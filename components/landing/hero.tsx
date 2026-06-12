@@ -134,7 +134,7 @@ export function Hero() {
             ref={labelRef}
             className="mb-8 text-xs font-medium uppercase tracking-[0.35em] text-[#000000]"
           >
-            Smart Expense Splitting
+            For Roommates, Trips & Everything In Between
           </span>
 
           <h1
@@ -150,8 +150,9 @@ export function Hero() {
             ref={paragraphRef}
             className="mt-10 max-w-[520px] text-lg leading-[1.75] text-slate-700"
           >
-            Track expenses, settle balances instantly, and keep everyone on the
-            same page without awkward money conversations.
+            Stop doing math in the group chat. Evven tracks every shared expense
+            automatically, settles balances instantly, and keeps the &quot;you still
+            owe me&quot; conversations out of your friendships.
           </p>
 
           <div
@@ -171,7 +172,7 @@ export function Hero() {
                 hover:scale-[1.02]
               "
             >
-              Get Started
+              Start splitting for free
 
               <ArrowRight
                 size={15}
@@ -188,7 +189,7 @@ export function Hero() {
                 hover:text-slate-900
               "
             >
-              Learn More →
+              See how it works ↓
             </button>
           </div>
         </div>

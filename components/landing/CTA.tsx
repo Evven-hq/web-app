@@ -20,16 +20,16 @@ export function CTA() {
         <div className="space-y-8">
           <div className="space-y-6">
             <h2 className="text-5xl sm:text-6xl font-heading tracking-tight leading-tight">
-              Ready to simplify group expenses?
+              Ready to stop splitting bills the hard way?
             </h2>
             <p className="text-lg sm:text-xl text-white/80 max-w-2xl">
-              Join groups who trust Evven to keep every shared expense transparent, fair, and easy to resolve.
+              Join Evven free — no credit card, no spreadsheets, no more awkward money talks.
             </p>
           </div>
           <div className="flex flex-col sm:flex-row items-start gap-4">
             <Link href="/signup">
               <Button className="rounded-full bg-white text-[var(--evven-accent-primary)] hover:bg-white/90 px-8 py-3 text-base font-semibold">
-                Get started free
+                Start for free
               </Button>
             </Link>
             <a

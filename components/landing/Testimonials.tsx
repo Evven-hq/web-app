@@ -13,6 +13,12 @@ const testimonials = [
     name: "Jordan L.",
     role: "College student",
   },
+  {
+    quote:
+      "We used to spend an hour every month reconciling who owed what. Now it takes two minutes.",
+    name: "Priya S.",
+    role: "Apartment co-lease, 4 roommates",
+  },
 ];
 
 export function Testimonials() {

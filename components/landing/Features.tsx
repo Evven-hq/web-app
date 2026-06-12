@@ -2,19 +2,19 @@
 
 const features = [
   {
-    title: "Shared expense tracking",
+    title: "No more \"who owes who\"",
     description:
-      "Invite friends, roommates, or travel partners and keep every charge visible in one shared space.",
+      "Add anyone to a group and every expense logged is instantly visible to everyone. No spreadsheets, no screenshots, no guessing.",
   },
   {
-    title: "Auto balance calculations",
+    title: "The math, done for you",
     description:
-      "Let Evven do the math: see who owes what instantly and eliminate awkward settling conversations.",
+      "Split evenly, by percentage, or by exact shares. Evven calculates real-time balances so nobody has to pull out a calculator.",
   },
   {
-    title: "Fast settlements",
+    title: "Settle up in seconds",
     description:
-      "Create payment plans, record reimbursements, and close out group expenses in minutes.",
+      "See exactly who needs to pay whom, mark it as settled, and move on. No more chasing people for Venmo.",
   },
 ];
 

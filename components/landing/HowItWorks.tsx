@@ -5,17 +5,17 @@ export function HowItWorks() {
     {
       step: "Track",
       title: "Capture every expense",
-      desc: "Log payments instantly, categorize bills, and add notes so your group always knows who paid what.",
+      desc: "Snap a receipt or log it in seconds. Tag who paid and who's in — Evven remembers so you don't have to.",
     },
     {
       step: "Split",
       title: "Split it your way",
-      desc: "Choose split methods for each expense and let Evven handle exact shares for each person.",
+      desc: "Even, by percentage, or custom shares — choose per expense. Evven calculates exact amounts so there's never a debate.",
     },
     {
       step: "Settle",
       title: "Close the loop",
-      desc: "Review group balances, send settlement reminders, and record reimbursements with a few clicks.",
+      desc: "See live balances, send a settlement reminder, and mark it paid. Done in five minutes, not five arguments.",
     },
   ];
 

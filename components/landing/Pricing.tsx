@@ -7,14 +7,18 @@ const plans = [
   {
     name: "Basic",
     price: "Free",
-    desc: "Perfect for small groups.",
+    desc: "Everything you need to split expenses with any group. Forever free.",
     features: ["Unlimited groups", "Automatic balances", "Expense history"],
   },
   {
     name: "Pro",
     price: "$9/mo",
-    desc: "For frequent groups and budgets.",
-    features: ["Detailed reports", "Advanced split rules", "Priority support"],
+    desc: "For groups that want more control and visibility.",
+    features: [
+      "Export expense history to CSV",
+      "Recurring split templates",
+      "Priority support",
+    ],
     featured: true,
   },
   {
@@ -32,7 +36,7 @@ export function Pricing() {
         <div className="space-y-6 mb-16">
           <p className="section-label">Pricing</p>
           <h2 className="text-5xl sm:text-6xl font-heading tracking-tight">
-            Plans for every budget.
+            Free to start. No catch.
           </h2>
         </div>
 

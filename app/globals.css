@@ -28,7 +28,9 @@
   --font-heading: "Xanh Mono", monospace;
   --font-mono: "JetBrains Mono", monospace;
 }
-
+.handwritten {
+  font-family: var(--font-homemade-apple);
+}
 /* .dark {
  
 
@@ -67,6 +69,7 @@
   --font-sans: "Satoshi", sans-serif;
   --font-heading: "Xanh Mono", monospace;
   --font-mono: "JetBrains Mono", monospace;
+  --font-hero-heading : "Dancing Script", cursive;
 }
 
 ::selection {

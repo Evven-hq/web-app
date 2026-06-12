@@ -60,11 +60,11 @@ export function Footer() {
         <div className="px-6 md:px-10 lg:px-14 pt-20 md:pt-24">
           <h2
             className="
-              max-w-3xl
               font-heading
+              max-w-3xl
               text-[clamp(3rem,6vw,6rem)]
               leading-[0.88]
-              tracking-[-0.05em]
+              tracking-[-0.08em]
             "
           >
             Split fairly.
@@ -218,7 +218,7 @@ export function Footer() {
           className="
             pointer-events-none
             absolute
-            right-[-10rem]
+            right-[-5rem]
             bottom-[4rem]
             z-20
             w-[42vw]

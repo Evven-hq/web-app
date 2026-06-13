@@ -7,38 +7,37 @@ const plans = [
   {
     name: "Personal",
     price: "Free",
-    desc: "Everything you need to split expenses with friends, roommates, and trips.",
+    desc: "For individuals and casual groups.",
     features: [
-      "Unlimited personal expenses",
       "Up to 3 groups",
+      "Shared expenses",
       "Automatic balances",
     ],
-    featured: true,
   },
   {
     name: "Teams",
     price: "$9/mo",
-    desc: "For active groups that manage expenses together regularly.",
+    desc: "For active groups managing expenses together.",
     features: [
       "Unlimited groups",
-      "Recurring expenses",
+      "Unlimited members",
       "Expense exports",
     ],
-    
+    featured: true,
   },
   {
     name: "Enterprise",
     price: "Custom",
-    desc: "For organizations that need advanced controls and support.",
+    desc: "For organizations with advanced requirements.",
     features: [
-      "SSO & SCIM",
+      "Admin controls",
       "Audit logs",
-      "Dedicated support",
+      "Priority support",
     ],
   },
 ];
 
-export function Pricing() {
+export function TeamsPricing() {
   return (
     <section
       id="pricing"
@@ -48,7 +47,7 @@ export function Pricing() {
         <div className="space-y-6 mb-16">
           <p className="section-label">Pricing</p>
           <h2 className="text-5xl sm:text-6xl font-heading tracking-tight">
-            Free to start. Scale when you need it.
+            Plans that scale with your team.
           </h2>
         </div>
 

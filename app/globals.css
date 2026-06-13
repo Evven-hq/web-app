@@ -157,7 +157,37 @@
   color: var(--evven-text-muted);
 }
 
+
+
+/* Teams theme — navy / dark blue */
+.theme-teams {
+  --evven-accent-primary: #1e3a5f;
+  --evven-accent-secondary: #d6e2ef;
+  --evven-background: #f6f8fa;
+  --evven-surface: #eef2f6;
+  --evven-border: #dce4ec;
+}
+
+/* Enterprise theme — deep maroon/burgundy */
+.theme-enterprise {
+  --evven-accent-primary: #6e1f2e;
+  --evven-accent-secondary: #f1dde1;
+  --evven-background: #faf6f6;
+  --evven-surface: #f6ebec;
+  --evven-border: #e9d6d9;
+}
 ::selection {
-  background-color: #024119; 
-  color: #ffffff;            
+  background-color: #2d5a4f; 
+  color: #f9f7f4;            
+}
+/* Teams */
+.theme-teams ::selection {
+  background: #0f3f75;
+  color: #f9f7f4;
+}
+
+/* Enterprise */
+.theme-enterprise ::selection {
+  background: #6e1f2e;
+  color: #f9f7f4;
 }

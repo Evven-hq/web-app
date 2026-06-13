@@ -1,0 +1,37 @@
+"use client";
+
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+
+export function EnterpriseCTA() {
+  return (
+    <section className="section-animate px-6 py-24 sm:py-32 mb-20 sm:mb-28 bg-background">
+      <div className="mx-auto max-w-5xl rounded-3xl bg-[var(--evven-accent-primary)] px-8 sm:px-12 py-16 sm:py-20 text-white">
+        <div className="space-y-8">
+          <div className="space-y-6">
+            <h2 className="text-5xl sm:text-6xl font-heading tracking-tight leading-tight">
+              Ready to manage expenses at scale?
+            </h2>
+            <p className="text-lg sm:text-xl text-white/80 max-w-2xl">
+              Talk to our team about rolling Evven out across your organization
+              — with the security and controls your IT and finance teams need.
+            </p>
+          </div>
+          <div className="flex flex-col sm:flex-row items-start gap-4">
+            <Link href="/signup">
+              <Button className="rounded-full bg-white text-[var(--evven-accent-primary)] hover:bg-white/90 px-8 py-3 text-base font-semibold">
+                Request a demo
+              </Button>
+            </Link>
+            <a
+              href="mailto:sales@evven.app"
+              className="inline-flex items-center text-sm font-semibold text-white/80 hover:text-white"
+            >
+              Contact sales →
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}

@@ -5,40 +5,29 @@ import { Button } from "@/components/ui/button";
 
 const plans = [
   {
-    name: "Personal",
-    price: "Free",
-    desc: "Everything you need to split expenses with friends, roommates, and trips.",
-    features: [
-      "Unlimited personal expenses",
-      "Up to 3 groups",
-      "Automatic balances",
-    ],
-    featured: true,
-  },
-  {
     name: "Teams",
     price: "$9/mo",
-    desc: "For active groups that manage expenses together regularly.",
+    desc: "For growing teams and communities.",
     features: [
       "Unlimited groups",
-      "Recurring expenses",
       "Expense exports",
+      "Priority support",
     ],
-    
   },
   {
     name: "Enterprise",
     price: "Custom",
-    desc: "For organizations that need advanced controls and support.",
+    desc: "For organizations requiring security, compliance, and control.",
     features: [
       "SSO & SCIM",
       "Audit logs",
-      "Dedicated support",
+      "Custom policies",
     ],
+    featured: true,
   },
 ];
 
-export function Pricing() {
+export function EnterprisePricing() {
   return (
     <section
       id="pricing"
@@ -48,11 +37,11 @@ export function Pricing() {
         <div className="space-y-6 mb-16">
           <p className="section-label">Pricing</p>
           <h2 className="text-5xl sm:text-6xl font-heading tracking-tight">
-            Free to start. Scale when you need it.
+            Plans built around your organization.
           </h2>
         </div>
 
-        <div className="grid gap-8 lg:grid-cols-3">
+        <div className="grid gap-8 lg:grid-cols-2">
           {plans.map((plan) => (
             <div
               key={plan.name}

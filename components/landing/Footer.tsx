@@ -34,7 +34,6 @@ export function Footer() {
       ref={footerRef}
       className={`
         relative
-        min-h-[95vh]
         overflow-hidden
         bg-[var(--evven-accent-primary)]
         text-white
@@ -55,7 +54,7 @@ export function Footer() {
         />
       </div>
 
-      <div className="relative z-10 flex min-h-[95vh] flex-col">
+      <div className="relative z-10 flex flex-col py-20 lg:py-24">
         {/* Top statement */}
         <div className="px-6 md:px-10 lg:px-14 pt-20 md:pt-24">
           <h2
@@ -92,9 +91,9 @@ export function Footer() {
 
         {/* Bottom content */}
         <div className="border-t border-white/10">
-          <div className="grid lg:grid-cols-[1fr_30vw]">
+          <div className="grid lg:grid-cols-[1fr_auto]">
             {/* Content */}
-            <div className="px-6 md:px-10 lg:px-14 py-14">
+            <div className="px-6 md:px-10 lg:px-14 py-12">
               <div className="grid grid-cols-2 md:grid-cols-4 gap-12">
                 {/* Product */}
                 <div>
@@ -196,19 +195,22 @@ export function Footer() {
                 </div>
               </div>
 
-              <div className="mt-16 border-t border-white/10 pt-8 flex flex-col md:flex-row md:items-end md:justify-between gap-8">
+              <div className="mt-16 border-t border-white/10 pt-8 flex flex-col md:flex-row md:justify-between gap-8">
                 <p className="max-w-md text-sm leading-relaxed text-white/55">
-                  Less time settling bills.<br/>More time making memories.
+                  Less time settling bills.<br />
+                  More time making memories.
                 </p>
 
-                <p className="text-[11px] tracking-[0.15em] text-white/40">
-                  © {year} EVVEN
-                </p>
+                <div className="md:ml-auto">
+                  <p className="text-[11px] tracking-[0.15em] text-white/40">
+                    © {year} EVVEN
+                  </p>
+                </div>
               </div>
             </div>
 
             {/* Reserved illustration space */}
-            <div className="hidden lg:block" />
+            <div className="hidden lg:block w-[420px]" />
           </div>
         </div>
       </div>
@@ -218,15 +220,15 @@ export function Footer() {
           className="
             pointer-events-none
             absolute
-            right-[-5rem]
-            bottom-[4rem]
+            right-[-3rem]
+            bottom-[-0.9rem]
             z-20
-            w-[42vw]
-            h-[42vw]
-            min-w-[620px]
-            min-h-[620px]
-            max-w-[950px]
-            max-h-[950px]
+            w-[38vw]
+            h-[38vw]
+            min-w-[360px]
+            min-h-[360px]
+            max-w-[700px]
+            max-h-[700px]
             select-none
           "
         >

@@ -155,10 +155,9 @@ export default function Header() {
                   className="flex flex-col"
                 >
                   {[
-                    { href: "#features", label: "Features" },
-                    { href: "#personal", label: "Personal" },
-                    { href: "#teams",    label: "Teams" },
-                    { href: "#enterprise", label: "Enterprise" },
+                    { href: "/", label: "Personal" },
+                    { href: "/teams",    label: "Teams" },
+                    { href: "/enterprise", label: "Enterprise" },
                   ].map(({ href, label }) => (
                     <motion.div
                       key={href}

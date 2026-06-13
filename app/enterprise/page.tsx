@@ -1,6 +1,6 @@
 "use client";
 
-import Header from "@/components/landing/Header";
+import Header from "@/components/landing/personal/Header";
 import { EnterpriseHero } from "@/components/landing/enterprise/EnterpriseHero";
 import { EnterpriseFeatures } from "@/components/landing/enterprise/EnterpriseFeatures";
 import { EnterpriseHowItWorks } from "@/components/landing/enterprise/EnterpriseHowItWorks";
@@ -9,7 +9,7 @@ import { EnterpriseTestimonials } from "@/components/landing/enterprise/Enterpri
 import { EnterprisePricing } from "@/components/landing/enterprise/EnterprisePricing";
 import { EnterpriseFAQ } from "@/components/landing/enterprise/EnterpriseFAQ";
 import { EnterpriseCTA } from "@/components/landing/enterprise/EnterpriseCTA";
-import { Footer } from "@/components/landing/Footer";
+import { Footer } from "@/components/landing/personal/Footer";
 import { useLandingAnimations } from "@/components/landing/useLandingAnimations";
 
 export default function EnterprisePage() {

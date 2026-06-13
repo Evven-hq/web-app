@@ -1,15 +1,15 @@
 "use client";
 
-import Header from "@/components/landing/Header";
-import { Hero } from "@/components/landing/hero";
-import { Features } from "@/components/landing/Features";
-import { HowItWorks } from "@/components/landing/HowItWorks";
-import { UseCases } from "@/components/landing/UseCases";
-import { Testimonials } from "@/components/landing/Testimonials";
-import { Pricing } from "@/components/landing/Pricing";
-import { FAQ } from "@/components/landing/FAQ";
-import { CTA } from "@/components/landing/CTA";
-import { Footer } from "@/components/landing/Footer";
+import Header from "@/components/landing/personal/Header";
+import { Hero } from "@/components/landing/personal/hero";
+import { Features } from "@/components/landing/personal/Features";
+import { HowItWorks } from "@/components/landing/personal/HowItWorks";
+import { UseCases } from "@/components/landing/personal/UseCases";
+import { Testimonials } from "@/components/landing/personal/Testimonials";
+import { Pricing } from "@/components/landing/personal/Pricing";
+import { FAQ } from "@/components/landing/personal/FAQ";
+import { CTA } from "@/components/landing/personal/CTA";
+import { Footer } from "@/components/landing/personal/Footer";
 import { useLandingAnimations } from "@/components/landing/useLandingAnimations";
 import { useRef } from "react";
 

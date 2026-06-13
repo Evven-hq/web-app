@@ -114,7 +114,7 @@ export function Footer() {
                       FAQ
                     </Link>
 
-                    <Link href="#security" className="hover:text-white transition-colors">
+                    <Link href="/security" className="hover:text-white transition-colors">
                       Security
                     </Link>
                   </div>
@@ -131,15 +131,15 @@ export function Footer() {
                       FAQ
                     </Link>
 
-                    <Link href="#" className="hover:text-white transition-colors">
+                    <Link href="/guides" className="hover:text-white transition-colors">
                       Guides
                     </Link>
 
-                    <Link href="#" className="hover:text-white transition-colors">
+                    <Link href="/support" className="hover:text-white transition-colors">
                       Support
                     </Link>
 
-                    <Link href="#" className="hover:text-white transition-colors">
+                    <Link href="/status" className="hover:text-white transition-colors">
                       Status
                     </Link>
                   </div>

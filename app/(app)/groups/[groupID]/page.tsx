@@ -21,6 +21,7 @@ import {
   getGroupMembers,
   getGroupExpenses,
   getGroupBalances,
+  getGroupDebtBreakdown,
   createGroupExpense,
   updateGroupExpense,
   deleteGroupExpense,
@@ -35,6 +36,7 @@ import type {
   GroupMember,
   GroupExpense,
   GroupBalances,
+  GroupDebtBreakdown,
   Settlement,
   ExpenseSplit,
   GroupExpenseCreate,
@@ -106,10 +108,12 @@ export default function GroupDetailPage() {
   const [members, setMembers] = useState<GroupMember[]>([]);
   const [expenses, setExpenses] = useState<GroupExpense[]>([]);
   const [balances, setBalances] = useState<GroupBalances>({});
+  const [debtBreakdown, setDebtBreakdown] = useState<GroupDebtBreakdown | null>(null);
   const [settlements, setSettlements] = useState<Settlement[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [sectionError, setSectionError] = useState<string | null>(null);
+  const [breakdownError, setBreakdownError] = useState<string | null>(null);
 
   // Expense modal
   const [showExpenseModal, setShowExpenseModal] = useState(false);
@@ -143,16 +147,24 @@ export default function GroupDetailPage() {
     setLoading(true);
     setError(null);
     setSectionError(null);
+    setBreakdownError(null);
     try {
       const g = await getGroup(groupID);
       setGroup(g);
 
-      const [membersResult, expensesResult, balancesResult, settlementsResult] =
+      const [
+        membersResult,
+        expensesResult,
+        balancesResult,
+        settlementsResult,
+        breakdownResult,
+      ] =
         await Promise.allSettled([
           getGroupMembers(groupID),
           getGroupExpenses(groupID),
           getGroupBalances(groupID),
           getGroupSettlements(groupID),
+          getGroupDebtBreakdown(groupID),
         ]);
 
       const nextExpenses =
@@ -165,6 +177,9 @@ export default function GroupDetailPage() {
       setBalances(balancesResult.status === "fulfilled" ? balancesResult.value : {});
       setSettlements(
         settlementsResult.status === "fulfilled" ? settlementsResult.value : []
+      );
+      setDebtBreakdown(
+        breakdownResult.status === "fulfilled" ? breakdownResult.value : null
       );
 
       if (
@@ -192,6 +207,15 @@ export default function GroupDetailPage() {
         ].filter(Boolean);
 
         setSectionError(detailErrors.join(" "));
+      }
+
+      if (breakdownResult.status === "rejected") {
+        setBreakdownError(
+          getApiErrorMessage(
+            breakdownResult.reason,
+            "Expense breakdown could not be loaded."
+          )
+        );
       }
     } catch (err) {
       setError(getApiErrorMessage(err, "Failed to load group."));
@@ -413,6 +437,42 @@ export default function GroupDetailPage() {
       ),
     [members]
   );
+
+  const detailedBreakdown = useMemo(() => {
+    if (!debtBreakdown?.breakdown) return [];
+
+    return Object.entries(debtBreakdown.breakdown)
+      .map(([debtorId, creditors]) => {
+        const creditorEntries = Object.entries(creditors)
+          .map(([creditorId, items]) => {
+            const sortedItems = [...items].sort(
+              (left, right) => Number(right.amount) - Number(left.amount)
+            );
+            const total = sortedItems.reduce(
+              (sum, item) => sum + Number(item.amount),
+              0
+            );
+
+            return {
+              creditorId,
+              items: sortedItems,
+              total,
+            };
+          })
+          .filter(({ items }) => items.length > 0)
+          .sort((left, right) => right.total - left.total);
+
+        const total = creditorEntries.reduce((sum, entry) => sum + entry.total, 0);
+
+        return {
+          debtorId,
+          creditors: creditorEntries,
+          total,
+        };
+      })
+      .filter(({ creditors }) => creditors.length > 0)
+      .sort((left, right) => right.total - left.total);
+  }, [debtBreakdown]);
 
   const splitParticipantIds = (() => {
     const ids = new Set<string>();
@@ -789,6 +849,100 @@ export default function GroupDetailPage() {
                 </div>
               </div>
             )}
+
+            <div className="mt-6">
+              <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: "var(--evven-text-muted)" }}>
+                Expense breakdown
+              </p>
+              {breakdownError ? (
+                <div
+                  className="rounded-2xl border px-4 py-3 text-sm"
+                  style={{
+                    background: "#FEF2F2",
+                    borderColor: "#FECACA",
+                    color: "#B91C1C",
+                  }}
+                >
+                  {breakdownError}
+                </div>
+              ) : detailedBreakdown.length === 0 ? (
+                <div
+                  className="rounded-2xl border px-4 py-5 text-center"
+                  style={{ background: "white", borderColor: "var(--evven-border)" }}
+                >
+                  <Receipt size={18} className="mx-auto mb-2" style={{ color: "var(--evven-text-muted)" }} />
+                  <p className="text-sm font-medium" style={{ color: "var(--evven-text-primary)" }}>
+                    No breakdown to show
+                  </p>
+                  <p className="text-xs mt-1" style={{ color: "var(--evven-text-muted)" }}>
+                    Add a few expenses and their splits to see who owes whom.
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {detailedBreakdown.map(({ debtorId, creditors }) => (
+                    <div
+                      key={debtorId}
+                      className="rounded-2xl border p-4"
+                      style={{ background: "white", borderColor: "var(--evven-border)" }}
+                    >
+                      <div className="flex items-start justify-between gap-3 mb-3">
+                        <div>
+                          <p className="text-sm font-semibold" style={{ color: "var(--evven-text-primary)" }}>
+                            {userName(debtorId)}
+                          </p>
+                          <p className="text-xs mt-0.5" style={{ color: "var(--evven-text-muted)" }}>
+                            Owes across {creditors.length} creditor{creditors.length !== 1 ? "s" : ""}
+                          </p>
+                        </div>
+                        <span className="text-xs font-medium px-2.5 py-1 rounded-full" style={{ background: "var(--evven-surface)", color: "var(--evven-text-muted)" }}>
+                          {formatAmount(creditors.reduce((sum, entry) => sum + entry.total, 0))}
+                        </span>
+                      </div>
+
+                      <div className="space-y-2">
+                        {creditors.map(({ creditorId, items, total }) => (
+                          <div
+                            key={creditorId}
+                            className="rounded-xl p-3"
+                            style={{ background: "var(--evven-surface)" }}
+                          >
+                            <div className="flex items-center justify-between gap-2 mb-2">
+                              <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: "var(--evven-text-muted)" }}>
+                                To {userName(creditorId)}
+                              </p>
+                              <p className="text-xs font-medium" style={{ color: "var(--evven-text-primary)" }}>
+                                {formatAmount(total)}
+                              </p>
+                            </div>
+                            <div className="space-y-2">
+                              {items.map((item) => (
+                                <div
+                                  key={item.expense_id}
+                                  className="flex items-center justify-between gap-3 rounded-lg bg-white px-3 py-2"
+                                >
+                                  <div className="min-w-0">
+                                    <p className="text-sm font-medium truncate" style={{ color: "var(--evven-text-primary)" }}>
+                                      {item.title}
+                                    </p>
+                                    <p className="text-xs mt-0.5" style={{ color: "var(--evven-text-muted)" }}>
+                                      Expense split
+                                    </p>
+                                  </div>
+                                  <span className="text-sm font-semibold flex-shrink-0" style={{ color: "var(--evven-text-primary)" }}>
+                                    {formatAmount(item.amount)}
+                                  </span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         )}
 

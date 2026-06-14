@@ -1,6 +1,7 @@
 import api from "@/lib/api";
 import type {
   ApiResponse,
+  GroupDebtBreakdown,
   Group,
   GroupMember,
   GroupExpense,
@@ -129,8 +130,12 @@ export async function getUserBalanceInGroup(
 }
 
 
-export async function getGroupDebtBreakdown(groupId: string): Promise<unknown> {
-  const response = await api.get(`/groups/${groupId}/debt-breakdown`);
+export async function getGroupDebtBreakdown(
+  groupId: string
+): Promise<GroupDebtBreakdown> {
+  const response = await api.get<ApiResponse<GroupDebtBreakdown>>(
+    `/groups/${groupId}/debt-breakdown`
+  );
   return response.data.data;
 }
 

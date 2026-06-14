@@ -27,12 +27,7 @@
 import React, { useEffect, useState } from "react";
 import { useAuthStore } from "@/store/auth-store";
 import Link from "next/link";
-
-const API = "https://api.evven.xyz";
-
-function getAuthHeaders(token: string) {
-  return { Authorization: `Bearer ${token}` };
-}
+import api from "@/lib/api";
 
 function getCategoryIcon(category: string | null) {
   const cat = (category || "").toLowerCase();
@@ -87,7 +82,7 @@ type DashboardData = {
 
 export default function DashboardPage() {
   const user = useAuthStore((s) => s.user);
-  const token = useAuthStore((s) => s.token);
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
 
   const [data, setData] = useState<DashboardData>({
     analytics: null,
@@ -100,13 +95,12 @@ export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState<"personal" | "group">("personal");
 
   useEffect(() => {
-    if (!token) return;
-    const headers = getAuthHeaders(token);
+    if (!isAuthenticated) return;
 
     Promise.allSettled([
-      fetch(`${API}/expenses/personal-data`, { headers }).then((r) => r.json()),
-      fetch(`${API}/groups/`, { headers }).then((r) => r.json()),
-      fetch(`${API}/expenses/`, { headers }).then((r) => r.json()),
+      api.get("/expenses/personal-data").then((response) => response.data),
+      api.get("/groups/").then((response) => response.data),
+      api.get("/expenses/").then((response) => response.data),
     ]).then(([analyticsRes, groupsRes, expensesRes]) => {
       setData({
         analytics:
@@ -125,7 +119,7 @@ export default function DashboardPage() {
         error: null,
       });
     });
-  }, [token]);
+  }, [isAuthenticated]);
 
   const greeting = () => {
     const h = new Date().getHours();

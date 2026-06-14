@@ -6,6 +6,7 @@ import type {
   GroupExpense,
   ExpenseSplit,
   GroupExpenseCreate,
+  GroupExpenseUpdate,
   GroupBalances,
   Settlement,
   SettlementCreate,
@@ -83,7 +84,7 @@ export async function createGroupExpense(
 export async function updateGroupExpense(
   groupId: string,
   expenseId: string,
-  data: { title?: string; amount?: number }
+  data: GroupExpenseUpdate
 ): Promise<GroupExpense> {
   const response = await api.put<ApiResponse<GroupExpense>>(
     `/groups/${groupId}/expenses/${expenseId}`,

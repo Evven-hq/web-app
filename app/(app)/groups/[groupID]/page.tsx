@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import {
@@ -14,6 +14,7 @@ import {
   Loader2,
   Trash2,
   CheckCircle,
+  Edit3,
 } from "lucide-react";
 import {
   getGroup,
@@ -21,16 +22,26 @@ import {
   getGroupExpenses,
   getGroupBalances,
   createGroupExpense,
+  updateGroupExpense,
   deleteGroupExpense,
   addGroupMember,
   getGroupSettlements,
   createSettlement,
+  getGroupExpenseWithSplits,
 } from "@/services/groups";
 import { useAuthStore } from "@/store/auth-store";
-import type { Group, GroupMember, GroupExpense, GroupBalances, Settlement } from "@/types";
-import api from "@/lib/api";
+import type {
+  Group,
+  GroupMember,
+  GroupExpense,
+  GroupBalances,
+  Settlement,
+  ExpenseSplit,
+  GroupExpenseCreate,
+} from "@/types";
 
 type Tab = "expenses" | "balances" | "members";
+type SplitType = "equal" | "exact" | "percentage";
 
 function formatAmount(n: string | number) {
   return `₹${Number(n).toLocaleString("en-IN", { maximumFractionDigits: 2 })}`;
@@ -41,7 +52,13 @@ function formatDate(d: string) {
 }
 
 function getInitials(name: string) {
-  return name.split(" ").map((w) => w[0]).join("").slice(0, 2).toUpperCase();
+  return name
+    .trim()
+    .split(/\s+/)
+    .map((w) => w[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
 }
 
 const COLORS = [
@@ -52,20 +69,32 @@ const COLORS = [
   { bg: "#E6F1FB", text: "#185FA5" },
 ];
 
-// Fetch user names in batch
-async function fetchUserNames(userIds: string[]): Promise<Record<string, string>> {
-  const results: Record<string, string> = {};
-  await Promise.allSettled(
-    userIds.map(async (id) => {
-      try {
-        const res = await api.get(`/users/${id}`);
-        results[id] = res.data?.data?.name ?? res.data?.name ?? id.slice(0, 8);
-      } catch {
-        results[id] = id.slice(0, 8);
-      }
-    })
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
+}
+
+function getApiErrorMessage(error: unknown, fallback: string) {
+  const response = isRecord(error) ? error.response : undefined;
+  const data = isRecord(response) ? response.data : undefined;
+
+  if (isRecord(data)) {
+    if (typeof data.detail === "string") return data.detail;
+    if (typeof data.message === "string") return data.message;
+  }
+
+  return error instanceof Error && error.message ? error.message : fallback;
+}
+
+function splitEvenly(total: number, count: number) {
+  if (count <= 0) return [];
+
+  const cents = Math.round(total * 100);
+  const base = Math.floor(cents / count);
+  const remainder = cents - base * count;
+
+  return Array.from({ length: count }, (_, index) =>
+    ((base + (index < remainder ? 1 : 0)) / 100).toFixed(2)
   );
-  return results;
 }
 
 export default function GroupDetailPage() {
@@ -78,18 +107,23 @@ export default function GroupDetailPage() {
   const [expenses, setExpenses] = useState<GroupExpense[]>([]);
   const [balances, setBalances] = useState<GroupBalances>({});
   const [settlements, setSettlements] = useState<Settlement[]>([]);
-  const [userNames, setUserNames] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [sectionError, setSectionError] = useState<string | null>(null);
 
-  // Add expense modal
-  const [showAddExpense, setShowAddExpense] = useState(false);
+  // Expense modal
+  const [showExpenseModal, setShowExpenseModal] = useState(false);
+  const [editingExpense, setEditingExpense] = useState<GroupExpense | null>(null);
   const [expTitle, setExpTitle] = useState("");
   const [expAmount, setExpAmount] = useState("");
-  const [expSplitType, setExpSplitType] = useState<"equal" | "exact" | "percentage">("equal");
+  const [expSplitType, setExpSplitType] = useState<SplitType>("equal");
+  const [splitInputs, setSplitInputs] = useState<Record<string, string>>({});
   const [savingExp, setSavingExp] = useState(false);
   const [expError, setExpError] = useState("");
+  const [detailExpense, setDetailExpense] = useState<GroupExpense | null>(null);
+  const [detailSplits, setDetailSplits] = useState<ExpenseSplit[]>([]);
+  const [loadingDetails, setLoadingDetails] = useState(false);
+  const [detailError, setDetailError] = useState("");
 
   // Add member modal
   const [showAddMember, setShowAddMember] = useState(false);
@@ -110,15 +144,12 @@ export default function GroupDetailPage() {
     setError(null);
     setSectionError(null);
     try {
-      const [g, mem] = await Promise.all([
-        getGroup(groupID),
-        getGroupMembers(groupID),
-      ]);
+      const g = await getGroup(groupID);
       setGroup(g);
-      setMembers(mem);
 
-      const [expensesResult, balancesResult, settlementsResult] =
+      const [membersResult, expensesResult, balancesResult, settlementsResult] =
         await Promise.allSettled([
+          getGroupMembers(groupID),
           getGroupExpenses(groupID),
           getGroupBalances(groupID),
           getGroupSettlements(groupID),
@@ -127,6 +158,9 @@ export default function GroupDetailPage() {
       const nextExpenses =
         expensesResult.status === "fulfilled" ? expensesResult.value : [];
 
+      if (membersResult.status === "fulfilled") {
+        setMembers(membersResult.value);
+      }
       setExpenses(nextExpenses);
       setBalances(balancesResult.status === "fulfilled" ? balancesResult.value : {});
       setSettlements(
@@ -134,52 +168,186 @@ export default function GroupDetailPage() {
       );
 
       if (
+        membersResult.status === "rejected" ||
         expensesResult.status === "rejected" ||
         balancesResult.status === "rejected" ||
         settlementsResult.status === "rejected"
       ) {
-        setSectionError("Some group details could not be loaded yet.");
-      }
+        const detailErrors = [
+          membersResult.status === "rejected"
+            ? getApiErrorMessage(membersResult.reason, "Members could not be loaded.")
+            : null,
+          expensesResult.status === "rejected"
+            ? getApiErrorMessage(expensesResult.reason, "Expenses could not be loaded.")
+            : null,
+          balancesResult.status === "rejected"
+            ? getApiErrorMessage(balancesResult.reason, "Balances could not be loaded.")
+            : null,
+          settlementsResult.status === "rejected"
+            ? getApiErrorMessage(
+                settlementsResult.reason,
+                "Settlements could not be loaded."
+              )
+            : null,
+        ].filter(Boolean);
 
-      const ids = [
-        ...new Set([
-          ...mem.map((m) => m.user_id),
-          ...nextExpenses.map((e) => e.paid_by),
-        ]),
-      ];
-      const names = await fetchUserNames(ids);
-      setUserNames(names);
-    } catch {
-      setError("Failed to load group.");
+        setSectionError(detailErrors.join(" "));
+      }
+    } catch (err) {
+      setError(getApiErrorMessage(err, "Failed to load group."));
     } finally {
       setLoading(false);
     }
   }, [groupID]);
 
-  useEffect(() => { load(); }, [load]);
+  useEffect(() => {
+    const timeoutId = window.setTimeout(() => {
+      void load();
+    }, 0);
 
-  const handleAddExpense = async () => {
-    if (!expTitle.trim() || !expAmount) return;
+    return () => window.clearTimeout(timeoutId);
+  }, [load]);
+
+  const resetExpenseForm = () => {
+    setEditingExpense(null);
+    setExpTitle("");
+    setExpAmount("");
+    setExpSplitType("equal");
+    setSplitInputs({});
+    setExpError("");
+  };
+
+  const openAddExpense = () => {
+    resetExpenseForm();
+    setShowExpenseModal(true);
+  };
+
+  const buildExpensePayload = (): GroupExpenseCreate | null => {
+    const amount = parseFloat(expAmount);
+    if (!expTitle.trim() || !Number.isFinite(amount) || amount <= 0) {
+      setExpError("Enter a title and an amount greater than zero.");
+      return null;
+    }
+
+    const payload: GroupExpenseCreate = {
+      title: expTitle.trim(),
+      amount,
+      split_type: expSplitType,
+    };
+
+    if (splitParticipantIds.length === 0) {
+      setExpError("Load or add group members before saving an expense.");
+      return null;
+    }
+
+    if (expSplitType === "equal") {
+      payload.equal_member_ids = splitParticipantIds;
+      return payload;
+    }
+
+    const splits = Object.fromEntries(
+      splitParticipantIds.map((userId) => [userId, Number(splitInputs[userId] || 0)])
+    );
+
+    if (Object.values(splits).some((value) => !Number.isFinite(value) || value < 0)) {
+      setExpError("Split values must be zero or greater.");
+      return null;
+    }
+
+    const total = Object.values(splits).reduce((sum, value) => sum + value, 0);
+    const expectedTotal = expSplitType === "exact" ? amount : 100;
+
+    if (Math.abs(total - expectedTotal) > 0.01) {
+      setExpError(
+        expSplitType === "exact"
+          ? `Exact splits must add up to ${formatAmount(amount)}.`
+          : "Percentages must add up to 100%."
+      );
+      return null;
+    }
+
+    payload.splits_input = splits;
+    return payload;
+  };
+
+  const refreshBalances = async () => {
+    try {
+      setBalances(await getGroupBalances(groupID));
+    } catch {
+      setSectionError("Balances could not be refreshed yet.");
+    }
+  };
+
+  const handleSaveExpense = async () => {
+    const payload = buildExpensePayload();
+    if (!payload) return;
+
     setSavingExp(true);
     setExpError("");
     try {
-      const exp = await createGroupExpense(groupID, {
-        title: expTitle.trim(),
-        amount: parseFloat(expAmount),
-        split_type: expSplitType,
-        equal_member_ids: expSplitType === "equal" ? members.map((m) => m.user_id) : undefined,
-      });
-      setExpenses((prev) => [exp, ...prev]);
-      setShowAddExpense(false);
-      setExpTitle("");
-      setExpAmount("");
-      // Refresh balances
-      const bal = await getGroupBalances(groupID);
-      setBalances(bal);
+      if (editingExpense) {
+        const updated = await updateGroupExpense(groupID, editingExpense.id, payload);
+        setExpenses((prev) =>
+          prev.map((expense) => (expense.id === updated.id ? updated : expense))
+        );
+        if (detailExpense?.id === updated.id) {
+          await handleViewExpense(updated);
+        }
+      } else {
+        const created = await createGroupExpense(groupID, payload);
+        setExpenses((prev) => [created, ...prev]);
+      }
+
+      setShowExpenseModal(false);
+      resetExpenseForm();
+      await refreshBalances();
     } catch {
-      setExpError("Could not add expense. Check details and try again.");
+      setExpError("Could not save expense. Check details and try again.");
     } finally {
       setSavingExp(false);
+    }
+  };
+
+  const handleViewExpense = async (expense: GroupExpense) => {
+    setDetailExpense(expense);
+    setDetailSplits([]);
+    setDetailError("");
+    setLoadingDetails(true);
+
+    try {
+      const details = await getGroupExpenseWithSplits(groupID, expense.id);
+      setDetailExpense(details.expense);
+      setDetailSplits(details.splits);
+    } catch {
+      setDetailError("Could not load split details.");
+    } finally {
+      setLoadingDetails(false);
+    }
+  };
+
+  const handleEditExpense = async (expense: GroupExpense) => {
+    setEditingExpense(expense);
+    setExpTitle(expense.title);
+    setExpAmount(String(expense.amount));
+    setExpSplitType(expense.split_type);
+    setExpError("");
+    setSplitInputs({});
+    setShowExpenseModal(true);
+
+    try {
+      const details = await getGroupExpenseWithSplits(groupID, expense.id);
+      const amount = Number(details.expense.amount);
+      const nextInputs = Object.fromEntries(
+        details.splits.map((split) => [
+          split.user_id,
+          expense.split_type === "percentage" && amount > 0
+            ? ((Number(split.amount) / amount) * 100).toFixed(2)
+            : String(split.amount),
+        ])
+      );
+      setSplitInputs(nextInputs);
+    } catch {
+      setExpError("Could not load existing splits. You can still save a new split.");
     }
   };
 
@@ -201,8 +369,6 @@ export default function GroupDetailPage() {
     try {
       const m = await addGroupMember(groupID, memberCode.trim());
       setMembers((prev) => [...prev, m]);
-      const names = await fetchUserNames([m.user_id]);
-      setUserNames((prev) => ({ ...prev, ...names }));
       setShowAddMember(false);
       setMemberCode("");
     } catch {
@@ -237,7 +403,64 @@ export default function GroupDetailPage() {
     }
   };
 
-  const userName = (id: string) => userNames[id] ?? id.slice(0, 8);
+  const memberNames = useMemo(
+    () =>
+      Object.fromEntries(
+        members.map((member) => [
+          member.user_id,
+          member.name?.trim() || member.user_id.slice(0, 8),
+        ])
+      ),
+    [members]
+  );
+
+  const splitParticipantIds = (() => {
+    const ids = new Set<string>();
+
+    members.forEach((member) => ids.add(member.user_id));
+    if (currentUser?.id) ids.add(currentUser.id);
+    Object.keys(balances).forEach((id) => ids.add(id));
+    expenses.forEach((expense) => ids.add(expense.paid_by));
+    settlements.forEach((settlement) => {
+      ids.add(settlement.payer_id);
+      ids.add(settlement.receiver_id);
+    });
+
+    return [...ids];
+  })();
+
+  const userName = (id: string) => {
+    if (id === currentUser?.id) return currentUser.name;
+    return memberNames[id] ?? id.slice(0, 8);
+  };
+
+  const fillSplitsEqually = () => {
+    if (splitParticipantIds.length === 0) return;
+
+    if (expSplitType === "exact") {
+      const amount = Number(expAmount || 0);
+      const values = splitEvenly(amount, splitParticipantIds.length);
+      setSplitInputs(
+        Object.fromEntries(
+          splitParticipantIds.map((userId, index) => [userId, values[index] ?? "0.00"])
+        )
+      );
+      return;
+    }
+
+    const values = splitEvenly(100, splitParticipantIds.length);
+    setSplitInputs(
+      Object.fromEntries(
+        splitParticipantIds.map((userId, index) => [userId, values[index] ?? "0.00"])
+      )
+    );
+  };
+
+  const selectSplitType = (splitType: SplitType) => {
+    setExpSplitType(splitType);
+    setExpError("");
+  };
+
   const isCreator = group?.created_by === currentUser?.id;
 
   // Parse balances: positive = others owe you, negative = you owe
@@ -296,7 +519,7 @@ export default function GroupDetailPage() {
                 <span className="hidden sm:inline">Add</span>
               </button>
               <button
-                onClick={() => setShowAddExpense(true)}
+                onClick={openAddExpense}
                 className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium text-white transition-all hover:opacity-90"
                 style={{ background: "var(--evven-accent-primary)" }}
               >
@@ -407,7 +630,7 @@ export default function GroupDetailPage() {
                   Log the first expense for this group.
                 </p>
                 <button
-                  onClick={() => setShowAddExpense(true)}
+                  onClick={openAddExpense}
                   className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium text-white"
                   style={{ background: "var(--evven-accent-primary)" }}
                 >
@@ -420,7 +643,16 @@ export default function GroupDetailPage() {
                 {expenses.map((exp) => (
                   <div
                     key={exp.id}
-                    className="flex items-center gap-3 px-4 py-3.5 rounded-2xl border"
+                    onClick={() => void handleViewExpense(exp)}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter" || event.key === " ") {
+                        event.preventDefault();
+                        void handleViewExpense(exp);
+                      }
+                    }}
+                    className="flex w-full cursor-pointer items-center gap-3 px-4 py-3.5 rounded-2xl border text-left transition-all hover:opacity-80"
                     style={{ background: "white", borderColor: "var(--evven-border)" }}
                   >
                     <div
@@ -441,9 +673,23 @@ export default function GroupDetailPage() {
                       <span className="text-sm font-semibold" style={{ color: "var(--evven-text-primary)" }}>
                         {formatAmount(exp.amount)}
                       </span>
+                      {exp.paid_by === currentUser?.id && (
+                        <button
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            void handleEditExpense(exp);
+                          }}
+                          className="p-1.5 rounded-lg transition-colors hover:bg-[var(--evven-surface)]"
+                        >
+                          <Edit3 size={13} style={{ color: "var(--evven-text-muted)" }} />
+                        </button>
+                      )}
                       {(isCreator || exp.paid_by === currentUser?.id) && (
                         <button
-                          onClick={() => handleDeleteExpense(exp.id)}
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            void handleDeleteExpense(exp.id);
+                          }}
                           className="p-1.5 rounded-lg transition-colors hover:bg-red-50"
                         >
                           <Trash2 size={13} style={{ color: "#A32D2D" }} />
@@ -588,18 +834,100 @@ export default function GroupDetailPage() {
         )}
       </div>
 
-      {/* Add Expense Modal */}
-      {showAddExpense && (
+      {/* Expense Details Modal */}
+      {detailExpense && (
         <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4">
-          <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" onClick={() => setShowAddExpense(false)} />
+          <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" onClick={() => setDetailExpense(null)} />
           <div
-            className="relative w-full max-w-sm rounded-3xl p-6 shadow-xl"
+            className="relative w-full max-w-md rounded-3xl p-6 shadow-xl"
             style={{ background: "white", border: "1px solid var(--evven-border)" }}
           >
-            <button onClick={() => setShowAddExpense(false)} className="absolute top-4 right-4 p-1.5 rounded-lg" style={{ background: "var(--evven-surface)" }}>
+            <button onClick={() => setDetailExpense(null)} className="absolute top-4 right-4 p-1.5 rounded-lg" style={{ background: "var(--evven-surface)" }}>
               <X size={15} />
             </button>
-            <h2 className="text-base font-semibold mb-4" style={{ color: "var(--evven-text-primary)" }}>Add expense</h2>
+
+            <div className="pr-8">
+              <p className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: "var(--evven-text-muted)" }}>
+                Expense details
+              </p>
+              <h2 className="text-lg font-semibold" style={{ color: "var(--evven-text-primary)" }}>
+                {detailExpense.title}
+              </h2>
+              <p className="text-sm mt-1" style={{ color: "var(--evven-text-muted)" }}>
+                Paid by {userName(detailExpense.paid_by)} · {formatDate(detailExpense.created_at)}
+              </p>
+            </div>
+
+            <div className="mt-5 grid grid-cols-2 gap-3">
+              <div className="rounded-2xl p-4" style={{ background: "var(--evven-surface)" }}>
+                <p className="text-xs mb-1" style={{ color: "var(--evven-text-muted)" }}>Total</p>
+                <p className="text-base font-semibold" style={{ color: "var(--evven-text-primary)" }}>
+                  {formatAmount(detailExpense.amount)}
+                </p>
+              </div>
+              <div className="rounded-2xl p-4" style={{ background: "var(--evven-surface)" }}>
+                <p className="text-xs mb-1" style={{ color: "var(--evven-text-muted)" }}>Split</p>
+                <p className="text-base font-semibold capitalize" style={{ color: "var(--evven-text-primary)" }}>
+                  {detailExpense.split_type}
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-5">
+              <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: "var(--evven-text-muted)" }}>
+                Breakdown
+              </p>
+              {loadingDetails ? (
+                <div className="flex h-20 items-center justify-center">
+                  <Loader2 size={18} className="animate-spin" style={{ color: "var(--evven-accent-primary)" }} />
+                </div>
+              ) : detailError ? (
+                <p className="text-sm" style={{ color: "var(--evven-error)" }}>{detailError}</p>
+              ) : (
+                <div className="space-y-2">
+                  {detailSplits.map((split) => (
+                    <div key={split.id} className="flex items-center justify-between rounded-2xl px-4 py-3" style={{ background: "var(--evven-surface)" }}>
+                      <span className="text-sm font-medium" style={{ color: "var(--evven-text-primary)" }}>
+                        {userName(split.user_id)}
+                        {split.user_id === currentUser?.id ? " (you)" : ""}
+                      </span>
+                      <span className="text-sm font-semibold" style={{ color: "var(--evven-text-primary)" }}>
+                        {formatAmount(split.amount)}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {detailExpense.paid_by === currentUser?.id && (
+              <button
+                onClick={() => void handleEditExpense(detailExpense)}
+                className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium text-white"
+                style={{ background: "var(--evven-accent-primary)" }}
+              >
+                <Edit3 size={15} />
+                Edit expense
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Add/Edit Expense Modal */}
+      {showExpenseModal && (
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" onClick={() => setShowExpenseModal(false)} />
+          <div
+            className="relative max-h-[90vh] w-full max-w-md overflow-y-auto rounded-3xl p-6 shadow-xl"
+            style={{ background: "white", border: "1px solid var(--evven-border)" }}
+          >
+            <button onClick={() => setShowExpenseModal(false)} className="absolute top-4 right-4 p-1.5 rounded-lg" style={{ background: "var(--evven-surface)" }}>
+              <X size={15} />
+            </button>
+            <h2 className="text-base font-semibold mb-4" style={{ color: "var(--evven-text-primary)" }}>
+              {editingExpense ? "Edit expense" : "Add expense"}
+            </h2>
 
             <div className="space-y-3">
               <input
@@ -626,7 +954,7 @@ export default function GroupDetailPage() {
                 {(["equal", "exact", "percentage"] as const).map((t) => (
                   <button
                     key={t}
-                    onClick={() => setExpSplitType(t)}
+                    onClick={() => selectSplitType(t)}
                     className="flex-1 py-1.5 rounded-lg text-xs font-medium capitalize transition-all"
                     style={{
                       background: expSplitType === t ? "var(--evven-accent-primary)" : "var(--evven-surface)",
@@ -637,18 +965,87 @@ export default function GroupDetailPage() {
                   </button>
                 ))}
               </div>
+
+              {expSplitType !== "equal" && (
+                <div className="rounded-2xl border p-3" style={{ borderColor: "var(--evven-border)" }}>
+                  <div className="mb-3 flex items-center justify-between">
+                    <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: "var(--evven-text-muted)" }}>
+                      {expSplitType === "exact" ? "Exact amounts" : "Percentages"}
+                    </p>
+                    <div className="flex items-center gap-2">
+                      <p className="text-xs font-medium" style={{ color: "var(--evven-text-muted)" }}>
+                        {expSplitType === "exact"
+                          ? `${formatAmount(Object.values(splitInputs).reduce((sum, value) => sum + Number(value || 0), 0))} / ${formatAmount(Number(expAmount || 0))}`
+                          : `${Object.values(splitInputs).reduce((sum, value) => sum + Number(value || 0), 0).toFixed(2)}% / 100%`}
+                      </p>
+                      <button
+                        type="button"
+                        onClick={fillSplitsEqually}
+                        disabled={splitParticipantIds.length === 0}
+                        className="rounded-lg px-2 py-1 text-xs font-medium disabled:opacity-50"
+                        style={{
+                          background: "var(--evven-surface)",
+                          color: "var(--evven-text-primary)",
+                        }}
+                      >
+                        Fill equally
+                      </button>
+                    </div>
+                  </div>
+                  {splitParticipantIds.length === 0 ? (
+                    <p className="rounded-xl px-3 py-2 text-xs" style={{ background: "var(--evven-surface)", color: "var(--evven-error)" }}>
+                      Group members are still loading. Try again in a moment.
+                    </p>
+                  ) : (
+                    <div className="space-y-2">
+                      {splitParticipantIds.map((userId) => (
+                      <div key={userId} className="flex items-center gap-3">
+                        <div className="min-w-0 flex-1">
+                          <p className="truncate text-sm font-medium" style={{ color: "var(--evven-text-primary)" }}>
+                            {userName(userId)}
+                            {userId === currentUser?.id ? " (you)" : ""}
+                          </p>
+                        </div>
+                        <div className="relative w-28">
+                          {expSplitType === "exact" && (
+                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs" style={{ color: "var(--evven-text-muted)" }}>₹</span>
+                          )}
+                          <input
+                            type="number"
+                            min="0"
+                            step="0.01"
+                            value={splitInputs[userId] ?? ""}
+                            onChange={(event) =>
+                              setSplitInputs((current) => ({
+                                ...current,
+                                [userId]: event.target.value,
+                              }))
+                            }
+                            className={`w-full rounded-xl border py-2 text-right text-sm outline-none focus:ring-2 ${expSplitType === "exact" ? "pl-6 pr-3" : "px-3"}`}
+                            style={{ borderColor: "var(--evven-border)", background: "var(--evven-surface)", color: "var(--evven-text-primary)" }}
+                          />
+                          {expSplitType === "percentage" && (
+                            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs" style={{ color: "var(--evven-text-muted)" }}>%</span>
+                          )}
+                        </div>
+                      </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
 
             {expError && <p className="text-xs mt-2" style={{ color: "var(--evven-error)" }}>{expError}</p>}
 
             <button
-              onClick={handleAddExpense}
+              onClick={handleSaveExpense}
               disabled={!expTitle.trim() || !expAmount || savingExp}
               className="w-full mt-4 py-2.5 rounded-xl text-sm font-medium text-white flex items-center justify-center gap-2 disabled:opacity-50"
               style={{ background: "var(--evven-accent-primary)" }}
             >
               {savingExp ? <Loader2 size={15} className="animate-spin" /> : <Plus size={15} />}
-              {savingExp ? "Adding…" : "Add expense"}
+              {savingExp ? "Saving…" : editingExpense ? "Save changes" : "Add expense"}
             </button>
           </div>
         </div>

@@ -2,14 +2,14 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Eye, EyeOff, Mail } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 
 import { useAuthStore } from "@/store/auth-store";
-import { CharacterAnimation } from "@/components/characters/CharacterAnimation";
+import { GoogleSignInButton } from "@/components/auth/GoogleSignInButton";
 
 export default function Register() {
   const router = useRouter();
@@ -21,10 +21,6 @@ export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError]             = useState("");
   const [isLoading, setIsLoading]     = useState(false);
-
-  const [isNameFocused, setIsNameFocused]         = useState(false);
-  const [isEmailFocused, setIsEmailFocused]       = useState(false);
-  const [isPasswordFocused, setIsPasswordFocused] = useState(false);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -64,8 +60,6 @@ export default function Register() {
                   value={name}
                   autoComplete="off"
                   onChange={(e) => setName(e.target.value)}
-                  onFocus={() => setIsNameFocused(true)}
-                  onBlur={() => setIsNameFocused(false)}
                   required
                   className="h-12 bg-background/50 border-border/60 focus:border-primary focus:bg-background transition-all duration-200"
                 />
@@ -80,8 +74,6 @@ export default function Register() {
                   value={email}
                   autoComplete="off"
                   onChange={(e) => setEmail(e.target.value)}
-                  onFocus={() => setIsEmailFocused(true)}
-                  onBlur={() => setIsEmailFocused(false)}
                   required
                   className="h-12 bg-background/50 border-border/60 focus:border-primary focus:bg-background transition-all duration-200"
                 />
@@ -96,8 +88,6 @@ export default function Register() {
                     placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    onFocus={() => setIsPasswordFocused(true)}
-                    onBlur={() => setIsPasswordFocused(false)}
                     required
                     className="h-12 pr-10 bg-background/50 border-border/60 focus:border-primary focus:bg-background transition-all duration-200"
                   />
@@ -141,14 +131,7 @@ export default function Register() {
               </div>
             </div>
 
-            <Button
-              variant="outline"
-              className="w-full h-12 bg-background/50 border-border/60 hover:bg-background hover:border-primary/40 transition-all duration-200"
-              type="button"
-            >
-              <Mail className="mr-2 size-5" />
-              Google <span className="text-xs text-muted-foreground">(it does nothing now)</span>
-            </Button>
+            <GoogleSignInButton />
 
             <div className="text-center text-sm text-muted-foreground mt-8">
               Already have an account?{" "}

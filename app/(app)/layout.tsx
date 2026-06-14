@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
@@ -34,25 +34,23 @@ function getInitials(name: string) {
     .toUpperCase();
 }
 
-export default function AppLayout({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
-  const router = useRouter();
-  const user = useAuthStore((s) => s.user);
-  const logout = useAuthStore((s) => s.logout);
-  const [mobileOpen, setMobileOpen] = useState(false);
+interface SidebarProps {
+  pathname: string;
+  user: ReturnType<typeof useAuthStore.getState>["user"];
+  mobile?: boolean;
+  onNavigate: () => void;
+  onLogout: () => void;
+}
 
-  const handleLogout = () => {
-    logout();
-    router.push("/login");
-  };
-
-  const Sidebar = ({ mobile = false }: { mobile?: boolean }) => (
-    <div
-      className={cn(
-        "flex flex-col h-full",
-        mobile ? "p-4" : "p-4"
-      )}
-    >
+function Sidebar({
+  pathname,
+  user,
+  mobile = false,
+  onNavigate,
+  onLogout,
+}: SidebarProps) {
+  return (
+    <div className={cn("flex h-full flex-col", mobile ? "p-4" : "p-4")}>
       {/* Logo */}
       <div className="mb-8 px-2 pt-2">
         <Link href="/" className="flex items-center gap-2">
@@ -63,7 +61,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             height={42}
           />
           <span className="font-semibold text-sm tracking-wide" style={{ color: "var(--evven-text-primary)" }}>
-            evven
+            Evven
           </span>
         </Link>
       </div>
@@ -76,7 +74,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             <Link
               key={href}
               href={href}
-              onClick={() => setMobileOpen(false)}
+              onClick={onNavigate}
               className={cn(
                 "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 group",
                 active
@@ -96,7 +94,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <div className="mb-4">
         <Link
           href="/expenses/new"
-          onClick={() => setMobileOpen(false)}
+          onClick={onNavigate}
           className="flex items-center justify-center gap-2 w-full px-3 py-2.5 rounded-xl text-sm font-medium text-white transition-all duration-150 hover:opacity-90"
           style={{ background: "var(--evven-accent-primary)" }}
         >
@@ -125,7 +123,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           </p>
         </div>
         <button
-          onClick={handleLogout}
+          onClick={onLogout}
           className="p-1.5 rounded-lg transition-colors hover:bg-[var(--evven-border)]"
           title="Log out"
         >
@@ -134,6 +132,38 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       </div>
     </div>
   );
+}
+
+export default function AppLayout({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  const router = useRouter();
+  const user = useAuthStore((s) => s.user);
+  const logout = useAuthStore((s) => s.logout);
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const isInitialized = useAuthStore((s) => s.isInitialized);
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  useEffect(() => {
+    if (isInitialized && !isAuthenticated) {
+      router.replace("/login");
+    }
+  }, [isAuthenticated, isInitialized, router]);
+
+  const handleLogout = () => {
+    logout();
+    router.replace("/login");
+  };
+
+  if (!isInitialized || !isAuthenticated) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-background">
+        <div
+          className="size-5 animate-spin rounded-full border-2 border-r-transparent"
+          style={{ borderColor: "var(--evven-accent-primary)", borderRightColor: "transparent" }}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-screen bg-background overflow-hidden">
@@ -145,7 +175,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           borderColor: "var(--evven-border)",
         }}
       >
-        <Sidebar />
+        <Sidebar
+          pathname={pathname}
+          user={user}
+          onNavigate={() => setMobileOpen(false)}
+          onLogout={handleLogout}
+        />
       </aside>
 
       {/* Mobile sidebar overlay */}
@@ -169,7 +204,13 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             >
               <X size={16} />
             </button>
-            <Sidebar mobile />
+            <Sidebar
+              mobile
+              pathname={pathname}
+              user={user}
+              onNavigate={() => setMobileOpen(false)}
+              onLogout={handleLogout}
+            />
           </aside>
         </div>
       )}

@@ -9,12 +9,13 @@ const AuthProvider = (
 
   const restoreSession = useAuthStore((state) => state.restoreSession)
   const isLoading = useAuthStore((state) => state.isLoading)
+  const isInitialized = useAuthStore((state) => state.isInitialized)
 
   useEffect(() => {
       restoreSession()
     }, [restoreSession])
 
-  if (isLoading){
+  if (!isInitialized || isLoading){
     return (
       <div>loading ...</div>
     )

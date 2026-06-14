@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState, useCallback } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import Link from "next/link";
 import {
   ArrowLeft,
@@ -13,8 +13,6 @@ import {
   X,
   Loader2,
   Trash2,
-  ChevronDown,
-  ChevronUp,
   CheckCircle,
 } from "lucide-react";
 import {
@@ -72,7 +70,6 @@ async function fetchUserNames(userIds: string[]): Promise<Record<string, string>
 
 export default function GroupDetailPage() {
   const { groupID } = useParams<{ groupID: string }>();
-  const router = useRouter();
   const currentUser = useAuthStore((s) => s.user);
 
   const [tab, setTab] = useState<Tab>("expenses");
@@ -84,6 +81,7 @@ export default function GroupDetailPage() {
   const [userNames, setUserNames] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [sectionError, setSectionError] = useState<string | null>(null);
 
   // Add expense modal
   const [showAddExpense, setShowAddExpense] = useState(false);
@@ -109,22 +107,46 @@ export default function GroupDetailPage() {
   const load = useCallback(async () => {
     if (!groupID) return;
     setLoading(true);
+    setError(null);
+    setSectionError(null);
     try {
-      const [g, mem, exp, bal, set] = await Promise.all([
+      const [g, mem] = await Promise.all([
         getGroup(groupID),
         getGroupMembers(groupID),
-        getGroupExpenses(groupID),
-        getGroupBalances(groupID),
-        getGroupSettlements(groupID),
       ]);
       setGroup(g);
       setMembers(mem);
-      setExpenses(exp);
-      setBalances(bal);
-      setSettlements(set);
 
-      // Fetch names for all user IDs
-      const ids = [...new Set([...mem.map((m) => m.user_id), ...exp.map((e) => e.paid_by)])];
+      const [expensesResult, balancesResult, settlementsResult] =
+        await Promise.allSettled([
+          getGroupExpenses(groupID),
+          getGroupBalances(groupID),
+          getGroupSettlements(groupID),
+        ]);
+
+      const nextExpenses =
+        expensesResult.status === "fulfilled" ? expensesResult.value : [];
+
+      setExpenses(nextExpenses);
+      setBalances(balancesResult.status === "fulfilled" ? balancesResult.value : {});
+      setSettlements(
+        settlementsResult.status === "fulfilled" ? settlementsResult.value : []
+      );
+
+      if (
+        expensesResult.status === "rejected" ||
+        balancesResult.status === "rejected" ||
+        settlementsResult.status === "rejected"
+      ) {
+        setSectionError("Some group details could not be loaded yet.");
+      }
+
+      const ids = [
+        ...new Set([
+          ...mem.map((m) => m.user_id),
+          ...nextExpenses.map((e) => e.paid_by),
+        ]),
+      ];
       const names = await fetchUserNames(ids);
       setUserNames(names);
     } catch {
@@ -284,6 +306,20 @@ export default function GroupDetailPage() {
             </div>
           </div>
         </div>
+
+        {/* Partial load warning */}
+        {sectionError && (
+          <div
+            className="mb-5 rounded-2xl border px-4 py-3 text-sm"
+            style={{
+              background: "#FFF8E7",
+              borderColor: "#F3D08A",
+              color: "#7A4A00",
+            }}
+          >
+            {sectionError}
+          </div>
+        )}
 
         {/* My net balance summary */}
         {myBalances.length > 0 && (

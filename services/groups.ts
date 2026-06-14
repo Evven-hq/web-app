@@ -136,8 +136,8 @@ export async function getGroupDebtBreakdown(groupId: string): Promise<unknown> {
 
 export async function getGroupSettlements(groupId: string): Promise<Settlement[]> {
   const response = await api.get(`/groups/${groupId}/settlements`);
-  // settlements endpoint returns SettlementListResponse shape
-  return response.data.data?.settlements ?? [];
+  const payload = response.data.data ?? response.data;
+  return payload?.settlements ?? [];
 }
 
 export async function createSettlement(

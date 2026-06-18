@@ -102,19 +102,31 @@ export function Footer() {
                   </p>
 
                   <div className="flex flex-col gap-3 text-sm text-white/70">
-                    <Link href="#features" className="hover:text-white transition-colors">
+                    <Link
+                      href="#features"
+                      className="hover:text-white transition-colors"
+                    >
                       Features
                     </Link>
 
-                    <Link href="#pricing" className="hover:text-white transition-colors">
+                    <Link
+                      href="#pricing"
+                      className="hover:text-white transition-colors"
+                    >
                       Pricing
                     </Link>
 
-                    <Link href="#faq" className="hover:text-white transition-colors">
+                    <Link
+                      href="#faq"
+                      className="hover:text-white transition-colors"
+                    >
                       FAQ
                     </Link>
 
-                    <Link href="/security" className="hover:text-white transition-colors">
+                    <Link
+                      href="/security"
+                      className="hover:text-white transition-colors"
+                    >
                       Security
                     </Link>
                   </div>
@@ -127,19 +139,31 @@ export function Footer() {
                   </p>
 
                   <div className="flex flex-col gap-3 text-sm text-white/70">
-                    <Link href="#faq" className="hover:text-white transition-colors">
+                    <Link
+                      href="#faq"
+                      className="hover:text-white transition-colors"
+                    >
                       FAQ
                     </Link>
 
-                    <Link href="/guides" className="hover:text-white transition-colors">
+                    <Link
+                      href="/guides"
+                      className="hover:text-white transition-colors"
+                    >
                       Guides
                     </Link>
 
-                    <Link href="/support" className="hover:text-white transition-colors">
+                    <Link
+                      href="/support"
+                      className="hover:text-white transition-colors"
+                    >
                       Support
                     </Link>
 
-                    <Link href="/status" className="hover:text-white transition-colors">
+                    <Link
+                      href="/status"
+                      className="hover:text-white transition-colors"
+                    >
                       Status
                     </Link>
                   </div>
@@ -152,7 +176,10 @@ export function Footer() {
                   </p>
 
                   <div className="flex flex-col gap-3 text-sm text-white/70">
-                    <Link href="/about" className="hover:text-white transition-colors">
+                    <Link
+                      href="/about"
+                      className="hover:text-white transition-colors"
+                    >
                       About
                     </Link>
 
@@ -163,11 +190,17 @@ export function Footer() {
                       Contact
                     </a>
 
-                    <Link href="/privacy" className="hover:text-white transition-colors">
+                    <Link
+                      href="/privacy"
+                      className="hover:text-white transition-colors"
+                    >
                       Privacy
                     </Link>
 
-                    <Link href="/terms" className="hover:text-white transition-colors">
+                    <Link
+                      href="/terms"
+                      className="hover:text-white transition-colors"
+                    >
                       Terms
                     </Link>
                   </div>
@@ -180,15 +213,21 @@ export function Footer() {
                   </p>
 
                   <div className="flex flex-col gap-3 text-sm text-white/70">
-                    <a href="#" className="hover:text-white transition-colors">
+                    <a
+                      href="https://github.com/Evven-hq"
+                      className="hover:text-white transition-colors"
+                    >
                       GitHub
                     </a>
 
-                    <a href="#" className="hover:text-white transition-colors">
+                    {/* <a href="#" className="hover:text-white transition-colors">
                       X
-                    </a>
+                    </a> */}
 
-                    <a href="#" className="hover:text-white transition-colors">
+                    <a
+                      href="https://linkedin.com/company/evven-hq"
+                      className="hover:text-white transition-colors"
+                    >
                       LinkedIn
                     </a>
                   </div>
@@ -197,7 +236,8 @@ export function Footer() {
 
               <div className="mt-16 border-t border-white/10 pt-8 flex flex-col md:flex-row md:justify-between gap-8">
                 <p className="max-w-md text-sm leading-relaxed text-white/55">
-                  Less time settling bills.<br />
+                  Less time settling bills.
+                  <br />
                   More time making memories.
                 </p>
 
@@ -216,8 +256,8 @@ export function Footer() {
       </div>
 
       {/* Character */}
-        <div
-          className="
+      <div
+        className="
             pointer-events-none
             absolute
             right-[-3rem]
@@ -231,15 +271,15 @@ export function Footer() {
             max-h-[700px]
             select-none
           "
-        >
-          <Image
-            src="/footer-img.png"
-            alt=""
-            fill
-            priority
-            className="object-contain object-bottom-right"
-          />
-        </div>
+      >
+        <Image
+          src="/footer-img.png"
+          alt=""
+          fill
+          priority
+          className="object-contain object-bottom-right"
+        />
+      </div>
     </footer>
   );
 }

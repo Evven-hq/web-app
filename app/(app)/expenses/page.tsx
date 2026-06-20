@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Edit3, Loader2, Plus, Receipt, Search, Trash2 } from "lucide-react";
 import { deletePersonalExpense, getPersonalExpenses } from "@/services/expenses";
 import type { PersonalExpense } from "@/types";
+import { EXPENSE_CATEGORIES, getCategoryMeta } from "@/lib/expense-categories";
 
 function formatAmount(amount: string) {
   return `₹${Number(amount).toLocaleString("en-IN", { maximumFractionDigits: 2 })}`;
@@ -24,6 +25,7 @@ export default function ExpensesPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [categoryFilter, setCategoryFilter] = useState<string>("all");
 
   useEffect(() => {
     let active = true;
@@ -46,14 +48,20 @@ export default function ExpensesPage() {
 
   const filteredExpenses = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
-    if (!normalizedQuery) return expenses;
 
-    return expenses.filter((expense) =>
-      [expense.title, expense.category, expense.notes]
-        .filter(Boolean)
-        .some((value) => value?.toLowerCase().includes(normalizedQuery))
-    );
-  }, [expenses, query]);
+    return expenses.filter((expense) => {
+      const matchesQuery =
+        !normalizedQuery ||
+        [expense.title, expense.category, expense.notes]
+          .filter(Boolean)
+          .some((value) => value?.toLowerCase().includes(normalizedQuery));
+
+      const matchesCategory =
+        categoryFilter === "all" || (expense.category ?? "").toLowerCase() === categoryFilter;
+
+      return matchesQuery && matchesCategory;
+    });
+  }, [expenses, query, categoryFilter]);
 
   const total = filteredExpenses.reduce((sum, expense) => sum + Number(expense.amount), 0);
 
@@ -70,7 +78,7 @@ export default function ExpensesPage() {
       setDeletingId(null);
     }
   };
-
+  
   return (
     <div className="min-h-full bg-background">
       <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 sm:py-10">
@@ -90,7 +98,7 @@ export default function ExpensesPage() {
           </Link>
         </div>
 
-        <div className="mb-5 grid gap-3 sm:grid-cols-[1fr_auto]">
+        <div className="mb-3 grid gap-3 sm:grid-cols-[1fr_auto]">
           <div className="relative">
             <Search
               size={15}
@@ -111,6 +119,43 @@ export default function ExpensesPage() {
             <span className="text-muted-foreground">Total </span>
             <span className="font-semibold">{formatAmount(String(total))}</span>
           </div>
+        </div>
+
+        <div className="mb-5 flex flex-wrap gap-2">
+          <button
+            onClick={() => setCategoryFilter("all")}
+            className="rounded-full px-3 py-1.5 text-xs font-medium transition-all"
+            style={{
+              background: categoryFilter === "all" ? "var(--evven-text-primary)" : "var(--evven-surface)",
+              color: categoryFilter === "all" ? "white" : "var(--evven-text-muted)",
+            }}
+          >
+            All
+          </button>
+          {EXPENSE_CATEGORIES.map((cat) => {
+            const Icon = cat.icon;
+
+            return (
+              <button
+                key={cat.value}
+                onClick={() => setCategoryFilter(cat.value)}
+                className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-all"
+                style={{
+                  background:
+                    categoryFilter === cat.value
+                      ? cat.bg
+                      : "var(--evven-surface)",
+                  color:
+                    categoryFilter === cat.value
+                      ? cat.text
+                      : "var(--evven-text-muted)",
+                }}
+              >
+                <Icon size={14} />
+                {cat.label}
+              </button>
+            );
+          })}
         </div>
 
         {error && (
@@ -149,45 +194,55 @@ export default function ExpensesPage() {
           </div>
         ) : (
           <div className="space-y-2">
-            {filteredExpenses.map((expense) => (
-              <div
-                key={expense.id}
-                className="flex items-center gap-3 rounded-2xl border bg-white px-4 py-3.5"
-                style={{ borderColor: "var(--evven-border)" }}
-              >
-                <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-secondary">
-                  <Receipt size={16} className="text-primary" />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium">{expense.title}</p>
-                  <p className="mt-0.5 truncate text-xs text-muted-foreground">
-                    {expense.category ?? "Uncategorised"} · {formatDate(expense)}
-                  </p>
-                </div>
-                <span className="shrink-0 text-sm font-semibold">
-                  {formatAmount(expense.amount)}
-                </span>
-                <Link
-                  href={`/expenses/${expense.id}/edit`}
-                  aria-label={`Edit ${expense.title}`}
-                  className="rounded-lg p-2 text-muted-foreground hover:bg-secondary hover:text-foreground"
+            {filteredExpenses.map((expense) => {
+              const categoryMeta = getCategoryMeta(expense.category);
+              const CategoryIcon = categoryMeta.icon;
+
+              return (
+                <div
+                  key={expense.id}
+                  className="flex items-center gap-3 rounded-2xl border bg-white px-4 py-3.5"
+                  style={{ borderColor: "var(--evven-border)" }}
                 >
-                  <Edit3 size={14} />
-                </Link>
-                <button
-                  onClick={() => void handleDelete(expense)}
-                  disabled={deletingId === expense.id}
-                  aria-label={`Delete ${expense.title}`}
-                  className="rounded-lg p-2 text-muted-foreground hover:bg-red-50 hover:text-destructive disabled:opacity-50"
-                >
-                  {deletingId === expense.id ? (
-                    <Loader2 size={14} className="animate-spin" />
-                  ) : (
-                    <Trash2 size={14} />
-                  )}
-                </button>
-              </div>
-            ))}
+                  <div
+                    className="flex size-10 shrink-0 items-center justify-center rounded-xl"
+                    style={{
+                      background: categoryMeta.bg,
+                    }}
+                  >
+                    <CategoryIcon size={16} />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-medium">{expense.title}</p>
+                    <p className="mt-0.5 truncate text-xs text-muted-foreground">
+                      {categoryMeta.label} · {formatDate(expense)}
+                    </p>
+                  </div>
+                  <span className="shrink-0 text-sm font-semibold">
+                    {formatAmount(expense.amount)}
+                  </span>
+                  <Link
+                    href={`/expenses/${expense.id}/edit`}
+                    aria-label={`Edit ${expense.title}`}
+                    className="rounded-lg p-2 text-muted-foreground hover:bg-secondary hover:text-foreground"
+                  >
+                    <Edit3 size={14} />
+                  </Link>
+                  <button
+                    onClick={() => void handleDelete(expense)}
+                    disabled={deletingId === expense.id}
+                    aria-label={`Delete ${expense.title}`}
+                    className="rounded-lg p-2 text-muted-foreground hover:bg-red-50 hover:text-destructive disabled:opacity-50"
+                  >
+                    {deletingId === expense.id ? (
+                      <Loader2 size={14} className="animate-spin" />
+                    ) : (
+                      <Trash2 size={14} />
+                    )}
+                  </button>
+                </div>
+              );
+            })}
           </div>
         )}
       </div>

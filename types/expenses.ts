@@ -16,6 +16,7 @@ export interface GroupExpense {
   group_id: string;
   paid_by: string;
   title: string;
+  category? : string;
   amount: string;
   split_type: "equal" | "exact" | "percentage";
   created_at: string;
@@ -48,15 +49,17 @@ export interface GroupExpenseCreate {
   title: string;
   amount: number;
   split_type: "equal" | "exact" | "percentage";
+  category? : string;
   splits_input?: Record<string, number>;
-  equal_member_ids?: string[];
+  participant_ids?: string[];
 }
 
 export interface GroupExpenseUpdate {
   title?: string;
   amount?: number;
   split_type?: "equal" | "exact" | "percentage";
+  category? : string;
   splits_input?: Record<string, number>;
-  equal_member_ids?: string[];
+  participant_ids?: string[];
 }
  

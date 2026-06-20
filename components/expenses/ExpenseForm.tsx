@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import type { PersonalExpenseCreate } from "@/types";
+import { EXPENSE_CATEGORIES } from "@/lib/expense-categories";
 
 export interface ExpenseFormValues {
   title: string;
@@ -120,13 +121,34 @@ export function ExpenseForm({
         <label className="mb-2 block text-xs font-semibold uppercase tracking-widest text-muted-foreground">
           Category
         </label>
-        <input
-          value={values.category}
-          onChange={(event) => updateValue("category", event.target.value)}
-          placeholder="Food, travel, home..."
-          className={fieldClass}
-          style={{ background: "var(--evven-surface)", borderColor: "var(--evven-border)" }}
-        />
+        <div className="flex flex-wrap gap-2">
+          {EXPENSE_CATEGORIES.map((cat) => {
+              const Icon = cat.icon;
+
+              return (
+                <button
+                  key={cat.value}
+                  type="button"
+                  onClick={() =>
+                    updateValue("category", values.category === cat.value ? "" : cat.value)
+                  }
+                  className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-all"
+                  style={{
+                    background: values.category === cat.value ? cat.bg : "var(--evven-surface)",
+                    color: values.category === cat.value ? cat.text : "var(--evven-text-muted)",
+                    border: `1px solid ${
+                      values.category === cat.value
+                        ? cat.bg
+                        : "var(--evven-border)"
+                    }`,
+                  }}
+                >
+                  <Icon size={14} />
+                  {cat.label}
+                </button>
+              );
+            })}
+        </div>
       </div>
 
       <div>

@@ -1,49 +1,18 @@
-// "use client"
-
-// import { useAuthStore } from '@/store/auth-store';
-// import React from 'react'
-
-// const Dashboard = () => {
-//   const user = useAuthStore(
-//     (state) => state.user
-//   );
-
-//   return (
-//     <div>
-//       <h1>Welcome {user?.name}</h1>
-//       <li>
-//         <ul>User Tag : {user?.user_code}</ul>
-//         <ul>Email : {user?.email}</ul>
-//         <ul>Profile Picture : {user?.profile_picture ? user?.profile_picture : "No profile picture"}</ul>
-//       </li>
-//     </div>
-//   )
-// }
-
-// export default Dashboard
-
 "use client";
 
 import React, { useEffect, useState } from "react";
 import { useAuthStore } from "@/store/auth-store";
 import Link from "next/link";
 import api from "@/lib/api";
+import { getCategoryMeta } from "@/lib/expense-categories";
 
-function getCategoryIcon(category: string | null) {
-  const cat = (category || "").toLowerCase();
-  if (cat === "food") return "🍜";
-  if (cat === "travel") return "✈️";
-  if (cat === "home") return "🏠";
-  return "📌";
-}
-
-function getCategoryColor(category: string | null) {
-  const cat = (category || "").toLowerCase();
-  if (cat === "food") return { bg: "#FAEEDA", text: "#854F0B" };
-  if (cat === "travel") return { bg: "#E6F1FB", text: "#185FA5" };
-  if (cat === "home") return { bg: "#EAF3DE", text: "#3B6D11" };
-  return { bg: "#EEEDFE", text: "#534AB7" };
-}
+const CATEGORY_COLORS: Record<string, string> = {
+    Food: "#854F0B",
+    Travel: "#185FA5",
+    Home: "#3B6D11",
+    Uncategorized: "#888780",
+    uncategorized: "#888780",
+  };
 
 function formatAmount(amount: string | number, currency = "₹") {
   const n = Number(amount);
@@ -322,7 +291,7 @@ export default function DashboardPage() {
               <div className="space-y-3">
                 {categoryEntries.map(([cat, amt]) => {
                   const pct = Math.round((Number(amt) / maxCategory) * 100);
-                  const barColor = CATEGORY_COLORS[cat] ?? "#534AB7";
+                  const barColor = getCategoryMeta(cat).text;
                   return (
                     <div key={cat} className="flex items-center gap-2">
                       <span
@@ -428,8 +397,7 @@ export default function DashboardPage() {
               ) : (
                 <div>
                   {personalExpenses.map((exp) => {
-                    const col = getCategoryColor(exp.category);
-                    const icon = getCategoryIcon(exp.category);
+                    const catMeta = getCategoryMeta(exp.category);
                     return (
                       <div
                         key={exp.id}
@@ -437,18 +405,22 @@ export default function DashboardPage() {
                         style={{ borderColor: "var(--evven-border)" }}
                       >
                         <div
-                          className="w-8 h-8 rounded-lg flex items-center justify-center text-base flex-shrink-0"
-                          style={{ background: col.bg }}
-                        >
-                          {icon}
-                        </div>
+                            className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+                            style={{ background: catMeta.bg }}
+                          >
+                            {typeof catMeta.icon === "string" ? (
+                              <span className="text-base">{catMeta.icon}</span>
+                            ) : (
+                              <catMeta.icon size={16} />
+                            )}
+                          </div>
                         <div className="flex-1 min-w-0">
                           <p className="text-sm truncate">{exp.title}</p>
                           <p
                             className="text-xs"
                             style={{ color: "var(--evven-text-muted)" }}
                           >
-                            {exp.category ?? "Uncategorised"} ·{" "}
+                            {exp.category ? catMeta.label : "Uncategorised"} ·{" "}
                             {formatDate(exp.created_at)}
                           </p>
                         </div>

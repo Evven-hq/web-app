@@ -179,7 +179,7 @@ export default function Header() {
                     transition={{ duration: 0.8, ease: smoothEase }}
                   >
                     <a
-                      href="https://github.com/jagdep-singh/EvenUp"
+                      href="https://github.com/Evven-hq"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="block py-3 md:py-4 text-2xl sm:text-3xl md:text-4xl font-medium"

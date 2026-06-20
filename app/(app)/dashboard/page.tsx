@@ -235,7 +235,7 @@ export default function DashboardPage() {
                       style={{ borderColor: "var(--evven-border)" }}
                     >
                       <div
-                        className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium flex-shrink-0"
+                        className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium shrink-0"
                         style={{ background: color.bg, color: color.text }}
                       >
                         {getInitials(g.name)}
@@ -295,7 +295,7 @@ export default function DashboardPage() {
                   return (
                     <div key={cat} className="flex items-center gap-2">
                       <span
-                        className="text-xs w-20 flex-shrink-0 truncate"
+                        className="text-xs w-20 shrink-0 truncate"
                         style={{ color: "var(--evven-text-muted)" }}
                       >
                         {cat}
@@ -313,7 +313,7 @@ export default function DashboardPage() {
                         />
                       </div>
                       <span
-                        className="text-xs font-medium min-w-12 text-right flex-shrink-0"
+                        className="text-xs font-medium min-w-12 text-right shrink-0"
                       >
                         {formatAmount(amt)}
                       </span>
@@ -405,7 +405,7 @@ export default function DashboardPage() {
                         style={{ borderColor: "var(--evven-border)" }}
                       >
                         <div
-                            className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+                            className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
                             style={{ background: catMeta.bg }}
                           >
                             {typeof catMeta.icon === "string" ? (
@@ -425,7 +425,7 @@ export default function DashboardPage() {
                           </p>
                         </div>
                         <span
-                          className="text-sm font-medium flex-shrink-0"
+                          className="text-sm font-medium shrink-0"
                           style={{ color: "#A32D2D" }}
                         >
                           −{formatAmount(exp.amount)}
@@ -477,7 +477,7 @@ export default function DashboardPage() {
                 }}
               >
                 <span
-                  className="text-base w-5 text-center flex-shrink-0"
+                  className="text-base w-5 text-center shrink-0"
                   style={{ color: "var(--evven-text-muted)" }}
                 >
                   {action.icon}

@@ -28,12 +28,14 @@ import {
   GroupTabs,
   MembersTab,
   SectionWarning,
+  SettlementsTab,
   type Tab,
 } from "@/components/groups/GroupDetailSections";
 import {
   AddMemberModal,
   ExpenseDetailsModal,
   ExpenseEditorModal,
+  ConfirmRemoveMemberModal,
   SettleModal,
 } from "@/components/groups/GroupDetailModals";
 import type {
@@ -67,6 +69,7 @@ function getApiErrorMessage(error: unknown, fallback: string) {
 export default function GroupDetailPage() {
   const { groupID } = useParams<{ groupID: string }>();
   const currentUser = useAuthStore((s) => s.user);
+  const currentUserId = currentUser?.id;
 
   const [tab, setTab] = useState<Tab>("expenses");
   const [group, setGroup] = useState<Group | null>(null);
@@ -102,6 +105,7 @@ export default function GroupDetailPage() {
   const [savingMember, setSavingMember] = useState(false);
   const [memberError, setMemberError] = useState("");
   const [removingMemberId, setRemovingMemberId] = useState<string | null>(null);
+  const [memberToRemove, setMemberToRemove] = useState<GroupMember | null>(null);
 
   // Settle modal
   const [showSettle, setShowSettle] = useState(false);
@@ -385,13 +389,18 @@ export default function GroupDetailPage() {
     }
   };
 
-  const handleRemoveMember = async (member: GroupMember) => {
-    if (!window.confirm(`Remove ${userName(member.user_id)} from this group?`)) return;
+  const handleRemoveMember = (member: GroupMember) => {
+    setMemberToRemove(member);
+  };
 
+  const confirmRemoveMember = async () => {
+    if (!memberToRemove) return;
+    const member = memberToRemove;
     setRemovingMemberId(member.user_id);
     try {
       await removeGroupMember(groupID, member.user_id);
       setMembers((prev) => prev.filter((m) => m.user_id !== member.user_id));
+      setMemberToRemove(null);
       await Promise.all([refreshBalances(), refreshBreakdown()]);
     } catch {
       setSectionError("Could not remove that member — they may have an outstanding balance.");
@@ -415,6 +424,7 @@ export default function GroupDetailPage() {
       ]);
       setSettlements(set);
       setBalances(bal);
+      await refreshBreakdown();
       setShowSettle(false);
       setSettleReceiver("");
       setSettleAmount("");
@@ -442,11 +452,21 @@ export default function GroupDetailPage() {
     [members]
   );
 
+  const payableDebts = (() => {
+    if (!currentUserId || !debtBreakdown?.simplified?.[currentUserId]) return {};
+
+    return Object.fromEntries(
+      Object.entries(debtBreakdown.simplified[currentUserId])
+        .map(([userId, amount]): [string, number] => [userId, Number(amount)])
+        .filter(([, amount]) => Number.isFinite(amount) && amount > 0.01)
+    );
+  })();
+
   const splitParticipantIds = (() => {
     const ids = new Set<string>();
 
     members.forEach((member) => ids.add(member.user_id));
-    if (currentUser?.id) ids.add(currentUser.id);
+    if (currentUserId) ids.add(currentUserId);
     Object.keys(balances).forEach((id) => ids.add(id));
     expenses.forEach((expense) => ids.add(expense.paid_by));
     settlements.forEach((settlement) => {
@@ -458,7 +478,7 @@ export default function GroupDetailPage() {
   })();
 
   const userName = (id: string) => {
-    if (id === currentUser?.id) return currentUser.name;
+    if (id === currentUserId) return currentUser?.name ?? id.slice(0, 8);
     return memberNames[id] ?? id.slice(0, 8);
   };
 
@@ -489,7 +509,7 @@ export default function GroupDetailPage() {
     setExpError("");
   };
 
-  const isCreator = group?.created_by === currentUser?.id;
+  const isCreator = group?.created_by === currentUserId;
 
   // Parse balances: positive = others owe you, negative = you owe
   if (loading) {
@@ -509,65 +529,77 @@ export default function GroupDetailPage() {
   }
 
   return (
-    <div className="min-h-screen" style={{ background: "var(--evven-background)" }}>
-      <div className="max-w-2xl mx-auto px-4 py-8">
-        <GroupHeader
-          group={group}
-          membersCount={members.length}
-          expensesCount={expenses.length}
-          onAddMember={() => setShowAddMember(true)}
-          onAddExpense={openAddExpense}
-        />
-
-        {sectionError && <SectionWarning message={sectionError} />}
-
-        <BalanceSummary
-          balances={balances}
-          currentUserId={currentUser?.id}
-          userName={userName}
-          onSettle={openSettle}
-        />
-
-        <GroupTabs tab={tab} onChange={setTab} />
-
-        {tab === "expenses" && (
-          <ExpensesTab
-            expenses={expenses}
-            currentUserId={currentUser?.id}
-            isCreator={isCreator}
-            userName={userName}
-            onViewExpense={handleViewExpense}
-            onEditExpense={handleEditExpense}
-            onDeleteExpense={handleDeleteExpense}
+    <div className="h-full overflow-hidden" style={{ background: "var(--evven-background)" }}>
+      <div className="mx-auto flex h-full max-w-2xl flex-col px-4 py-6">
+        <div className="shrink-0">
+          <GroupHeader
+            group={group}
+            membersCount={members.length}
+            expensesCount={expenses.length}
+            onAddMember={() => setShowAddMember(true)}
+            onAddExpense={openAddExpense}
           />
-        )}
 
-        {tab === "balances" && (
-          <BalancesTab
+          {sectionError && <SectionWarning message={sectionError} />}
+
+          <BalanceSummary
             balances={balances}
-            currentUserId={currentUser?.id}
-            members={members}
-            settlements={settlements}
-            debtBreakdown={debtBreakdown}
-            breakdownError={breakdownError}
+            currentUserId={currentUserId}
+            payableDebts={payableDebts}
             userName={userName}
             onSettle={openSettle}
-            onReloadBreakdown={refreshBreakdown}
           />
-        )}
 
-        {tab === "members" && (
-          <MembersTab
-            members={members}
-            groupCreatedBy={group.created_by}
-            currentUserId={currentUser?.id}
-            isCreator={isCreator}
-            userName={userName}
-            onRemoveMember={handleRemoveMember}
-            removingMemberId={removingMemberId}
-            onAddMember={() => setShowAddMember(true)}
-          />
-        )}
+          <GroupTabs tab={tab} onChange={setTab} />
+        </div>
+
+        <div className="min-h-0 flex-1 overflow-hidden">
+          {tab === "expenses" && (
+            <ExpensesTab
+              expenses={expenses}
+              currentUserId={currentUserId}
+              isCreator={isCreator}
+              userName={userName}
+              onViewExpense={handleViewExpense}
+              onEditExpense={handleEditExpense}
+              onDeleteExpense={handleDeleteExpense}
+            />
+          )}
+
+          {tab === "balances" && (
+            <BalancesTab
+              balances={balances}
+              currentUserId={currentUserId}
+              payableDebts={payableDebts}
+              members={members}
+              userName={userName}
+              onSettle={openSettle}
+            />
+          )}
+
+          {tab === "settlements" && (
+            <SettlementsTab
+              settlements={settlements}
+              debtBreakdown={debtBreakdown}
+              breakdownError={breakdownError}
+              userName={userName}
+              onReloadBreakdown={refreshBreakdown}
+            />
+          )}
+
+          {tab === "members" && (
+            <MembersTab
+              members={members}
+              groupCreatedBy={group.created_by}
+              currentUserId={currentUserId}
+              isCreator={isCreator}
+              userName={userName}
+              onRemoveMember={handleRemoveMember}
+              removingMemberId={removingMemberId}
+              onAddMember={() => setShowAddMember(true)}
+            />
+          )}
+        </div>
       </div>
 
       {detailExpense && (
@@ -576,11 +608,11 @@ export default function GroupDetailPage() {
           detailSplits={detailSplits}
           loadingDetails={loadingDetails}
           detailError={detailError}
-          currentUserId={currentUser?.id}
+          currentUserId={currentUserId}
           userName={userName}
           onClose={() => setDetailExpense(null)}
           onEditExpense={() => void handleEditExpense(detailExpense)}
-          canEdit={detailExpense.paid_by === currentUser?.id}
+          canEdit={detailExpense.paid_by === currentUserId}
         />
       )}
 
@@ -600,7 +632,7 @@ export default function GroupDetailPage() {
         splitInputs={splitInputs}
         setSplitInputs={setSplitInputs}
         splitParticipantIds={splitParticipantIds}
-        currentUserId={currentUser?.id}
+        currentUserId={currentUserId}
         userName={userName}
         onSelectSplitType={selectSplitType}
         onFillSplitsEqually={fillSplitsEqually}
@@ -617,6 +649,14 @@ export default function GroupDetailPage() {
         onSubmit={handleAddMember}
         savingMember={savingMember}
         memberError={memberError}
+      />
+
+      <ConfirmRemoveMemberModal
+        member={memberToRemove}
+        memberName={memberToRemove ? userName(memberToRemove.user_id) : ""}
+        onClose={() => setMemberToRemove(null)}
+        onConfirm={confirmRemoveMember}
+        removing={Boolean(memberToRemove && removingMemberId === memberToRemove.user_id)}
       />
 
       <SettleModal

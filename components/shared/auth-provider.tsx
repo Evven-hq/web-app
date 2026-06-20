@@ -2,6 +2,7 @@
 
 import React, { useEffect } from 'react'
 import { useAuthStore } from '@/store/auth-store'
+import { LoadingScreen } from './LoadingScreen';
 
 const AuthProvider = (
   { children } : { children : React.ReactNode }
@@ -17,7 +18,7 @@ const AuthProvider = (
 
   if (!isInitialized || isLoading){
     return (
-      <div>loading ...</div>
+      <LoadingScreen />
     )
   } 
 

@@ -78,11 +78,11 @@ function Sidebar({
               className={cn(
                 "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 group",
                 active
-                  ? "bg-[var(--evven-accent-primary)] text-white"
-                  : "text-[var(--evven-text-muted)] hover:bg-[var(--evven-surface)] hover:text-[var(--evven-text-primary)]"
+                  ? "bg-(--evven-accent-primary) text-white"
+                  : "text-muted-foreground hover:bg-(--evven-surface) hover:text-(--evven-text-primary)"
               )}
             >
-              <Icon size={16} className="flex-shrink-0" />
+              <Icon size={16} className="shrink-0" />
               {label}
               {active && <ChevronRight size={14} className="ml-auto opacity-60" />}
             </Link>
@@ -109,7 +109,7 @@ function Sidebar({
         style={{ background: "var(--evven-surface)" }}
       >
         <div
-          className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold flex-shrink-0"
+          className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold shrink-0"
           style={{ background: "var(--evven-accent-secondary)", color: "var(--evven-accent-primary)" }}
         >
           {user?.name ? getInitials(user.name) : "?"}
@@ -124,7 +124,7 @@ function Sidebar({
         </div>
         <button
           onClick={onLogout}
-          className="p-1.5 rounded-lg transition-colors hover:bg-[var(--evven-border)]"
+          className="p-1.5 rounded-lg transition-colors hover:bg-(--evven-border)"
           title="Log out"
         >
           <LogOut size={14} style={{ color: "var(--evven-text-muted)" }} />
@@ -169,7 +169,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     <div className="flex h-screen bg-background overflow-hidden">
       {/* Desktop sidebar */}
       <aside
-        className="hidden md:flex flex-col w-56 flex-shrink-0 border-r"
+        className="hidden md:flex flex-col w-56 shrink-0 border-r"
         style={{
           background: "var(--evven-background)",
           borderColor: "var(--evven-border)",
@@ -219,7 +219,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* Mobile topbar */}
         <header
-          className="md:hidden flex items-center justify-between px-4 py-3 border-b flex-shrink-0"
+          className="md:hidden flex items-center justify-between px-4 py-3 border-b shrink-0"
           style={{
             background: "var(--evven-background)",
             borderColor: "var(--evven-border)",

@@ -69,7 +69,7 @@
   --font-sans: "Satoshi", sans-serif;
   --font-heading: "Xanh Mono", monospace;
   --font-mono: "JetBrains Mono", monospace;
-  --font-hero-heading : "Dancing Script", cursive;
+  --font-hero-heading : "Baskervville", latin;
 }
 
 ::selection {
@@ -156,6 +156,12 @@
 .font-heading {
   font-family: var(--font-heading);
   font-weight: 400;
+}
+
+.hero-main-text {
+  font-family: var(--font-hero-heading);
+  font-style: italic;
+  letter-spacing: -0.05em;
 }
 
 .font-mono {

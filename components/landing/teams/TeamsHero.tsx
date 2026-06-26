@@ -150,7 +150,7 @@ export function TeamsHero() {
 
           <h1
             ref={headingRef}
-            className="font-hero-heading text-7xl font-black leading-[1] text-slate-900 md:text-7xl lg:text-[6.5rem]"
+            className="hero-main-text text-7xl font-black leading-[1] text-slate-900 md:text-7xl lg:text-[6.5rem]"
           >
             Shared costs.
             <br />

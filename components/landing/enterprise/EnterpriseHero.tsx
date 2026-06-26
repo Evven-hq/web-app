@@ -147,7 +147,7 @@ export function EnterpriseHero() {
 
           <h1
             ref={headingRef}
-            className="text-7xl font-black text-slate-900 md:text-7xl lg:text-[6.5rem] leading-none whitespace-nowrap"
+            className="hero-main-text text-7xl font-black text-slate-900 md:text-7xl lg:text-[6.5rem] leading-none whitespace-nowrap"
           >
             Expense control,
             <br />

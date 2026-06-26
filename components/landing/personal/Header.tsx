@@ -156,7 +156,7 @@ export default function Header() {
                 >
                   {[
                     { href: "/", label: "Personal" },
-                    { href: "/teams",    label: "Teams" },
+                    { href: "/teams", label: "Teams" },
                     { href: "/enterprise", label: "Enterprise" },
                   ].map(({ href, label }) => (
                     <motion.div

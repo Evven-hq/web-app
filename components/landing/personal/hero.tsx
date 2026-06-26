@@ -154,7 +154,7 @@ export function Hero() {
 
           <h1
             ref={headingRef}
-            className="font-hero-heading text-7xl font-black leading-[1] text-slate-900 md:text-7xl lg:text-[6.5rem]"
+            className="hero-main-text text-7xl font-black leading-[1] text-slate-900 md:text-7xl lg:text-[6.5rem] tracking-tighter"
           >
             Split bills.
             <br />
@@ -166,8 +166,8 @@ export function Hero() {
             className="mt-10 max-w-[520px] text-lg leading-[1.75] text-slate-700"
           >
             Stop doing math in the group chat. Evven tracks every shared expense
-            automatically, settles balances instantly, and keeps the &quot;you still
-            owe me&quot; conversations out of your friendships.
+            automatically, settles balances instantly, and keeps the &quot;you
+            still owe me&quot; conversations out of your friendships.
           </p>
 
           <div ref={buttonsRef} className="mt-14 flex items-center gap-6">

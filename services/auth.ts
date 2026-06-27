@@ -34,3 +34,10 @@ export async function googleLogin(credential: string): Promise<AuthResponse> {
     const response = await api.post("/auth/google", { token: credential });
     return response.data;
 }
+
+export async function refreshSession(refreshToken: string): Promise<AuthResponse> {
+    const response = await api.post("/auth/refresh", {
+        refresh_token: refreshToken,
+    });
+    return response.data;
+}

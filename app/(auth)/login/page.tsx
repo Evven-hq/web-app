@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,7 +13,10 @@ import { GoogleSignInButton } from "@/components/auth/GoogleSignInButton";
 
 export default function Login() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const login = useAuthStore((state) => state.login);
+  const reason = searchParams.get("reason");
+  const isSessionExpired = reason === "session-expired";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -42,9 +45,18 @@ export default function Login() {
 
           <div className="rounded-3xl border border-border/40 bg-card/60 backdrop-blur-xl p-8 shadow-xl ring-1 ring-white/10">
 
-            <div className="text-center mb-8">
+          <div className="text-center mb-8">
+              {isSessionExpired && (
+                <div className="mb-4 rounded-2xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-left text-sm text-amber-200">
+                  Your desktop session expired or the token was unavailable. Sign in again to keep Evven open.
+                </div>
+              )}
               <h1 className="text-3xl font-bold tracking-tight mb-2">Welcome back!</h1>
-              <p className="text-muted-foreground text-sm">Enter your credentials to continue</p>
+              <p className="text-muted-foreground text-sm">
+                {isSessionExpired
+                  ? "We saved your place. Just sign in again to continue."
+                  : "Enter your credentials to continue"}
+              </p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-5">

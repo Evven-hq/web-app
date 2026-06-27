@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { JetBrains_Mono , Xanh_Mono ,Homemade_Apple, Baskervville } from 'next/font/google';
 import AuthProvider from "@/components/shared/auth-provider";
+import DesktopVersionBadge from "@/components/shared/desktop-version-badge";
 
 const jetBrains = JetBrains_Mono({
   subsets: ['latin'],
@@ -64,6 +65,7 @@ export default function RootLayout({
         <ThemeProvider>
           <AuthProvider>
             {children}
+            <DesktopVersionBadge />
           </AuthProvider>
         </ThemeProvider>
       </body>

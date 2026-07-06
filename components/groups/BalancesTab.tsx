@@ -26,14 +26,12 @@ function getInitials(name: string) {
 export function BalancesTab({
   balances,
   currentUserId,
-  payableDebts,
   members,
   userName,
   onSettle,
 }: {
   balances: GroupBalances;
   currentUserId?: string;
-  payableDebts: Record<string, number>;
   members: { user_id: string }[];
   userName: UserNameFn;
   onSettle: SettleFn;
@@ -42,10 +40,13 @@ export function BalancesTab({
     const colorIdx = members.findIndex((member) => member.user_id === uid) % COLORS.length;
     return COLORS[Math.max(0, colorIdx)];
   };
+  const balanceEntries = Object.entries(balances)
+    .map(([uid, bal]) => [uid, Number(bal)] as const)
+    .filter(([, amount]) => Number.isFinite(amount) && Math.abs(amount) > 0.01);
 
   return (
     <div className="h-full overflow-y-auto pr-1">
-      {Object.keys(balances).length === 0 ? (
+      {balanceEntries.length === 0 ? (
         <div
           className="rounded-2xl p-8 text-center border"
           style={{ background: "white", borderColor: "var(--evven-border)" }}
@@ -60,12 +61,10 @@ export function BalancesTab({
         </div>
       ) : (
         <div className="space-y-2 pb-8">
-          {Object.entries(balances).map(([uid, bal]) => {
-            const n = parseFloat(bal);
+          {balanceEntries.map(([uid, n]) => {
             const isMe = uid === currentUserId;
-            const payableAmount = payableDebts[uid] ?? 0;
-            const youOwe = payableAmount > 0;
-            const isPos = !youOwe && n > 0;
+            const displayAmount = Math.abs(n);
+            const youOwe = n < 0;
             const color = colorFor(uid);
 
             return (
@@ -88,21 +87,17 @@ export function BalancesTab({
                   <p
                     className="text-xs mt-0.5"
                     style={{
-                      color: youOwe ? "#A32D2D" : isPos ? "#0F6E56" : "#A32D2D",
+                      color: youOwe ? "#A32D2D" : "#0F6E56",
                     }}
                   >
-                    {n === 0 && !youOwe
-                      ? "settled"
-                      : youOwe
-                        ? `you owe ${formatAmount(payableAmount)}`
-                        : isPos
-                          ? `gets back ${formatAmount(Math.abs(n))}`
-                          : `owes ${formatAmount(Math.abs(n))}`}
+                    {youOwe
+                      ? `you owe ${formatAmount(displayAmount)}`
+                      : `owes you ${formatAmount(displayAmount)}`}
                   </p>
                 </div>
                 {!isMe && youOwe ? (
                   <button
-                    onClick={() => onSettle(uid, payableAmount)}
+                    onClick={() => onSettle(uid, displayAmount)}
                     className="text-xs px-3 py-1.5 rounded-lg font-medium text-white shrink-0"
                     style={{ background: "var(--evven-accent-primary)" }}
                   >

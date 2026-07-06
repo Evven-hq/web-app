@@ -2,31 +2,95 @@
 
 import { useState, type ReactNode } from "react";
 import { ArrowLeftRight, CheckCircle, Receipt, Split, Banknote } from "lucide-react";
-import type { GroupDebtBreakdown, Settlement } from "@/types";
+import type { GroupBalances, GroupDebtBreakdown, Settlement } from "@/types";
 import { formatAmount } from "./group-detail-utils";
-import { invertMatrix, matrixToRows, subtractMatrix } from "./group-detail-breakdown-utils";
 import type { UserNameFn } from "./group-detail-shared";
 
 type SettlementsSubTab = "past" | "final" | "receivables" | "breakdown";
+type SettlementEntry = {
+  targetId: string;
+  amount: number;
+};
+type SettlementRow = {
+  sourceId: string;
+  entries: SettlementEntry[];
+  total: number;
+};
 
 export function SettlementsTab({
   settlements,
+  balances,
   debtBreakdown,
   breakdownError,
+  currentUserId,
   userName,
   onReloadBreakdown,
 }: {
   settlements: Settlement[];
+  balances: GroupBalances;
   debtBreakdown: GroupDebtBreakdown | null;
   breakdownError: string | null;
+  currentUserId?: string;
   userName: UserNameFn;
   onReloadBreakdown: () => void;
 }) {
   const [subTab, setSubTab] = useState<SettlementsSubTab>("past");
 
-  const remainingMatrix = subtractMatrix(debtBreakdown?.simplified ?? null, debtBreakdown?.settled ?? null);
-  const finalSettlements = matrixToRows(remainingMatrix);
-  const receivableView = matrixToRows(invertMatrix(remainingMatrix));
+  const displayName = (userId: string) => (userId === currentUserId ? "You" : userName(userId));
+  const formatGiveLine = (giverId: string, receiverId: string) => {
+    if (giverId === currentUserId) return `you will give ${userName(receiverId)}`;
+    if (receiverId === currentUserId) return `${userName(giverId)} will give you`;
+    return `${userName(giverId)} will give ${userName(receiverId)}`;
+  };
+  const formatGaveLine = (giverId: string, receiverId: string) => {
+    if (giverId === currentUserId) return `you gave ${userName(receiverId)}`;
+    if (receiverId === currentUserId) return `${userName(giverId)} gave you`;
+    return `${userName(giverId)} gave ${userName(receiverId)}`;
+  };
+  const nettedBalanceEntries = Object.entries(balances)
+    .map(([userId, amount]) => [userId, Number(amount)] as const)
+    .filter(([userId, amount]) => userId !== currentUserId && Number.isFinite(amount) && Math.abs(amount) > 0.01);
+  const finalSettlements = (() => {
+    if (!currentUserId) return [];
+
+    const rows = new Map<string, SettlementRow>();
+
+    for (const [userId, amount] of nettedBalanceEntries) {
+      const sourceId = amount < 0 ? currentUserId : userId;
+      const targetId = amount < 0 ? userId : currentUserId;
+      const displayAmount = Math.abs(amount);
+      const row = rows.get(sourceId) ?? { sourceId, entries: [], total: 0 };
+
+      row.entries.push({ targetId, amount: displayAmount });
+      row.total += displayAmount;
+      rows.set(sourceId, row);
+    }
+
+    return [...rows.values()]
+      .map((row) => ({
+        ...row,
+        entries: row.entries.sort((left, right) => right.amount - left.amount),
+      }))
+      .sort((left, right) => right.total - left.total);
+  })();
+  const receivableView = (() => {
+    if (!currentUserId) return [];
+
+    const entries = nettedBalanceEntries
+      .filter(([, amount]) => amount > 0)
+      .map(([userId, amount]) => ({ targetId: userId, amount }))
+      .sort((left, right) => right.amount - left.amount);
+
+    if (entries.length === 0) return [];
+
+    return [
+      {
+        sourceId: currentUserId,
+        entries,
+        total: entries.reduce((sum, entry) => sum + entry.amount, 0),
+      },
+    ];
+  })();
 
   const detailedBreakdown = (() => {
     if (!debtBreakdown?.breakdown) return [];
@@ -57,9 +121,9 @@ export function SettlementsTab({
     label: string;
     icon: typeof Banknote;
   }> = [
-    { key: "past", label: "Past settlements", icon: CheckCircle },
+    { key: "past", label: "Settled", icon: CheckCircle },
     { key: "final", label: "Final settlements", icon: ArrowLeftRight },
-    { key: "receivables", label: "Receivables", icon: Split },
+    { key: "receivables", label: "Will receive", icon: Split },
     { key: "breakdown", label: "Expense breakdown", icon: Receipt },
   ];
 
@@ -101,10 +165,8 @@ export function SettlementsTab({
                     style={{ background: "white", borderColor: "var(--evven-border)" }}
                   >
                     <CheckCircle size={15} style={{ color: "#0F6E56" }} className="shrink-0" />
-                    <p className="text-sm flex-1" style={{ color: "var(--evven-text-primary)" }}>
-                      <span className="font-medium">{userName(settlement.payer_id)}</span>
-                      {" paid "}
-                      <span className="font-medium">{userName(settlement.receiver_id)}</span>
+                    <p className="text-sm flex-1 font-medium" style={{ color: "var(--evven-text-primary)" }}>
+                      {formatGaveLine(settlement.payer_id, settlement.receiver_id)}
                     </p>
                     <span className="text-sm font-semibold" style={{ color: "#0F6E56" }}>
                       {formatAmount(settlement.amount)}
@@ -113,7 +175,7 @@ export function SettlementsTab({
                 ))}
               </div>
             ) : (
-              <EmptyState title="No past settlements" description="Settlements you record will show up here." />
+              <EmptyState title="No settled payments" description="Payments you mark as settled will show up here." />
             )}
           </div>
         )}
@@ -131,10 +193,10 @@ export function SettlementsTab({
                     <div className="flex items-start justify-between gap-3 mb-3">
                       <div>
                         <p className="text-sm font-semibold" style={{ color: "var(--evven-text-primary)" }}>
-                          {userName(sourceId)}
+                          {displayName(sourceId)}
                         </p>
                         <p className="text-xs mt-0.5" style={{ color: "var(--evven-text-muted)" }}>
-                          Pays {entries.length} member{entries.length !== 1 ? "s" : ""}
+                          Will give to {entries.length} member{entries.length !== 1 ? "s" : ""}
                         </p>
                       </div>
                       <span
@@ -152,10 +214,8 @@ export function SettlementsTab({
                           className="flex items-center justify-between gap-3 rounded-xl px-3 py-2.5"
                           style={{ background: "var(--evven-surface)" }}
                         >
-                          <p className="text-sm" style={{ color: "var(--evven-text-primary)" }}>
-                            <span className="font-medium">{userName(sourceId)}</span>
-                            {" pays "}
-                            <span className="font-medium">{userName(targetId)}</span>
+                          <p className="text-sm font-medium" style={{ color: "var(--evven-text-primary)" }}>
+                            {formatGiveLine(sourceId, targetId)}
                           </p>
                           <span className="text-sm font-semibold shrink-0" style={{ color: "var(--evven-text-primary)" }}>
                             {formatAmount(amount)}
@@ -167,7 +227,7 @@ export function SettlementsTab({
                 ))}
               </div>
             ) : (
-              <EmptyState title="No final settlements" description="Once debt is simplified, the payment map appears here." />
+              <EmptyState title="No final settlements" description="Unsettled balances will show up here." />
             )}
           </div>
         )}
@@ -185,10 +245,10 @@ export function SettlementsTab({
                     <div className="flex items-start justify-between gap-3 mb-3">
                       <div>
                         <p className="text-sm font-semibold" style={{ color: "var(--evven-text-primary)" }}>
-                          {userName(sourceId)}
+                          {displayName(sourceId)}
                         </p>
                         <p className="text-xs mt-0.5" style={{ color: "var(--evven-text-muted)" }}>
-                          Gets from {entries.length} member{entries.length !== 1 ? "s" : ""}
+                          Will receive from {entries.length} member{entries.length !== 1 ? "s" : ""}
                         </p>
                       </div>
                       <span
@@ -206,10 +266,8 @@ export function SettlementsTab({
                           className="flex items-center justify-between gap-3 rounded-xl px-3 py-2.5"
                           style={{ background: "var(--evven-surface)" }}
                         >
-                          <p className="text-sm" style={{ color: "var(--evven-text-primary)" }}>
-                            <span className="font-medium">{userName(targetId)}</span>
-                            {" pays "}
-                            <span className="font-medium">{userName(sourceId)}</span>
+                          <p className="text-sm font-medium" style={{ color: "var(--evven-text-primary)" }}>
+                            {formatGiveLine(targetId, sourceId)}
                           </p>
                           <span className="text-sm font-semibold shrink-0" style={{ color: "var(--evven-text-primary)" }}>
                             {formatAmount(amount)}
@@ -221,7 +279,7 @@ export function SettlementsTab({
                 ))}
               </div>
             ) : (
-              <EmptyState title="No receivables" description="This view mirrors the final settlement map in reverse." />
+              <EmptyState title="Nothing to receive" description="Members who will give you money will show up here." />
             )}
           </div>
         )}
@@ -260,7 +318,7 @@ export function SettlementsTab({
             ) : detailedBreakdown.length === 0 ? (
               <EmptyState
                 title="No breakdown to show"
-                description="Add a few expenses and their splits to see who owes whom."
+                description="Add a few expenses and their splits to see who will give whom."
                 icon={<Receipt size={18} style={{ color: "var(--evven-text-muted)" }} />}
               />
             ) : (
@@ -274,10 +332,10 @@ export function SettlementsTab({
                     <div className="flex items-start justify-between gap-3 mb-3">
                       <div>
                         <p className="text-sm font-semibold" style={{ color: "var(--evven-text-primary)" }}>
-                          {userName(debtorId)}
+                          {displayName(debtorId)}
                         </p>
                         <p className="text-xs mt-0.5" style={{ color: "var(--evven-text-muted)" }}>
-                          Owes across {creditors.length} creditor{creditors.length !== 1 ? "s" : ""}
+                          Will give to {creditors.length} member{creditors.length !== 1 ? "s" : ""}
                         </p>
                       </div>
                       <span
@@ -300,7 +358,7 @@ export function SettlementsTab({
                               className="text-xs font-semibold uppercase tracking-widest"
                               style={{ color: "var(--evven-text-muted)" }}
                             >
-                              To {userName(creditorId)}
+                              Will give {displayName(creditorId)}
                             </p>
                             <p className="text-xs font-medium" style={{ color: "var(--evven-text-primary)" }}>
                               {formatAmount(total)}

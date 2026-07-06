@@ -7,17 +7,17 @@ import type { SettleFn, UserNameFn } from "./group-detail-shared";
 export function BalanceSummary({
   balances,
   currentUserId,
-  payableDebts,
   userName,
   onSettle,
 }: {
   balances: GroupBalances;
   currentUserId?: string;
-  payableDebts: Record<string, number>;
   userName: UserNameFn;
   onSettle: SettleFn;
 }) {
-  const myBalances = Object.entries(balances).filter(([uid]) => uid !== currentUserId);
+  const myBalances = Object.entries(balances)
+    .map(([uid, bal]) => [uid, Number(bal)] as const)
+    .filter(([uid, amount]) => uid !== currentUserId && Number.isFinite(amount) && Math.abs(amount) > 0.01);
 
   if (myBalances.length === 0) return null;
 
@@ -33,12 +33,10 @@ export function BalanceSummary({
         Your balances
       </p>
       <div className="space-y-2">
-        {Object.entries(balances)
-          .filter(([uid]) => uid !== currentUserId)
-          .map(([uid, bal]) => {
-            const n = parseFloat(bal);
-            const payableAmount = payableDebts[uid] ?? 0;
-            const youOwe = payableAmount > 0;
+        {myBalances
+          .map(([uid, n]) => {
+            const youOwe = n < 0;
+            const displayAmount = Math.abs(n);
             return (
               <div key={uid} className="flex items-center justify-between">
                 <span className="text-sm" style={{ color: "var(--evven-text-primary)" }}>
@@ -50,12 +48,12 @@ export function BalanceSummary({
                     style={{ color: youOwe ? "#A32D2D" : "#0F6E56" }}
                   >
                     {youOwe
-                      ? `you owe ${formatAmount(payableAmount)}`
-                      : `owes you ${formatAmount(Math.abs(n))}`}
+                      ? `you owe ${formatAmount(displayAmount)}`
+                      : `owes you ${formatAmount(displayAmount)}`}
                   </span>
                   {youOwe ? (
                     <button
-                      onClick={() => onSettle(uid, payableAmount)}
+                      onClick={() => onSettle(uid, displayAmount)}
                       className="text-xs px-2.5 py-1 rounded-lg font-medium text-white"
                       style={{ background: "var(--evven-accent-primary)" }}
                     >

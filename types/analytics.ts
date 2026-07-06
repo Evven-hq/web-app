@@ -4,5 +4,5 @@ export interface PersonalAnalytics {
   spending_by_category: Record<string, number>;
 }
 
-// Map of user_id → net balance string (positive = owed to you, negative = you owe)
-export type GroupBalances = Record<string, string>;
+// Map of user_id → net balance (positive = owed to you, negative = you owe)
+export type GroupBalances = Record<string, string | number>;

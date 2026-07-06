@@ -7,7 +7,7 @@ import {
   getGroup,
   getGroupMembers,
   getGroupExpenses,
-  getGroupBalances,
+  getUserBalanceInGroup,
   getGroupDebtBreakdown,
   createGroupExpense,
   updateGroupExpense,
@@ -20,7 +20,6 @@ import {
 } from "@/services/groups";
 import { useAuthStore } from "@/store/auth-store";
 import { formatAmount, splitEvenly } from "@/components/groups/group-detail-utils";
-import { subtractMatrix } from "@/components/groups/group-detail-breakdown-utils";
 import {
   BalanceSummary,
   BalancesTab,
@@ -135,7 +134,7 @@ export default function GroupDetailPage() {
         await Promise.allSettled([
           getGroupMembers(groupID),
           getGroupExpenses(groupID),
-          getGroupBalances(groupID),
+          currentUserId ? getUserBalanceInGroup(groupID, currentUserId) : Promise.resolve({}),
           getGroupSettlements(groupID),
           getGroupDebtBreakdown(groupID),
         ]);
@@ -195,7 +194,7 @@ export default function GroupDetailPage() {
     } finally {
       setLoading(false);
     }
-  }, [groupID]);
+  }, [groupID, currentUserId]);
 
   useEffect(() => {
     const timeoutId = window.setTimeout(() => {
@@ -272,8 +271,13 @@ export default function GroupDetailPage() {
   };
 
   const refreshBalances = async () => {
+    if (!currentUserId) {
+      setBalances({});
+      return;
+    }
+
     try {
-      setBalances(await getGroupBalances(groupID));
+      setBalances(await getUserBalanceInGroup(groupID, currentUserId));
     } catch {
       setSectionError("Balances could not be refreshed yet.");
     }
@@ -417,7 +421,7 @@ export default function GroupDetailPage() {
   };
 
   const handleSettle = async () => {
-    if (!settleReceiver || !settleAmount) return;
+    if (!settleReceiver || !settleAmount || !currentUserId) return;
     setSavingSettle(true);
     setSettleError("");
     try {
@@ -427,7 +431,7 @@ export default function GroupDetailPage() {
       });
       const [set, bal] = await Promise.all([
         getGroupSettlements(groupID),
-        getGroupBalances(groupID),
+        getUserBalanceInGroup(groupID, currentUserId),
       ]);
       setSettlements(set);
       setBalances(bal);
@@ -458,20 +462,6 @@ export default function GroupDetailPage() {
       ),
     [members]
   );
-
-  const payableDebts = (() => {
-    if (!currentUserId || !debtBreakdown) return {};
-
-    const remaining = subtractMatrix(debtBreakdown.simplified, debtBreakdown.settled);
-    const currentDebts = remaining[currentUserId];
-    if (!currentDebts) return {};
-
-    return Object.fromEntries(
-      Object.entries(currentDebts)
-        .map(([userId, amount]): [string, number] => [userId, Number(amount)])
-        .filter(([, amount]) => Number.isFinite(amount) && amount > 0.01)
-    );
-  })();
 
   const splitParticipantIds = (() => {
     const ids = new Set<string>();
@@ -550,7 +540,6 @@ export default function GroupDetailPage() {
           <BalanceSummary
             balances={balances}
             currentUserId={currentUserId}
-            payableDebts={payableDebts}
             userName={userName}
             onSettle={openSettle}
           />
@@ -575,7 +564,6 @@ export default function GroupDetailPage() {
             <BalancesTab
               balances={balances}
               currentUserId={currentUserId}
-              payableDebts={payableDebts}
               members={members}
               userName={userName}
               onSettle={openSettle}
@@ -585,8 +573,10 @@ export default function GroupDetailPage() {
           {tab === "settlements" && (
             <SettlementsTab
               settlements={settlements}
+              balances={balances}
               debtBreakdown={debtBreakdown}
               breakdownError={breakdownError}
+              currentUserId={currentUserId}
               userName={userName}
               onReloadBreakdown={refreshBreakdown}
             />

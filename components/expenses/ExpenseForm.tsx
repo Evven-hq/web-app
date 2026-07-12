@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
-import type { PersonalExpenseCreate } from "@/types";
+import type { PersonalExpenseCreate, SettlementDirection } from "@/types";
+import { FriendExpenseFields } from "@/components/expenses/friends";
 import { EXPENSE_CATEGORIES } from "@/lib/expense-categories";
 
 export interface ExpenseFormValues {
@@ -11,6 +12,9 @@ export interface ExpenseFormValues {
   category: string;
   date: string;
   notes: string;
+  ghost_id: string;
+  settlement_direction: SettlementDirection;
+  settlement_amount: string;
 }
 
 interface ExpenseFormProps {
@@ -25,6 +29,9 @@ const DEFAULT_VALUES: ExpenseFormValues = {
   category: "",
   date: new Date().toISOString().slice(0, 10),
   notes: "",
+  ghost_id: "",
+  settlement_direction: "they_owe",
+  settlement_amount: "",
 };
 
 export function ExpenseForm({
@@ -37,15 +44,36 @@ export function ExpenseForm({
   const [error, setError] = useState("");
 
   const updateValue = (field: keyof ExpenseFormValues, value: string) => {
-    setValues((current) => ({ ...current, [field]: value }));
+    setValues((current) => {
+      const next = { ...current, [field]: value };
+
+      if (
+        field === "amount" &&
+        current.ghost_id &&
+        (!current.settlement_amount || current.settlement_amount === current.amount)
+      ) {
+        next.settlement_amount = value;
+      }
+
+      return next;
+    });
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const amount = Number(values.amount);
+    const settlementAmount = Number(values.settlement_amount || values.amount);
 
     if (!values.title.trim() || !Number.isFinite(amount) || amount <= 0) {
       setError("Enter a title and an amount greater than zero.");
+      return;
+    }
+
+    if (
+      values.ghost_id &&
+      (!Number.isFinite(settlementAmount) || settlementAmount <= 0)
+    ) {
+      setError("Enter a settlement amount greater than zero.");
       return;
     }
 
@@ -53,13 +81,21 @@ export function ExpenseForm({
     setError("");
 
     try {
-      await onSubmit({
+      const payload: PersonalExpenseCreate = {
         title: values.title.trim(),
         amount,
         category: values.category.trim() || undefined,
         date: values.date ? new Date(`${values.date}T00:00:00`).toISOString() : undefined,
         notes: values.notes.trim() || undefined,
-      });
+      };
+
+      if (values.ghost_id) {
+        payload.ghost_id = values.ghost_id;
+        payload.settlement_direction = values.settlement_direction;
+        payload.settlement_amount = settlementAmount;
+      }
+
+      await onSubmit(payload);
     } catch {
       setError("Could not save this expense. Please try again.");
     } finally {
@@ -164,6 +200,21 @@ export function ExpenseForm({
           style={{ background: "var(--evven-surface)", borderColor: "var(--evven-border)" }}
         />
       </div>
+
+      <FriendExpenseFields
+        amount={values.amount}
+        values={{
+          ghost_id: values.ghost_id,
+          settlement_direction: values.settlement_direction,
+          settlement_amount: values.settlement_amount,
+        }}
+        onChange={(updates) =>
+          setValues((current) => ({
+            ...current,
+            ...updates,
+          }))
+        }
+      />
 
       {error && <p className="text-sm text-destructive">{error}</p>}
 

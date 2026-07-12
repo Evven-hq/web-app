@@ -22,6 +22,9 @@ export default function EditExpensePage() {
           category: expense.category ?? "",
           date: expense.date ? expense.date.slice(0, 10) : "",
           notes: expense.notes ?? "",
+          ghost_id: expense.ghost_id ?? expense.ghost?.id ?? "",
+          settlement_direction: expense.settlement_direction ?? "they_owe",
+          settlement_amount: expense.settlement_amount ?? "",
         });
       })
       .catch(() => setError("Could not load this expense."));

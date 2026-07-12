@@ -3,12 +3,42 @@ export interface PersonalExpense {
   user_id: string;
   group_id: string | null;
   group_expense_id: string | null;
+  ghost_id?: string | null;
+  ghost?: Ghost | null;
   title: string;
   amount: string;
   category: string | null;
   date: string | null;
   notes: string | null;
+  settlement_direction?: SettlementDirection | null;
+  settlement_amount?: string | null;
   created_at: string;
+}
+
+export type SettlementDirection = "you_owe" | "they_owe";
+
+export interface Ghost {
+  id: string;
+  name: string;
+  user_code?: string | null;
+  shadow_group_id?: string | null;
+  net_balance?: string | number | null;
+  status?: string | null;
+  expenses?: PersonalExpense[];
+}
+
+export interface GhostCreatePayload {
+  name: string;
+}
+
+export interface GhostBalance {
+  ghost_id?: string;
+  net_balance: string | number;
+  status?: string | null;
+}
+
+export interface GhostDetail extends Ghost {
+  expenses: PersonalExpense[];
 }
  
 export interface GroupExpense {
@@ -35,6 +65,9 @@ export interface PersonalExpenseCreate {
   category?: string;
   date?: string;
   notes?: string;
+  ghost_id?: string;
+  settlement_direction?: SettlementDirection;
+  settlement_amount?: number;
 }
  
 export interface PersonalExpenseUpdate {
@@ -43,6 +76,9 @@ export interface PersonalExpenseUpdate {
   category?: string;
   date?: string;
   notes?: string;
+  ghost_id?: string | null;
+  settlement_direction?: SettlementDirection | null;
+  settlement_amount?: number | null;
 }
  
 export interface GroupExpenseCreate {

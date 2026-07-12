@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { useEffect, useMemo, useState } from "react";
 import { Edit3, Loader2, Plus, Receipt, Search, Trash2 } from "lucide-react";
+import { FriendSummaryLine, getGhostExpenseSummary } from "@/components/expenses/friends";
 import { deletePersonalExpense, getPersonalExpenses } from "@/services/expenses";
-import type { PersonalExpense } from "@/types";
 import { EXPENSE_CATEGORIES, getCategoryMeta } from "@/lib/expense-categories";
+import type { PersonalExpense } from "@/types";
 
 function formatAmount(amount: string) {
   return `₹${Number(amount).toLocaleString("en-IN", { maximumFractionDigits: 2 })}`;
@@ -52,7 +53,7 @@ export default function ExpensesPage() {
     return expenses.filter((expense) => {
       const matchesQuery =
         !normalizedQuery ||
-        [expense.title, expense.category, expense.notes]
+        [expense.title, expense.category, expense.notes, expense.ghost?.name, getGhostExpenseSummary(expense)]
           .filter(Boolean)
           .some((value) => value?.toLowerCase().includes(normalizedQuery));
 
@@ -78,7 +79,7 @@ export default function ExpensesPage() {
       setDeletingId(null);
     }
   };
-  
+
   return (
     <div className="min-h-full bg-background">
       <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 sm:py-10">
@@ -137,9 +138,15 @@ export default function ExpensesPage() {
             onClick={() => setCategoryFilter("all")}
             className="rounded-full px-3 py-1.5 text-xs font-medium transition-all"
             style={{
-              background: categoryFilter === "all" ? "var(--color-background-primary, var(--evven-background))" : "transparent",
+              background:
+                categoryFilter === "all"
+                  ? "var(--color-background-primary, var(--evven-background))"
+                  : "transparent",
               color: categoryFilter === "all" ? "var(--evven-text-primary)" : "var(--evven-text-muted)",
-              border: categoryFilter === "all" ? "0.5px solid var(--evven-border)" : "0.5px solid transparent",
+              border:
+                categoryFilter === "all"
+                  ? "0.5px solid var(--evven-border)"
+                  : "0.5px solid transparent",
             }}
           >
             All
@@ -157,10 +164,7 @@ export default function ExpensesPage() {
                     categoryFilter === cat.value
                       ? "var(--color-background-primary, var(--evven-background))"
                       : "transparent",
-                  color:
-                    categoryFilter === cat.value
-                      ? cat.text
-                      : "var(--evven-text-muted)",
+                  color: categoryFilter === cat.value ? cat.text : "var(--evven-text-muted)",
                   border:
                     categoryFilter === cat.value
                       ? "0.5px solid var(--evven-border)"
@@ -246,6 +250,7 @@ export default function ExpensesPage() {
                     <p className="mt-0.5 truncate text-xs text-muted-foreground">
                       {categoryMeta.label} · {formatDate(expense)}
                     </p>
+                    <FriendSummaryLine expense={expense} />
                   </div>
                   <span className="shrink-0 text-sm font-semibold" style={{ fontFamily: "var(--font-mono)" }}>
                     {formatAmount(expense.amount)}

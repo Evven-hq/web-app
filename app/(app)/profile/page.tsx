@@ -2,18 +2,10 @@
 
 import { useState } from "react";
 import { Check, Copy, Loader2, UserRound } from "lucide-react";
+import { FriendsSection, getInitials } from "@/components/expenses/friends";
 import { updateCurrentUser } from "@/services/users";
 import { useAuthStore } from "@/store/auth-store";
 import type { User } from "@/types/user";
-
-function getInitials(name: string) {
-  return name
-    .split(" ")
-    .map((part) => part[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
-}
 
 export default function ProfilePage() {
   const user = useAuthStore((state) => state.user);
@@ -77,7 +69,7 @@ function ProfileEditor({
         </div>
 
         <div
-          className="mb-4 flex items-center gap-4 rounded-[var(--evven-radius-card)] p-5"
+          className="mb-4 flex items-center gap-4 rounded-(--evven-radius-card) p-5"
           style={{
             background: "var(--color-background-primary, var(--evven-background))",
             border: "0.5px solid var(--evven-border)",
@@ -108,7 +100,7 @@ function ProfileEditor({
         </div>
 
         <div
-          className="mb-4 rounded-[var(--evven-radius-card)] p-5"
+          className="mb-4 rounded-(--evven-radius-card) p-5"
           style={{
             background: "var(--color-background-primary, var(--evven-background))",
             border: "0.5px solid var(--evven-border)",
@@ -122,7 +114,7 @@ function ProfileEditor({
           </p>
           <button
             onClick={() => void copyCode()}
-            className="flex w-full items-center justify-between rounded-[var(--evven-radius-card)] px-4 py-3 text-sm font-semibold"
+            className="flex w-full items-center justify-between rounded-(--evven-radius-card) px-4 py-3 text-sm font-semibold"
             style={{ background: "var(--evven-surface)" }}
           >
             <span style={{ fontFamily: "var(--font-mono)" }}>{user.user_code}</span>
@@ -130,9 +122,11 @@ function ProfileEditor({
           </button>
         </div>
 
+        <FriendsSection />
+
         <form
           onSubmit={handleSubmit}
-          className="rounded-[var(--evven-radius-card)] p-5 sm:p-6"
+          className="rounded-(--evven-radius-card) p-5 sm:p-6"
           style={{
             background: "var(--color-background-primary, var(--evven-background))",
             border: "0.5px solid var(--evven-border)",
@@ -146,7 +140,7 @@ function ProfileEditor({
             <input
               value={name}
               onChange={(event) => setName(event.target.value)}
-              className="w-full rounded-[var(--evven-radius-card)] px-4 py-2.5 text-sm outline-none"
+              className="w-full rounded-(--evven-radius-card) px-4 py-2.5 text-sm outline-none"
               style={{
                 background: "var(--evven-surface)",
                 border: "0.5px solid var(--evven-border)",
@@ -163,7 +157,7 @@ function ProfileEditor({
               onChange={(event) => setProfilePicture(event.target.value)}
               type="url"
               placeholder="https://..."
-              className="w-full rounded-[var(--evven-radius-card)] px-4 py-2.5 text-sm outline-none"
+              className="w-full rounded-(--evven-radius-card) px-4 py-2.5 text-sm outline-none"
               style={{
                 background: "var(--evven-surface)",
                 border: "0.5px solid var(--evven-border)",

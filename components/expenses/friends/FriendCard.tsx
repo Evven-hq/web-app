@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { ArrowRight, Trash2 } from "lucide-react";
 import type { Ghost } from "@/types";
 import { getGhostBalanceLabel, getGhostBalanceState, getInitials } from "./friend-utils";
@@ -9,6 +10,7 @@ interface FriendCardProps {
   friend: Ghost;
   selected?: boolean;
   onSelect?: () => void;
+  href?: string;
   onDelete?: () => void;
   compact?: boolean;
 }
@@ -17,6 +19,7 @@ export function FriendCard({
   friend,
   selected = false,
   onSelect,
+  href,
   onDelete,
   compact = false,
 }: FriendCardProps) {
@@ -37,7 +40,20 @@ export function FriendCard({
         border: "0.5px solid var(--evven-border)",
       }}
     >
-      {onSelect ? (
+      {href ? (
+        <Link
+          href={href}
+          className="block w-full text-left outline-none transition active:scale-[0.99] focus-visible:ring-2 focus-visible:ring-[var(--evven-accent-primary)] focus-visible:ring-inset"
+        >
+          <CardInner
+            friend={friend}
+            selected={selected}
+            compact={compact}
+            balanceState={balanceState}
+            selectable
+          />
+        </Link>
+      ) : onSelect ? (
         <button
           type="button"
           onClick={onSelect}

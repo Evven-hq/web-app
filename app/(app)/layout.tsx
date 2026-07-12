@@ -5,12 +5,13 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/auth-store";
 import {
-  LayoutDashboard,
+  House,
+  ReceiptText,
   Users,
-  UserRound,
-  Receipt,
-  User,
+  HandCoins,
+  CircleUserRound,
   LogOut,
+  Plus,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -22,11 +23,11 @@ type DockItem = {
 };
 
 const DOCK_ITEMS: DockItem[] = [
-  { href: "/dashboard", label: "Home", icon: LayoutDashboard },
+  { href: "/dashboard", label: "Dashboard", icon: House },
+  { href: "/expenses", label: "Expenses", icon: ReceiptText },
   { href: "/groups", label: "Groups", icon: Users },
-  { href: "/friends", label: "Friends", icon: UserRound },
-  { href: "/expenses", label: "Expenses", icon: Receipt },
-  { href: "/profile", label: "Profile", icon: User },
+  { href: "/friends", label: "Friends", icon: HandCoins },
+  { href: "/profile", label: "Profile", icon: CircleUserRound },
 ] as const;
 
 function getInitials(name: string) {
@@ -56,7 +57,7 @@ function Dock({ pathname, variant }: { pathname: string; variant: "mobile" | "de
     >
       <div
         className={cn(
-          "pointer-events-auto grid items-center rounded-(--evven-radius-hero) border shadow-2xl shadow-black/10",
+          "pointer-events-auto grid items-center rounded-(--evven-radius-hero) border shadow-2xl shadow-black/20",
           isDesktop
             ? "grid-flow-col auto-cols-max gap-1.5 px-3 py-2.5"
             : "mx-auto h-16 max-w-md grid-cols-5 gap-1 px-3 py-0"
@@ -213,11 +214,13 @@ function DesktopLogoutButton({ onLogout }: { onLogout: () => void }) {
 
 function MobileFloatingChrome({
   user,
+  showAddExpense,
 }: {
   user: ReturnType<typeof useAuthStore.getState>["user"];
+  showAddExpense: boolean;
 }) {
   return (
-    <div className="pointer-events-none fixed inset-x-0 top-0 z-40 flex items-start px-4 pt-4 md:hidden">
+    <div className="pointer-events-none fixed inset-x-0 top-0 z-40 flex items-start justify-between px-4 pt-4 md:hidden">
       <Link
         href="/profile"
         className="pointer-events-auto flex size-11 items-center justify-center overflow-hidden rounded-full text-xs font-semibold shadow-lg"
@@ -244,6 +247,16 @@ function MobileFloatingChrome({
           "?"
         )}
       </Link>
+
+      {showAddExpense ? (
+        <Link
+          href="/expenses/new"
+          aria-label="Add expense"
+          className="pointer-events-auto inline-flex size-11 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition-all hover:opacity-90"
+        >
+          <Plus size={16} />
+        </Link>
+      ) : null}
     </div>
   );
 }
@@ -281,7 +294,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex h-screen overflow-hidden bg-background">
       <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
-        <MobileFloatingChrome user={user} />
+        <MobileFloatingChrome user={user} showAddExpense={pathname === "/dashboard"} />
         <DesktopIdentityChip user={user} />
 
         <main className="flex-1 overflow-y-auto pb-24 pt-16 md:pb-32 md:pt-24">

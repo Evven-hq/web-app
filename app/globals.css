@@ -1,13 +1,9 @@
 @import "tailwindcss";
 
 :root {
-  /* Light Theme - Evven Premium Aesthetic */
-
-  /* using --evven-... for consistent branding */
-
   --evven-background: #faf8f5;
   --evven-surface: #f5f3f0;
-  --evven-border: #e8e5e0;
+  --evven-border: #c4bfb7;
 
   --evven-text-primary: #1a1816;
   --evven-text-muted: #8b8480;
@@ -32,19 +28,17 @@
   font-family: var(--font-homemade-apple);
 }
 /* .dark {
- 
+  --evven-background: #2c2924;
+  --evven-surface: #262424;
+  --evven-border: #332c2c;
 
-  --evenup-background: #070606;
-  --evenup-surface: #1a1a1a;
-  --evenup-border: #2a2a2a;
+  --evven-text-primary: #ffffff;
+  --evven-text-muted: #888888;
+  --evven-text-inverse: #f1efe9;
 
-  --evenup-text-primary: #ffffff;
-  --evenup-text-muted: #888888;
-  --evenup-text-inverse: #111111;
-
-  --evenup-accent-hero: #ffffff;
-  --evenup-error: #e57373;
-  --evenup-accent-slate: #9ca3af;
+  --evven-accent-hero: #ffffff;
+  --evven-error: #e57373;
+  --evven-accent-slate: #9ca3af;
 } */
 
 @theme inline {
@@ -73,8 +67,8 @@
 }
 
 ::selection {
-  background: var(--evenup-text-primary);
-  color: var(--evenup-background);
+  background: var(--evven-text-primary);
+  color: var(--evven-background);
 }
 
 @layer base {

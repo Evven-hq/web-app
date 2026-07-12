@@ -223,9 +223,9 @@ export function FriendsWorkspace() {
                 )}
               </div>
             ) : (
-              filteredFriends.map((friend) => (
+              filteredFriends.map((friend, index) => (
                 <FriendCard
-                  key={friend.id}
+                  key={`${friend.id}-${index}`}
                   friend={friend}
                   selected={friend.id === visualSelectedFriendId}
                   onSelect={() => handleSelectFriend(friend.id)}

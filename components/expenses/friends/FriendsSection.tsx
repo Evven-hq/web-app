@@ -29,7 +29,7 @@ export function FriendsSection() {
 
   return (
     <section
-      className="mb-4 rounded-[var(--evven-radius-card)] p-5 sm:p-6"
+      className="mb-4 rounded-(--evven-radius-card) p-5 sm:p-6"
       style={{
         background: "var(--color-background-primary, var(--evven-background))",
         border: "0.5px solid var(--evven-border)",
@@ -63,7 +63,7 @@ export function FriendsSection() {
             value={search}
             onChange={(event) => setSearch(event.target.value)}
             placeholder="Search friends"
-            className="w-full rounded-[var(--evven-radius-card)] py-2.5 pl-10 pr-4 text-sm outline-none"
+            className="w-full rounded-(--evven-radius-card) py-2.5 pl-10 pr-4 text-sm outline-none"
             style={{
               background: "var(--evven-surface)",
               border: "0.5px solid var(--evven-border)",
@@ -86,7 +86,7 @@ export function FriendsSection() {
         </div>
       ) : filteredFriends.length === 0 ? (
         <div
-          className="rounded-[var(--evven-radius-card)] p-5 text-center"
+          className="rounded-(--evven-radius-card) p-5 text-center"
           style={{ background: "var(--evven-surface)" }}
         >
           <p className="text-sm font-medium">
@@ -100,11 +100,12 @@ export function FriendsSection() {
         </div>
       ) : (
         <div className="space-y-2">
-          {filteredFriends.map((friend) => (
+          {filteredFriends.map((friend, index) => (
             <FriendCard
-              key={friend.id}
+              key={`${friend.id}-${index}`}
               friend={friend}
               compact
+              href={`/friends?ghost_id=${friend.id}`}
               onDelete={() => void handleDelete(friend.id)}
             />
           ))}

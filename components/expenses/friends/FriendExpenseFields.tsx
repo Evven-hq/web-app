@@ -82,8 +82,8 @@ export function FriendExpenseFields({ amount, values, onChange }: FriendExpenseF
             }}
           >
             <option value="">{loading ? "Loading friends..." : "No friend selected"}</option>
-            {friends.map((friend) => (
-              <option key={friend.id} value={friend.id}>
+            {friends.map((friend, index) => (
+              <option key={`${friend.id}-${index}`} value={friend.id}>
                 {friend.name}
               </option>
             ))}

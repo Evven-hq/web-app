@@ -166,14 +166,14 @@ export default function DashboardPage() {
       <div className="mx-auto max-w-5xl px-4 py-6 sm:px-6 sm:py-10">
 
         {/* Header */}
-        <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-          <div className="min-w-0">
-            <p
+        <div className="relative mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+          <div className="min-w-0 sm:pr-0">
+            {/* <p
               className="text-xs font-semibold uppercase tracking-widest"
               style={{ color: "var(--evven-text-muted)" }}
             >
               Overview
-            </p>
+            </p> */}
             <h1 className="mt-2 flex min-w-0 flex-wrap items-end gap-x-2 gap-y-1 text-2xl font-medium leading-snug sm:text-[2rem]">
               <span className="shrink-0">{greeting()},</span>
               <span
@@ -202,11 +202,12 @@ export default function DashboardPage() {
 
           <Link
             href="/expenses/new"
-            className="inline-flex items-center justify-center shrink-0 rounded-xl bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground transition-all hover:opacity-90"
+            className="hidden shrink-0 items-center justify-center rounded-xl bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground transition-all hover:opacity-90 sm:inline-flex"
           >
             <Plus size={15} />
             Add expense
           </Link>
+
         </div>
 
         {/* Hero */}
@@ -214,33 +215,50 @@ export default function DashboardPage() {
           className="mb-4 overflow-hidden rounded-[30px] p-5 sm:p-6"
           style={{ background: "var(--evven-accent-primary)", color: "var(--evven-text-inverse)" }}
         >
-          <p className="max-w-xl text-xl font-medium leading-snug sm:text-2xl">
-            You&apos;ve spent {analytics ? formatAmount(analytics.total_spent) : "—"} across {groups.length} {groups.length === 1 ? "group" : "groups"} this month.
-          </p>
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+            <div className="max-w-2xl">
+              
+              <p className="text-xl font-medium leading-snug sm:text-2xl">
+                You&apos;ve spent {analytics ? formatAmount(analytics.total_spent) : "—"} across {groups.length} {groups.length === 1 ? "group" : "groups"} this month.
+              </p>
+              <p className="mt-3 max-w-xl text-sm leading-6 opacity-85">
+                Keep momentum going with a quick view of your activity, recent splits, and the next expense to log.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              <div
+                className="rounded-full border px-3 py-1.5 text-sm"
+                style={{ borderColor: "color-mix(in srgb, white 24%, transparent)", background: "color-mix(in srgb, white 10%, transparent)" }}
+              >
+                {analytics?.expense_count ?? 0} expenses
+              </div>
+              <div
+                className="rounded-full border px-3 py-1.5 text-sm"
+                style={{ borderColor: "color-mix(in srgb, white 24%, transparent)", background: "color-mix(in srgb, white 10%, transparent)" }}
+              >
+                {groups.length} active groups
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-5 flex flex-wrap items-center gap-3">
+            <Link
+              href="/expenses/new"
+              className="inline-flex items-center gap-2 rounded-full bg-background px-4 py-2.5 text-sm font-medium text-foreground transition-all hover:opacity-90"
+            >
+              <Plus size={15} />
+              Add expense
+            </Link>
+            <Link
+              href="/groups"
+              className="text-sm font-medium underline decoration-white/40 underline-offset-4 transition-opacity hover:opacity-80"
+            >
+              View groups
+            </Link>
+          </div>
         </div>
 
-        {/* Quick access */}
-        <div className="mb-4 grid grid-cols-4 gap-2 sm:gap-3">
-          {[
-            { label: "Groups", href: "/groups", icon: Users },
-            { label: "Expenses", href: "/expenses", icon: Receipt },
-            { label: "Profile", href: "/profile", icon: User },
-          ].map(({ label, href, icon: Icon }) => (
-            <Link
-              key={href}
-              href={href}
-              className="flex min-h-20 flex-col items-center justify-center gap-2 rounded-3xl px-2 text-center text-xs font-medium transition-opacity hover:opacity-80"
-              style={{
-                background: "var(--evven-surface)",
-                color: "var(--evven-text-primary)",
-                border: "0.5px solid var(--evven-border)",
-              }}
-            >
-              <Icon size={18} />
-              <span>{label}</span>
-            </Link>
-          ))}
-        </div>
 
         {/* Stat cards */}
         <div className="mb-5 grid gap-3 md:grid-cols-3">

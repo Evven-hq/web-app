@@ -221,7 +221,7 @@ Tracked informally in `notes/`:
 
 ## Contributing
 
-This is Evven's core team repo (Jagdeep, Krishna, Rohit, Keshav). General conventions to follow:
+This is Evven's core team repo (Jagdeep, Krishna, Rohit, Keshav, Omkar). General conventions to follow:
 
 - Match existing `--evven-*` token usage rather than hardcoding colors/spacing.
 - Keep pure UI/presentation changes scoped away from data-fetching or business logic in the same PR.

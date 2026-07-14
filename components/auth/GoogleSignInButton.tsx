@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Script from "next/script";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/auth-store";
+import { isAxiosError } from "axios";
 
 declare global {
   interface Window {
@@ -68,6 +69,11 @@ export function GoogleSignInButton() {
     return () => observer.disconnect();
   }, []);
 
+  const setErrorRef = useRef(setError);
+  useEffect(() => {
+    setErrorRef.current = setError;
+  }, [setError]);
+
   const initializeGoogle = useCallback(() => {
     if (!clientId || !window.google || !buttonRef.current) return;
 
@@ -75,12 +81,18 @@ export function GoogleSignInButton() {
       window.google.accounts.id.initialize({
         client_id: clientId,
         callback: async ({ credential }) => {
-          setError("");
+          setErrorRef.current(""); // was: setError("")
           try {
             await loginWithGoogleRef.current(credential);
             routerRef.current.push("/dashboard");
-          } catch {
-            setError("Google sign-in is not available yet.");
+          } catch (err) {
+            if (isAxiosError(err) && err.response?.data?.detail) {
+              setErrorRef.current(err.response.data.detail); // was: setError(...)
+            } else {
+              setErrorRef.current(
+                "Something went wrong with Google sign-in. Please try again.",
+              );
+            }
           }
         },
       });

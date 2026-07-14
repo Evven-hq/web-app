@@ -3,6 +3,7 @@
 import { CheckCircle, Loader2, X } from "lucide-react";
 import type { GroupExpense, ExpenseSplit } from "@/types";
 import { getCategoryMeta } from "@/lib/expense-categories";
+import { getPaymentModeMeta } from "@/lib/payment-modes";
 import { formatAmount } from "./group-detail-utils";
 import type { UserNameFn } from "./group-detail-shared";
 
@@ -27,6 +28,8 @@ export function ExpenseDetailsModal({
   onEditExpense: () => void;
   canEdit: boolean;
 }) {
+  const paymentModeMeta = getPaymentModeMeta(detailExpense.payment_mode);
+
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" onClick={onClose} />
@@ -63,7 +66,7 @@ export function ExpenseDetailsModal({
             </p>
           </div>
           {detailExpense.category && (
-            <div className="card col-span-2 rounded-2xl p-4">
+            <div className="card rounded-2xl p-4">
               <p className="text-xs mb-1" style={{ color: "var(--evven-text-muted)" }}>Category</p>
               <p className="text-base font-semibold flex items-center gap-2" style={{ color: "var(--evven-text-primary)" }}>
                 {(() => {
@@ -71,6 +74,15 @@ export function ExpenseDetailsModal({
                   return <Icon size={16} />;
                 })()}
                 {getCategoryMeta(detailExpense.category).label}
+              </p>
+            </div>
+          )}
+          {paymentModeMeta && (
+            <div className="card rounded-2xl p-4">
+              <p className="text-xs mb-1" style={{ color: "var(--evven-text-muted)" }}>Payment mode</p>
+              <p className="text-base font-semibold flex items-center gap-2" style={{ color: "var(--evven-text-primary)" }}>
+                <paymentModeMeta.icon size={16} />
+                {paymentModeMeta.label}
               </p>
             </div>
           )}

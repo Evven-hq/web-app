@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
-import type { Ghost, SettlementDirection } from "@/types";
+import type { Ghost, SettlementDirection, PaymentMode } from "@/types";
 import { formatMoney, getDefaultSettlementDirection } from "./friend-utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { getGhostExpenseDirectionLabel } from "./friend-utils";
+import { PAYMENT_MODES } from "@/lib/payment-modes";
 
 interface FriendSettlementDialogProps {
   friend: Ghost | null;
@@ -24,6 +25,7 @@ interface FriendSettlementDialogProps {
     amount: number;
     note?: string;
     direction: SettlementDirection;
+    payment_mode: PaymentMode;
   }) => Promise<void>;
 }
 
@@ -36,6 +38,7 @@ export function FriendSettlementDialog({
   const [amount, setAmount] = useState("");
   const [note, setNote] = useState("");
   const [direction, setDirection] = useState<SettlementDirection>("they_owe");
+  const [paymentMode, setPaymentMode] = useState<PaymentMode>("upi");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
@@ -56,6 +59,7 @@ export function FriendSettlementDialog({
         amount: nextAmount,
         note: note.trim() || undefined,
         direction,
+        payment_mode: paymentMode,
       });
       onOpenChange(false);
     } catch {
@@ -74,6 +78,7 @@ export function FriendSettlementDialog({
           setAmount(String(Math.abs(balance || 0) || ""));
           setDirection(getDefaultSettlementDirection(balance));
           setNote("");
+          setPaymentMode("upi");
           setError("");
         }
 
@@ -85,7 +90,10 @@ export function FriendSettlementDialog({
         onOpenChange(nextOpen);
       }}
     >
-      <DialogContent className="sm:max-w-md">
+      <DialogContent
+        className="sm:max-w-md bg-popover"
+        style={{ backgroundColor: "var(--popover, white)" }}
+      >
         <DialogHeader>
           <DialogTitle>Record settlement</DialogTitle>
           <DialogDescription>
@@ -129,6 +137,35 @@ export function FriendSettlementDialog({
                 step="0.01"
                 placeholder="0.00"
               />
+            </div>
+          </div>
+
+          <div>
+            <label className="mb-2 block text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+              Payment mode
+            </label>
+            <div className="flex flex-wrap gap-2">
+              {PAYMENT_MODES.map((mode) => {
+                const Icon = mode.icon;
+                const active = paymentMode === mode.value;
+
+                return (
+                  <button
+                    key={mode.value}
+                    type="button"
+                    onClick={() => setPaymentMode(mode.value)}
+                    className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-all"
+                    style={{
+                      background: active ? mode.bg : "var(--evven-surface)",
+                      color: active ? mode.text : "var(--evven-text-muted)",
+                      border: `1px solid ${active ? mode.bg : "var(--evven-border)"}`,
+                    }}
+                  >
+                    <Icon size={14} />
+                    {mode.label}
+                  </button>
+                );
+              })}
             </div>
           </div>
 

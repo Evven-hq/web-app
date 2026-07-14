@@ -3,7 +3,8 @@
 import { Loader2, Plus, CheckCircle, X } from "lucide-react";
 import type { Dispatch, SetStateAction } from "react";
 import { EXPENSE_CATEGORIES } from "@/lib/expense-categories";
-import type { GroupExpense } from "@/types";
+import { PAYMENT_MODES } from "@/lib/payment-modes";
+import type { GroupExpense, PaymentMode } from "@/types";
 import { formatAmount } from "./group-detail-utils";
 import type { UserNameFn } from "./group-detail-shared";
 
@@ -20,6 +21,8 @@ export function ExpenseEditorModal({
   expSplitType,
   expCategory,
   setExpCategory,
+  expPaymentMode,
+  setExpPaymentMode,
   selectedParticipants,
   setSelectedParticipants,
   splitInputs,
@@ -43,6 +46,8 @@ export function ExpenseEditorModal({
   expSplitType: SplitType;
   expCategory: string;
   setExpCategory: Dispatch<SetStateAction<string>>;
+  expPaymentMode: PaymentMode;
+  setExpPaymentMode: Dispatch<SetStateAction<PaymentMode>>;
   selectedParticipants: string[];
   setSelectedParticipants: Dispatch<SetStateAction<string[]>>;
   splitInputs: Record<string, string>;
@@ -115,6 +120,34 @@ export function ExpenseEditorModal({
                   {cat.label}
                 </button>
               ))}
+            </div>
+          </div>
+
+          <div>
+            <p className="mb-2 text-xs font-semibold uppercase tracking-widest" style={{ color: "var(--evven-text-muted)" }}>
+              Payment mode
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {PAYMENT_MODES.map((mode) => {
+                const Icon = mode.icon;
+                const active = expPaymentMode === mode.value;
+
+                return (
+                  <button
+                    key={mode.value}
+                    type="button"
+                    onClick={() => setExpPaymentMode(mode.value)}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all"
+                    style={{
+                      background: active ? mode.bg : "var(--evven-surface)",
+                      color: active ? mode.text : "var(--evven-text-muted)",
+                    }}
+                  >
+                    <Icon size={14} />
+                    {mode.label}
+                  </button>
+                );
+              })}
             </div>
           </div>
 

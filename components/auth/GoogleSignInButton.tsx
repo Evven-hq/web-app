@@ -38,6 +38,7 @@ export function GoogleSignInButton() {
   const [error, setError] = useState("");
   const [buttonWidth, setButtonWidth] = useState(336);
   const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+  const googleInitializedRef = useRef(false);
 
   useEffect(() => {
     const updateWidth = () => {
@@ -58,18 +59,22 @@ export function GoogleSignInButton() {
   const initializeGoogle = useCallback(() => {
     if (!clientId || !window.google || !buttonRef.current) return;
 
-    window.google.accounts.id.initialize({
-      client_id: clientId,
-      callback: async ({ credential }) => {
-        setError("");
-        try {
-          await loginWithGoogle(credential);
-          router.push("/dashboard");
-        } catch {
-          setError("Google sign-in is not available yet.");
-        }
-      },
-    });
+    if (!googleInitializedRef.current) {
+      window.google.accounts.id.initialize({
+        client_id: clientId,
+        callback: async ({ credential }) => {
+          setError("");
+          try {
+            await loginWithGoogle(credential);
+            router.push("/dashboard");
+          } catch {
+            setError("Google sign-in is not available yet.");
+          }
+        },
+      });
+
+      googleInitializedRef.current = true;
+    }
 
     buttonRef.current.innerHTML = "";
     window.google.accounts.id.renderButton(buttonRef.current, {
@@ -82,8 +87,10 @@ export function GoogleSignInButton() {
   }, [buttonWidth, clientId, loginWithGoogle, router]);
 
   useEffect(() => {
-    if (!clientId || !window.google || !buttonRef.current) return;
-    initializeGoogle();
+    if (!clientId || !buttonRef.current) return;
+    if (window.google?.accounts?.id) {
+      initializeGoogle();
+    }
   }, [initializeGoogle, clientId]);
 
   if (!clientId) {

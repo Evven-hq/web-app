@@ -22,6 +22,7 @@ export default function EditExpensePage() {
           category: expense.category ?? "",
           date: expense.date ? expense.date.slice(0, 10) : "",
           notes: expense.notes ?? "",
+          payment_mode: expense.payment_mode ?? "upi",
           ghost_id: expense.ghost_id ?? expense.ghost?.id ?? "",
           settlement_direction: expense.settlement_direction ?? "they_owe",
           settlement_amount: expense.settlement_amount ?? "",

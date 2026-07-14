@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
-import type { PersonalExpenseCreate, SettlementDirection } from "@/types";
+import type { PersonalExpenseCreate, SettlementDirection, PaymentMode } from "@/types";
 import { FriendExpenseFields } from "@/components/expenses/friends";
 import { EXPENSE_CATEGORIES } from "@/lib/expense-categories";
+import { PAYMENT_MODES } from "@/lib/payment-modes";
 
 export interface ExpenseFormValues {
   title: string;
@@ -12,6 +13,7 @@ export interface ExpenseFormValues {
   category: string;
   date: string;
   notes: string;
+  payment_mode: PaymentMode;
   ghost_id: string;
   settlement_direction: SettlementDirection;
   settlement_amount: string;
@@ -29,6 +31,7 @@ const DEFAULT_VALUES: ExpenseFormValues = {
   category: "",
   date: new Date().toISOString().slice(0, 10),
   notes: "",
+  payment_mode: "upi",
   ghost_id: "",
   settlement_direction: "they_owe",
   settlement_amount: "",
@@ -87,6 +90,7 @@ export function ExpenseForm({
         category: values.category.trim() || undefined,
         date: values.date ? new Date(`${values.date}T00:00:00`).toISOString() : undefined,
         notes: values.notes.trim() || undefined,
+        payment_mode: values.payment_mode,
       };
 
       if (values.ghost_id) {
@@ -184,6 +188,37 @@ export function ExpenseForm({
                 </button>
               );
             })}
+        </div>
+      </div>
+
+      <div>
+        <label className="mb-2 block text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+          Payment mode
+        </label>
+        <div className="flex flex-wrap gap-2">
+          {PAYMENT_MODES.map((mode) => {
+            const Icon = mode.icon;
+            const active = values.payment_mode === mode.value;
+
+            return (
+              <button
+                key={mode.value}
+                type="button"
+                onClick={() =>
+                  setValues((current) => ({ ...current, payment_mode: mode.value }))
+                }
+                className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-all"
+                style={{
+                  background: active ? mode.bg : "var(--evven-surface)",
+                  color: active ? mode.text : "var(--evven-text-muted)",
+                  border: `1px solid ${active ? mode.bg : "var(--evven-border)"}`,
+                }}
+              >
+                <Icon size={14} />
+                {mode.label}
+              </button>
+            );
+          })}
         </div>
       </div>
 

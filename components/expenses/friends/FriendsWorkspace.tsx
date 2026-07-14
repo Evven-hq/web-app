@@ -103,6 +103,7 @@ export function FriendsWorkspace() {
     amount: number;
     note?: string;
     direction: "you_owe" | "they_owe";
+    payment_mode: "upi" | "cash";
   }) => {
     if (!activeFriend) return;
 
@@ -113,6 +114,7 @@ export function FriendsWorkspace() {
         amount: payload.amount,
         date: new Date().toISOString(),
         notes: payload.note,
+        payment_mode: payload.payment_mode,
         ghost_id: activeFriend.id,
         settlement_direction: payload.direction,
         settlement_amount: payload.amount,

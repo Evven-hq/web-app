@@ -2,6 +2,8 @@
 
 import { CheckCircle, Loader2, X } from "lucide-react";
 import type { Dispatch, SetStateAction } from "react";
+import { PAYMENT_MODES } from "@/lib/payment-modes";
+import type { PaymentMode } from "@/types";
 import type { UserNameFn } from "./group-detail-shared";
 
 export function SettleModal({
@@ -10,6 +12,8 @@ export function SettleModal({
   settleReceiver,
   settleAmount,
   setSettleAmount,
+  settlePaymentMode,
+  setSettlePaymentMode,
   userName,
   onSubmit,
   savingSettle,
@@ -20,6 +24,8 @@ export function SettleModal({
   settleReceiver: string;
   settleAmount: string;
   setSettleAmount: Dispatch<SetStateAction<string>>;
+  settlePaymentMode: PaymentMode;
+  setSettlePaymentMode: Dispatch<SetStateAction<PaymentMode>>;
   userName: UserNameFn;
   onSubmit: () => void;
   savingSettle: boolean;
@@ -52,6 +58,31 @@ export function SettleModal({
           className="w-full px-4 py-2.5 rounded-xl text-sm border outline-none focus:ring-2 mb-3"
           style={{ borderColor: "var(--evven-border)", background: "var(--evven-surface)", color: "var(--evven-text-primary)" }}
         />
+        <p className="mb-2 text-xs font-semibold uppercase tracking-widest" style={{ color: "var(--evven-text-muted)" }}>
+          Payment mode
+        </p>
+        <div className="mb-4 flex flex-wrap gap-2">
+          {PAYMENT_MODES.map((mode) => {
+            const Icon = mode.icon;
+            const active = settlePaymentMode === mode.value;
+
+            return (
+              <button
+                key={mode.value}
+                type="button"
+                onClick={() => setSettlePaymentMode(mode.value)}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all"
+                style={{
+                  background: active ? mode.bg : "var(--evven-surface)",
+                  color: active ? mode.text : "var(--evven-text-muted)",
+                }}
+              >
+                <Icon size={14} />
+                {mode.label}
+              </button>
+            );
+          })}
+        </div>
         {settleError && <p className="text-xs mb-2" style={{ color: "var(--evven-error)" }}>{settleError}</p>}
         <button
           onClick={onSubmit}

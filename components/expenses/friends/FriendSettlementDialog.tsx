@@ -85,7 +85,10 @@ export function FriendSettlementDialog({
         onOpenChange(nextOpen);
       }}
     >
-      <DialogContent className="sm:max-w-md">
+      <DialogContent
+        className="sm:max-w-md bg-popover"
+        style={{ backgroundColor: "var(--popover, white)" }}
+      >
         <DialogHeader>
           <DialogTitle>Record settlement</DialogTitle>
           <DialogDescription>

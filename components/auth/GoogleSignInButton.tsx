@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Script from "next/script";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/auth-store";
+import { isAxiosError } from "axios";
 
 declare global {
   interface Window {
@@ -22,13 +23,17 @@ declare global {
               shape: string;
               width: number;
               text: string;
-            }
+            },
           ) => void;
         };
       };
     };
   }
 }
+
+// Module-level, not component-level: survives unmount/remount across
+// client-side navigation (login <-> signup), only resets on a full page reload.
+let gsiInitialized = false;
 
 export function GoogleSignInButton() {
   const router = useRouter();
@@ -38,7 +43,15 @@ export function GoogleSignInButton() {
   const [error, setError] = useState("");
   const [buttonWidth, setButtonWidth] = useState(336);
   const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
-  const googleInitializedRef = useRef(false);
+
+  // Keep latest router / loginWithGoogle in refs so the GSI callback
+  // (captured only once, at first-ever initialize) never goes stale.
+  const routerRef = useRef(router);
+  const loginWithGoogleRef = useRef(loginWithGoogle);
+  useEffect(() => {
+    routerRef.current = router;
+    loginWithGoogleRef.current = loginWithGoogle;
+  }, [router, loginWithGoogle]);
 
   useEffect(() => {
     const updateWidth = () => {
@@ -56,24 +69,34 @@ export function GoogleSignInButton() {
     return () => observer.disconnect();
   }, []);
 
+  const setErrorRef = useRef(setError);
+  useEffect(() => {
+    setErrorRef.current = setError;
+  }, [setError]);
+
   const initializeGoogle = useCallback(() => {
     if (!clientId || !window.google || !buttonRef.current) return;
 
-    if (!googleInitializedRef.current) {
+    if (!gsiInitialized) {
       window.google.accounts.id.initialize({
         client_id: clientId,
         callback: async ({ credential }) => {
-          setError("");
+          setErrorRef.current(""); // was: setError("")
           try {
-            await loginWithGoogle(credential);
-            router.push("/dashboard");
-          } catch {
-            setError("Google sign-in is not available yet.");
+            await loginWithGoogleRef.current(credential);
+            routerRef.current.push("/dashboard");
+          } catch (err) {
+            if (isAxiosError(err) && err.response?.data?.detail) {
+              setErrorRef.current(err.response.data.detail); // was: setError(...)
+            } else {
+              setErrorRef.current(
+                "Something went wrong with Google sign-in. Please try again.",
+              );
+            }
           }
         },
       });
-
-      googleInitializedRef.current = true;
+      gsiInitialized = true;
     }
 
     buttonRef.current.innerHTML = "";
@@ -84,9 +107,13 @@ export function GoogleSignInButton() {
       width: buttonWidth,
       text: "continue_with",
     });
-  }, [buttonWidth, clientId, loginWithGoogle, router]);
+  }, [buttonWidth, clientId]);
 
   useEffect(() => {
+    if (!clientId || !buttonRef.current) return;
+    if (window.google?.accounts?.id) {
+      initializeGoogle();
+    }
     if (!clientId || !buttonRef.current) return;
     if (window.google?.accounts?.id) {
       initializeGoogle();
@@ -96,7 +123,6 @@ export function GoogleSignInButton() {
   if (!clientId) {
     return (
       <p className="text-center text-s text-muted-foreground">
-        {/* Google sign-in needs `NEXT_PUBLIC_GOOGLE_CLIENT_ID`. */}
         Google Sign-Up and Login will be here in future.
       </p>
     );
@@ -110,7 +136,9 @@ export function GoogleSignInButton() {
         onLoad={initializeGoogle}
       />
       <div ref={buttonRef} className="flex min-h-11 justify-center" />
-      {error && <p className="mt-2 text-center text-xs text-destructive">{error}</p>}
+      {error && (
+        <p className="mt-2 text-center text-xs text-destructive">{error}</p>
+      )}
     </div>
   );
 }

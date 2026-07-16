@@ -1,0 +1,65 @@
+<svg viewBox="0 0 1200 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Evven — group expense splitting. Keep shared costs fair, clear, and totally handled.">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="420" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0d251f"/>
+      <stop offset="100%" stop-color="#14322b"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="420" fill="url(#bg)"/>
+
+  <!-- eyebrow -->
+  <text x="64" y="96" font-family="'JetBrains Mono','SFMono-Regular',Consolas,monospace" font-size="14" letter-spacing="3" fill="#9fb6ae">GROUP EXPENSES · SPLIT, SETTLED, SIMPLIFIED</text>
+
+  <!-- wordmark -->
+  <text x="60" y="222" font-family="Baskervville,'Times New Roman',Georgia,serif" font-style="italic" font-size="132" fill="#f4f1ea">Evven</text>
+
+  <!-- tagline -->
+  <text x="64" y="266" font-family="Georgia,'Times New Roman',serif" font-size="21" fill="#c9d8d3">Keep shared costs fair, clear, and totally handled.</text>
+
+  <!-- stack line -->
+  <text x="64" y="330" font-family="'JetBrains Mono','SFMono-Regular',Consolas,monospace" font-size="14" fill="#e3b563">Next.js 16 · TypeScript · Tailwind v4 · FastAPI</text>
+
+  <!-- baseline rule -->
+  <line x1="64" y1="360" x2="700" y2="360" stroke="#f4f1ea" stroke-opacity="0.15" stroke-width="1"/>
+  <text x="64" y="388" font-family="'JetBrains Mono','SFMono-Regular',Consolas,monospace" font-size="13" fill="#75908a">This repo: the web client. Backend (FastAPI) lives separately.</text>
+
+  <!-- ============ signature: before/after debt graph ============ -->
+  <!-- "before" tangled graph -->
+  <g stroke="#5c7a72" stroke-width="1.4" fill="none" opacity="0.85">
+    <line x1="760" y1="150" x2="860" y2="150"/>
+    <line x1="860" y1="150" x2="860" y2="250"/>
+    <line x1="860" y1="250" x2="760" y2="250"/>
+    <line x1="760" y1="250" x2="760" y2="150"/>
+    <line x1="760" y1="150" x2="860" y2="250"/>
+    <line x1="860" y1="150" x2="760" y2="250"/>
+  </g>
+  <g font-family="'JetBrains Mono','SFMono-Regular',Consolas,monospace" font-size="12" fill="#0d251f">
+    <circle cx="760" cy="150" r="15" fill="#c9d8d3"/><text x="760" y="155" text-anchor="middle">A</text>
+    <circle cx="860" cy="150" r="15" fill="#c9d8d3"/><text x="860" y="155" text-anchor="middle">B</text>
+    <circle cx="860" cy="250" r="15" fill="#c9d8d3"/><text x="860" y="255" text-anchor="middle">C</text>
+    <circle cx="760" cy="250" r="15" fill="#c9d8d3"/><text x="760" y="255" text-anchor="middle">D</text>
+  </g>
+  <text x="810" y="300" text-anchor="middle" font-family="'JetBrains Mono','SFMono-Regular',Consolas,monospace" font-size="13" fill="#9fb6ae">6 debts</text>
+
+  <!-- arrow -->
+  <text x="905" y="210" font-family="Georgia,serif" font-size="30" fill="#75908a" text-anchor="middle">&#8594;</text>
+
+  <!-- "after" simplified graph -->
+  <defs>
+    <marker id="arrowGold" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#e3b563"/>
+    </marker>
+  </defs>
+  <g stroke="#e3b563" stroke-width="2.2" fill="none" marker-end="url(#arrowGold)">
+    <line x1="1050" y1="250" x2="1050" y2="150"/>
+    <line x1="1150" y1="250" x2="1150" y2="150"/>
+  </g>
+  <g font-family="'JetBrains Mono','SFMono-Regular',Consolas,monospace" font-size="12" fill="#0d251f">
+    <circle cx="1050" cy="150" r="15" fill="#e3b563"/><text x="1050" y="155" text-anchor="middle">A</text>
+    <circle cx="1150" cy="150" r="15" fill="#e3b563"/><text x="1150" y="155" text-anchor="middle">B</text>
+    <circle cx="1150" cy="250" r="15" fill="#c9d8d3"/><text x="1150" y="255" text-anchor="middle">C</text>
+    <circle cx="1050" cy="250" r="15" fill="#c9d8d3"/><text x="1050" y="255" text-anchor="middle">D</text>
+  </g>
+  <text x="1100" y="300" text-anchor="middle" font-family="'JetBrains Mono','SFMono-Regular',Consolas,monospace" font-size="13" fill="#e3b563">2 payments</text>
+</svg>

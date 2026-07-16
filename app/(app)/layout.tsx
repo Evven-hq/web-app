@@ -14,6 +14,9 @@ import {
   Plus,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { NavigationProvider, useNavigation } from "@/components/shared/NavigationProvider";
+import { RouteProgressBar } from "@/components/shared/RouteProgressbar";
+import { PageTransition } from "@/components/shared/PageTransition";
 
 type DockItem = {
   href: string;
@@ -45,6 +48,7 @@ function isActiveRoute(pathname: string, href: string) {
 
 function Dock({ pathname, variant }: { pathname: string; variant: "mobile" | "desktop" }) {
   const isDesktop = variant === "desktop";
+  const { navigate } = useNavigation();
 
   return (
     <nav
@@ -80,6 +84,21 @@ function Dock({ pathname, variant }: { pathname: string; variant: "mobile" | "de
               href={href}
               aria-label={label}
               title={label}
+              onClick={(e) => {
+                // Skip re-navigating to the page we're already on, and let
+                // modified clicks (open in new tab, etc.) behave natively.
+                if (
+                  active ||
+                  e.metaKey ||
+                  e.ctrlKey ||
+                  e.shiftKey ||
+                  e.altKey
+                ) {
+                  return;
+                }
+                e.preventDefault();
+                navigate(href);
+              }}
               className={cn(
                 "flex items-center justify-center justify-self-center rounded-full transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--evven-accent-primary) focus-visible:ring-offset-2 focus-visible:ring-offset-background",
                 isAdd
@@ -261,7 +280,7 @@ function MobileFloatingChrome({
   );
 }
 
-export default function AppLayout({ children }: { children: React.ReactNode }) {
+function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
   const user = useAuthStore((s) => s.user);
@@ -302,12 +321,13 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="flex h-screen overflow-hidden bg-background">
+      <RouteProgressBar />
       <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
         <MobileFloatingChrome user={user} showAddExpense={pathname === "/dashboard"} />
         <DesktopIdentityChip user={user} />
 
         <main className="flex-1 overflow-y-auto pb-24 pt-16 md:pb-32 md:pt-24">
-          {children}
+          <PageTransition>{children}</PageTransition>
         </main>
 
         <Dock pathname={pathname} variant="mobile" />
@@ -315,5 +335,13 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <DesktopLogoutButton onLogout={handleLogout} />
       </div>
     </div>
+  );
+}
+
+export default function AppLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <NavigationProvider>
+      <AppShell>{children}</AppShell>
+    </NavigationProvider>
   );
 }

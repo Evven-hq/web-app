@@ -62,10 +62,10 @@ function Dock({ pathname, variant }: { pathname: string; variant: "mobile" | "de
     >
       <div
         className={cn(
-          "pointer-events-auto grid items-center rounded-(--evven-radius-hero) border shadow-2xl shadow-black/20",
+          "pointer-events-auto grid items-center rounded-full border shadow-2xl shadow-black/20",
           isDesktop
-            ? "grid-flow-col auto-cols-max gap-1.5 px-3 py-2.5"
-            : "mx-auto h-16 max-w-md grid-cols-5 gap-1 px-3 py-0"
+            ? "grid-flow-col auto-cols-max gap-2 px-3.5 py-3"
+            : "mx-auto h-[76px] max-w-md grid-cols-5 gap-1.5 px-3.5 py-0"
         )}
         style={{
           background:
@@ -89,15 +89,7 @@ function Dock({ pathname, variant }: { pathname: string; variant: "mobile" | "de
                 if (!active) router.prefetch(href);
               }}
               onClick={(e) => {
-                // Skip re-navigating to the page we're already on, and let
-                // modified clicks (open in new tab, etc.) behave natively.
-                if (
-                  active ||
-                  e.metaKey ||
-                  e.ctrlKey ||
-                  e.shiftKey ||
-                  e.altKey
-                ) {
+                if (active || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) {
                   return;
                 }
                 e.preventDefault();
@@ -106,8 +98,8 @@ function Dock({ pathname, variant }: { pathname: string; variant: "mobile" | "de
               className={cn(
                 "flex items-center justify-center justify-self-center rounded-full transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--evven-accent-primary) focus-visible:ring-offset-2 focus-visible:ring-offset-background",
                 isAdd
-                  ? "size-12 shadow-md ring-1 ring-black/5 hover:-translate-y-0.5 hover:shadow-lg"
-                  : "size-11 hover:-translate-y-0.5"
+                  ? "size-14 shadow-md ring-1 ring-black/5 hover:-translate-y-0.5 hover:shadow-lg"
+                  : "size-13 hover:-translate-y-0.5"
               )}
               style={{
                 background: isAdd
@@ -125,7 +117,7 @@ function Dock({ pathname, variant }: { pathname: string; variant: "mobile" | "de
                   : undefined,
               }}
             >
-              <Icon size={isAdd ? 24 : 20} />
+              <Icon size={isAdd ? 28 : 24} />
             </Link>
           );
         })}

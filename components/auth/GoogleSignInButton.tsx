@@ -56,7 +56,9 @@ export function GoogleSignInButton() {
   useEffect(() => {
     const updateWidth = () => {
       const nextWidth = wrapperRef.current?.clientWidth ?? 336;
-      setButtonWidth(Math.max(240, Math.min(400, Math.floor(nextWidth))));
+      const clamped = Math.max(240, Math.min(400, Math.floor(nextWidth)));
+
+      setButtonWidth((prev) => (Math.abs(prev - clamped) < 8 ? prev : clamped));
     };
 
     updateWidth();
@@ -110,10 +112,6 @@ export function GoogleSignInButton() {
   }, [buttonWidth, clientId]);
 
   useEffect(() => {
-    if (!clientId || !buttonRef.current) return;
-    if (window.google?.accounts?.id) {
-      initializeGoogle();
-    }
     if (!clientId || !buttonRef.current) return;
     if (window.google?.accounts?.id) {
       initializeGoogle();

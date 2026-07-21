@@ -3,4 +3,4 @@ export interface ApiResponse<T> {
   data: T;
 }
 
-export type PaymentMode = "upi" | "cash";
+export type PaymentMethod = "upi" | "cash";

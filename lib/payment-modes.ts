@@ -1,9 +1,9 @@
 import { Smartphone, Banknote } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import type { PaymentMode } from "@/types";
+import type { PaymentMethod } from "@/types";
 
 export interface PaymentModeMeta {
-  value: PaymentMode;
+  value: PaymentMethod;
   label: string;
   icon: LucideIcon;
   bg: string;

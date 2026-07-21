@@ -24,7 +24,7 @@ interface FriendDetailPanelProps {
     amount: number;
     note?: string;
     direction: "you_owe" | "they_owe";
-    payment_mode: "upi" | "cash";
+    payment_method: "upi" | "cash";
   }) => Promise<void>;
 }
 

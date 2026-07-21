@@ -2,6 +2,7 @@
 
 import { Clock3, Loader2 } from "lucide-react";
 import type { PersonalExpense } from "@/types";
+import { getPaymentModeMeta } from "@/lib/payment-modes";
 import { formatMoney, getGhostHistoryDirection, getGhostHistoryStatus } from "./friend-utils";
 
 interface FriendHistoryListProps {
@@ -79,6 +80,10 @@ export function FriendHistoryList({
                   <p className="truncate text-sm font-medium">{expense.title}</p>
                   <p className="mt-0.5 text-xs text-muted-foreground">
                     {formatDate(expense)} · {direction}
+                    {(() => {
+                      const pm = getPaymentModeMeta(expense.payment_method);
+                      return pm ? ` · ${pm.label}` : "";
+                    })()}
                   </p>
                 </div>
                 <div className="text-left sm:text-right">

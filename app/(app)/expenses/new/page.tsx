@@ -18,7 +18,7 @@ export default function NewExpensePage() {
     category: "",
     date: new Date().toISOString().slice(0, 10),
     notes: "",
-    payment_mode: "upi",
+    payment_method: "upi",
     ghost_id: ghostId,
     settlement_direction:
       direction === "you_owe" || direction === "they_owe" ? direction : "they_owe",

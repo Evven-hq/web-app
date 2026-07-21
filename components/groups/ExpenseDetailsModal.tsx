@@ -28,7 +28,7 @@ export function ExpenseDetailsModal({
   onEditExpense: () => void;
   canEdit: boolean;
 }) {
-  const paymentModeMeta = getPaymentModeMeta(detailExpense.payment_mode);
+  const paymentModeMeta = getPaymentModeMeta(detailExpense.payment_method);
 
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4">

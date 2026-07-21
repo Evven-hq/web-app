@@ -1,4 +1,4 @@
-import type { PaymentMode } from "./common";
+import type { PaymentMethod } from "./common";
 
 export interface PersonalExpense {
   id: string;
@@ -12,7 +12,7 @@ export interface PersonalExpense {
   category: string | null;
   date: string | null;
   notes: string | null;
-  payment_mode?: PaymentMode | null;
+  payment_method?: PaymentMethod | null;
   settlement_direction?: SettlementDirection | null;
   settlement_amount?: string | null;
   created_at: string;
@@ -52,7 +52,7 @@ export interface GroupExpense {
   category? : string;
   amount: string;
   split_type: "equal" | "exact" | "percentage";
-  payment_mode?: PaymentMode | null;
+  payment_method?: PaymentMethod | null;
   created_at: string;
 }
  
@@ -69,7 +69,7 @@ export interface PersonalExpenseCreate {
   category?: string;
   date?: string;
   notes?: string;
-  payment_mode?: PaymentMode;
+  payment_method?: PaymentMethod;
   ghost_id?: string;
   settlement_direction?: SettlementDirection;
   settlement_amount?: number;
@@ -81,7 +81,7 @@ export interface PersonalExpenseUpdate {
   category?: string;
   date?: string;
   notes?: string;
-  payment_mode?: PaymentMode | null;
+  payment_method?: PaymentMethod | null;
   ghost_id?: string | null;
   settlement_direction?: SettlementDirection | null;
   settlement_amount?: number | null;
@@ -92,7 +92,7 @@ export interface GroupExpenseCreate {
   amount: number;
   split_type: "equal" | "exact" | "percentage";
   category? : string;
-  payment_mode?: PaymentMode;
+  payment_method?: PaymentMethod;
   splits_input?: Record<string, number>;
   participant_ids?: string[];
 }
@@ -102,7 +102,7 @@ export interface GroupExpenseUpdate {
   amount?: number;
   split_type?: "equal" | "exact" | "percentage";
   category? : string;
-  payment_mode?: PaymentMode;
+  payment_method?: PaymentMethod;
   splits_input?: Record<string, number>;
   participant_ids?: string[];
 }

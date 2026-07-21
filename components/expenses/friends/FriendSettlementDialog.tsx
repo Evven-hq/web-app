@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
-import type { Ghost, SettlementDirection, PaymentMode } from "@/types";
+import type { Ghost, SettlementDirection, PaymentMethod } from "@/types";
 import { formatMoney, getDefaultSettlementDirection } from "./friend-utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -25,7 +25,7 @@ interface FriendSettlementDialogProps {
     amount: number;
     note?: string;
     direction: SettlementDirection;
-    payment_mode: PaymentMode;
+    payment_method: PaymentMethod;
   }) => Promise<void>;
 }
 
@@ -38,7 +38,7 @@ export function FriendSettlementDialog({
   const [amount, setAmount] = useState("");
   const [note, setNote] = useState("");
   const [direction, setDirection] = useState<SettlementDirection>("they_owe");
-  const [paymentMode, setPaymentMode] = useState<PaymentMode>("upi");
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("upi");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
@@ -59,7 +59,7 @@ export function FriendSettlementDialog({
         amount: nextAmount,
         note: note.trim() || undefined,
         direction,
-        payment_mode: paymentMode,
+        payment_method: paymentMethod,
       });
       onOpenChange(false);
     } catch {
@@ -78,7 +78,7 @@ export function FriendSettlementDialog({
           setAmount(String(Math.abs(balance || 0) || ""));
           setDirection(getDefaultSettlementDirection(balance));
           setNote("");
-          setPaymentMode("upi");
+          setPaymentMethod("upi");
           setError("");
         }
 
@@ -147,13 +147,13 @@ export function FriendSettlementDialog({
             <div className="flex flex-wrap gap-2">
               {PAYMENT_MODES.map((mode) => {
                 const Icon = mode.icon;
-                const active = paymentMode === mode.value;
+                const active = paymentMethod === mode.value;
 
                 return (
                   <button
                     key={mode.value}
                     type="button"
-                    onClick={() => setPaymentMode(mode.value)}
+                    onClick={() => setPaymentMethod(mode.value)}
                     className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-all"
                     style={{
                       background: active ? mode.bg : "var(--evven-surface)",

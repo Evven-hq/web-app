@@ -153,7 +153,7 @@ export async function createSettlement(
   const response = await api.post<ApiResponse<Settlement>>(
     `/groups/${groupId}/settlements`,
     null,
-    { params: { receiver_id: data.receiver_id, amount: data.amount } }
+    { params: { receiver_id: data.receiver_id, amount: data.amount, payment_method: data.payment_method } }
   );
   return response.data.data;
 }

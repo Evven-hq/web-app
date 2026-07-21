@@ -4,7 +4,7 @@ import { Loader2, Plus, CheckCircle, X } from "lucide-react";
 import type { Dispatch, SetStateAction } from "react";
 import { EXPENSE_CATEGORIES } from "@/lib/expense-categories";
 import { PAYMENT_MODES } from "@/lib/payment-modes";
-import type { GroupExpense, PaymentMode } from "@/types";
+import type { GroupExpense, PaymentMethod } from "@/types";
 import { formatAmount } from "./group-detail-utils";
 import type { UserNameFn } from "./group-detail-shared";
 
@@ -21,8 +21,8 @@ export function ExpenseEditorModal({
   expSplitType,
   expCategory,
   setExpCategory,
-  expPaymentMode,
-  setExpPaymentMode,
+  expPaymentMethod,
+  setExpPaymentMethod,
   selectedParticipants,
   setSelectedParticipants,
   splitInputs,
@@ -46,8 +46,8 @@ export function ExpenseEditorModal({
   expSplitType: SplitType;
   expCategory: string;
   setExpCategory: Dispatch<SetStateAction<string>>;
-  expPaymentMode: PaymentMode;
-  setExpPaymentMode: Dispatch<SetStateAction<PaymentMode>>;
+  expPaymentMethod: PaymentMethod;
+  setExpPaymentMethod: Dispatch<SetStateAction<PaymentMethod>>;
   selectedParticipants: string[];
   setSelectedParticipants: Dispatch<SetStateAction<string[]>>;
   splitInputs: Record<string, string>;
@@ -130,13 +130,13 @@ export function ExpenseEditorModal({
             <div className="flex flex-wrap gap-2">
               {PAYMENT_MODES.map((mode) => {
                 const Icon = mode.icon;
-                const active = expPaymentMode === mode.value;
+                const active = expPaymentMethod === mode.value;
 
                 return (
                   <button
                     key={mode.value}
                     type="button"
-                    onClick={() => setExpPaymentMode(mode.value)}
+                    onClick={() => setExpPaymentMethod(mode.value)}
                     className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all"
                     style={{
                       background: active ? mode.bg : "var(--evven-surface)",

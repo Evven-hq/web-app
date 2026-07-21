@@ -3,7 +3,7 @@
 import { CheckCircle, Loader2, X } from "lucide-react";
 import type { Dispatch, SetStateAction } from "react";
 import { PAYMENT_MODES } from "@/lib/payment-modes";
-import type { PaymentMode } from "@/types";
+import type { PaymentMethod } from "@/types";
 import type { UserNameFn } from "./group-detail-shared";
 
 export function SettleModal({
@@ -12,8 +12,8 @@ export function SettleModal({
   settleReceiver,
   settleAmount,
   setSettleAmount,
-  settlePaymentMode,
-  setSettlePaymentMode,
+  settlePaymentMethod,
+  setSettlePaymentMethod,
   userName,
   onSubmit,
   savingSettle,
@@ -24,8 +24,8 @@ export function SettleModal({
   settleReceiver: string;
   settleAmount: string;
   setSettleAmount: Dispatch<SetStateAction<string>>;
-  settlePaymentMode: PaymentMode;
-  setSettlePaymentMode: Dispatch<SetStateAction<PaymentMode>>;
+  settlePaymentMethod: PaymentMethod;
+  setSettlePaymentMethod: Dispatch<SetStateAction<PaymentMethod>>;
   userName: UserNameFn;
   onSubmit: () => void;
   savingSettle: boolean;
@@ -64,13 +64,13 @@ export function SettleModal({
         <div className="mb-4 flex flex-wrap gap-2">
           {PAYMENT_MODES.map((mode) => {
             const Icon = mode.icon;
-            const active = settlePaymentMode === mode.value;
+            const active = settlePaymentMethod === mode.value;
 
             return (
               <button
                 key={mode.value}
                 type="button"
-                onClick={() => setSettlePaymentMode(mode.value)}
+                onClick={() => setSettlePaymentMethod(mode.value)}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all"
                 style={{
                   background: active ? mode.bg : "var(--evven-surface)",

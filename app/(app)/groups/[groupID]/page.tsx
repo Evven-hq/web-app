@@ -47,7 +47,7 @@ import type {
   Settlement,
   ExpenseSplit,
   GroupExpenseCreate,
-  PaymentMode,
+  PaymentMethod,
 } from "@/types";
 type SplitType = "equal" | "exact" | "percentage";
 
@@ -91,7 +91,7 @@ export default function GroupDetailPage() {
   const [expAmount, setExpAmount] = useState("");
   const [expSplitType, setExpSplitType] = useState<SplitType>("equal");
   const [expCategory, setExpCategory] = useState("");
-  const [expPaymentMode, setExpPaymentMode] = useState<PaymentMode>("upi");
+  const [expPaymentMethod, setExpPaymentMethod] = useState<PaymentMethod>("upi");
   const [splitInputs, setSplitInputs] = useState<Record<string, string>>({});
   const [selectedParticipants, setSelectedParticipants] = useState<string[]>([]);
   const [savingExp, setSavingExp] = useState(false);
@@ -113,7 +113,7 @@ export default function GroupDetailPage() {
   const [showSettle, setShowSettle] = useState(false);
   const [settleReceiver, setSettleReceiver] = useState("");
   const [settleAmount, setSettleAmount] = useState("");
-  const [settlePaymentMode, setSettlePaymentMode] = useState<PaymentMode>("upi");
+  const [settlePaymentMethod, setSettlePaymentMethod] = useState<PaymentMethod>("upi");
   const [savingSettle, setSavingSettle] = useState(false);
   const [settleError, setSettleError] = useState("");
 
@@ -214,7 +214,7 @@ export default function GroupDetailPage() {
     setExpSplitType("equal");
     setSelectedParticipants([]);
     setExpCategory("");
-    setExpPaymentMode("upi");
+    setExpPaymentMethod("upi");
     setSplitInputs({});
     setExpError("");
   };
@@ -237,7 +237,7 @@ export default function GroupDetailPage() {
       amount,
       split_type: expSplitType,
       category: expCategory || undefined,
-      payment_mode: expPaymentMode,
+      payment_method: expPaymentMethod,
     };
 
     if (selectedParticipants.length === 0) {
@@ -350,7 +350,7 @@ export default function GroupDetailPage() {
     setExpAmount(String(expense.amount));
     setExpSplitType(expense.split_type);
     setExpCategory(expense.category ?? "");
-    setExpPaymentMode(expense.payment_mode ?? "upi");
+    setExpPaymentMethod(expense.payment_method ?? "upi");
     setExpError("");
     setSplitInputs({});
     setShowExpenseModal(true);
@@ -434,7 +434,7 @@ export default function GroupDetailPage() {
       await createSettlement(groupID, {
         receiver_id: settleReceiver,
         amount: parseFloat(settleAmount),
-        payment_mode: settlePaymentMode,
+        payment_method: settlePaymentMethod,
       });
       const [set, bal] = await Promise.all([
         getGroupSettlements(groupID),
@@ -446,7 +446,7 @@ export default function GroupDetailPage() {
       setShowSettle(false);
       setSettleReceiver("");
       setSettleAmount("");
-      setSettlePaymentMode("upi");
+      setSettlePaymentMethod("upi");
     } catch {
       setSettleError("Could not record settlement.");
     } finally {
@@ -457,7 +457,7 @@ export default function GroupDetailPage() {
   const openSettle = (userId: string, amount: number) => {
     setSettleReceiver(userId);
     setSettleAmount(amount.toFixed(2));
-    setSettlePaymentMode("upi");
+    setSettlePaymentMethod("upi");
     setShowSettle(true);
   };
 
@@ -631,8 +631,8 @@ export default function GroupDetailPage() {
         expSplitType={expSplitType}
         expCategory={expCategory}
         setExpCategory={setExpCategory}
-        expPaymentMode={expPaymentMode}
-        setExpPaymentMode={setExpPaymentMode}
+        expPaymentMethod={expPaymentMethod}
+        setExpPaymentMethod={setExpPaymentMethod}
         selectedParticipants={selectedParticipants}
         setSelectedParticipants={setSelectedParticipants}
         splitInputs={splitInputs}
@@ -671,8 +671,8 @@ export default function GroupDetailPage() {
         settleReceiver={settleReceiver}
         settleAmount={settleAmount}
         setSettleAmount={setSettleAmount}
-        settlePaymentMode={settlePaymentMode}
-        setSettlePaymentMode={setSettlePaymentMode}
+        settlePaymentMethod={settlePaymentMethod}
+        setSettlePaymentMethod={setSettlePaymentMethod}
         userName={userName}
         onSubmit={handleSettle}
         savingSettle={savingSettle}

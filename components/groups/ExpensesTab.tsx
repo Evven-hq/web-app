@@ -3,6 +3,7 @@
 import { Edit3, Receipt, Trash2 } from "lucide-react";
 import type { GroupExpense } from "@/types";
 import { getCategoryMeta } from "@/lib/expense-categories";
+import { getPaymentModeMeta } from "@/lib/payment-modes";
 import { formatAmount, formatDate } from "./group-detail-utils";
 import type { UserNameFn } from "./group-detail-shared";
 
@@ -77,6 +78,10 @@ export function ExpensesTab({
             <p className="text-xs mt-0.5" style={{ color: "var(--evven-text-muted)" }}>
               Paid by {userName(exp.paid_by)} · {formatDate(exp.created_at)} · {exp.split_type}
               {exp.category ? ` · ${getCategoryMeta(exp.category).label}` : ""}
+              {(() => {
+                const pm = getPaymentModeMeta(exp.payment_method);
+                return pm ? ` · ${pm.label}` : "";
+              })()}
             </p>
           </div>
           <div className="flex items-center gap-3 shrink-0">

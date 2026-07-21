@@ -1,4 +1,4 @@
-import type { PaymentMode } from "./common";
+import type { PaymentMethod } from "./common";
 
 export interface Settlement {
   id: string;
@@ -6,11 +6,11 @@ export interface Settlement {
   payer_id: string;
   receiver_id: string;
   amount: string;
-  payment_mode?: PaymentMode | null;
+  payment_method?: PaymentMethod | null;
 }
  
 export interface SettlementCreate {
   receiver_id: string;
   amount: number;
-  payment_mode?: PaymentMode;
+  payment_method?: PaymentMethod;
 }

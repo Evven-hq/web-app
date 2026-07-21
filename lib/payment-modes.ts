@@ -17,5 +17,5 @@ export const PAYMENT_MODES: PaymentModeMeta[] = [
 
 export function getPaymentModeMeta(mode?: string | null): PaymentModeMeta | null {
   if (!mode) return null;
-  return PAYMENT_MODES.find((m) => m.value === mode) ?? null;
+  return PAYMENT_MODES.find((m) => m.value.toLowerCase() === mode.toLowerCase()) ?? null;
 }

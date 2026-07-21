@@ -128,9 +128,9 @@ export function ExpenseEditorModal({
               Payment mode
             </p>
             <div className="flex flex-wrap gap-2">
-              {PAYMENT_MODES.map((mode) => {
-                const Icon = mode.icon;
-                const active = expPaymentMethod === mode.value;
+{PAYMENT_MODES.map((mode) => {
+      const Icon = mode.icon;
+      const active = expPaymentMethod?.toLowerCase() === mode.value;
 
                 return (
                   <button

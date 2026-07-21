@@ -196,9 +196,9 @@ export function ExpenseForm({
           Payment mode
         </label>
         <div className="flex flex-wrap gap-2">
-          {PAYMENT_MODES.map((mode) => {
-            const Icon = mode.icon;
-            const active = values.payment_method === mode.value;
+{PAYMENT_MODES.map((mode) => {
+      const Icon = mode.icon;
+      const active = values.payment_method?.toLowerCase() === mode.value;
 
             return (
               <button

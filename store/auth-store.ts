@@ -2,6 +2,7 @@ import {
   getCurrentUser as getUser,
   googleLogin,
   login as loginUser,
+  logoutSession,
   refreshSession,
   register as registerUser,
 } from "@/services/auth";
@@ -27,7 +28,7 @@ interface AuthState {
   login: (email: string, password: string) => Promise<void>;
   signup: (name: string, email: string, password: string) => Promise<void>;
   loginWithGoogle: (credential: string) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
   restoreSession: () => Promise<void>;
   setUser: (user: User) => void;
 }
@@ -57,9 +58,19 @@ export const useAuthStore = create<AuthState>((set) => ({
     set({ user: data.user, isAuthenticated: true, token: data.tokens.access_token });
   },
 
-  logout: () => {
-    clearAuthTokens();
-    set({ user: null, isAuthenticated: false, token: null });
+  logout: async () => {
+    const refreshToken = getRefreshToken();
+
+    try {
+      if (refreshToken) {
+        await logoutSession(refreshToken);
+      }
+    } catch {
+      // Local logout should still complete if server-side revocation cannot.
+    } finally {
+      clearAuthTokens();
+      set({ user: null, isAuthenticated: false, token: null });
+    }
   },
 
   restoreSession: async () => {

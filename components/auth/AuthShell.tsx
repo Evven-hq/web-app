@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
@@ -26,6 +25,7 @@ export function AuthShell({
 }: {
   children: React.ReactNode;
 }) {
+  const landingUrl = process.env.NEXT_PUBLIC_LANDING_URL;
   const pathname = usePathname();
   const isLogin = pathname === "/login";
   const isDesktop = useIsDesktop();
@@ -40,7 +40,7 @@ export function AuthShell({
 
           <div className="relative flex min-h-[100svh] flex-col">
             <div className="flex items-center justify-between px-5 pt-6">
-              <Link href="/" className="inline-flex items-center">
+              <a href={landingUrl} className="inline-flex items-center">
                 <Image
                   src="/EvenUp-white.svg"
                   alt="EvenUp"
@@ -49,7 +49,7 @@ export function AuthShell({
                   className="invert"
                   priority
                 />
-              </Link>
+              </a>
             </div>
 
             <div className="flex flex-1 items-center justify-center px-4 py-8">
@@ -76,7 +76,7 @@ export function AuthShell({
       {showDesktop && (
         <div className="relative flex min-h-[100svh] md:overflow-y-auto">
           <div className="fixed left-8 top-6 z-50">
-            <Link href="/">
+            <a href={landingUrl}>
               <Image
                 src="/EvenUp-white.svg"
                 alt="EvenUp"
@@ -85,7 +85,7 @@ export function AuthShell({
                 className="invert"
                 priority
               />
-            </Link>
+            </a>
           </div>
 
           {/* LEFT SLOT */}

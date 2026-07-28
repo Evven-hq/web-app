@@ -1,6 +1,15 @@
+import axios from "axios";
 import api from "@/lib/api";
+import { getAccessToken } from "@/lib/desktop";
 import { User } from "@/types/user";
-import { AuthResponse } from "@/types/auth";
+import { AuthResponse, TokenResponse } from "@/types/auth";
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+
+const authClient = axios.create({
+    baseURL: API_URL,
+    timeout: 10000,
+});
 
 export async function login(
             email: string, 
@@ -35,9 +44,43 @@ export async function googleLogin(credential: string): Promise<AuthResponse> {
     return response.data;
 }
 
-export async function refreshSession(refreshToken: string): Promise<AuthResponse> {
-    const response = await api.post("/auth/refresh", {
+export async function refreshSession(refreshToken: string): Promise<{ tokens: TokenResponse }> {
+    const response = await authClient.post("/auth/refresh", {
         refresh_token: refreshToken,
     });
-    return response.data;
+    const tokens = response.data?.tokens ?? response.data;
+    return { tokens };
+}
+
+export async function logoutSession(refreshToken: string): Promise<void> {
+    let accessToken = getAccessToken();
+    let refreshTokenToRevoke = refreshToken;
+
+    const revoke = () =>
+        authClient.post(
+            "/auth/logout",
+            { refresh_token: refreshTokenToRevoke },
+            accessToken
+                ? { headers: { Authorization: `Bearer ${accessToken}` } }
+                : undefined
+        );
+
+    if (!accessToken) {
+        const refreshed = await refreshSession(refreshTokenToRevoke);
+        accessToken = refreshed.tokens.access_token;
+        refreshTokenToRevoke = refreshed.tokens.refresh_token;
+    }
+
+    try {
+        await revoke();
+    } catch (error) {
+        if (!axios.isAxiosError(error) || error.response?.status !== 401) {
+            throw error;
+        }
+
+        const refreshed = await refreshSession(refreshTokenToRevoke);
+        accessToken = refreshed.tokens.access_token;
+        refreshTokenToRevoke = refreshed.tokens.refresh_token;
+        await revoke();
+    }
 }

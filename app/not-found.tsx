@@ -1,17 +1,19 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import Link from "next/link";
-
-const Spline = dynamic(() => import("@splinetool/react-spline"), {
-  ssr: false,
-});
 
 export default function NotFound() {
   return (
-    <main className="relative h-screen w-full overflow-hidden bg-black">
-      <div className="absolute inset-0 z-20">
-        <Spline scene="https://draft.spline.design/YMje93xuF-2o-b0C/scene.splinecode" />
+    <main className="relative flex h-screen w-full items-center justify-center overflow-hidden bg-background">
+      <div className="text-center">
+        <h1 className="text-6xl font-bold tracking-tight text-foreground">404</h1>
+        <p className="mt-4 text-lg text-muted-foreground">Page not found</p>
+        <Link
+          href="/dashboard"
+          className="mt-8 inline-block rounded-full bg-primary px-6 py-3 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+        >
+          Go to dashboard
+        </Link>
       </div>
     </main>
   );

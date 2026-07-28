@@ -105,8 +105,8 @@ function ProfileEditor({
     window.setTimeout(() => setCopied(false), 1500);
   };
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     router.replace("/login");
   };
 

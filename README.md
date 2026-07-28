@@ -1,12 +1,12 @@
 <p align="center">
-  <img src="./public/readme/hero.svg" alt="Evven — group expense splitting. Keep shared costs fair, clear, and totally handled." width="100%" />
+  <img src="./public/EvenUp-black.svg" alt="Evven" width="96" />
 </p>
 
 <p align="center">
   <img alt="Next.js 16" src="https://img.shields.io/badge/Next.js-16-000000?style=flat-square&logo=next.js&logoColor=white">
   <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-strict-3178C6?style=flat-square&logo=typescript&logoColor=white">
   <img alt="Tailwind CSS v4" src="https://img.shields.io/badge/Tailwind-v4-38BDF8?style=flat-square&logo=tailwindcss&logoColor=white">
-  <img alt="pnpm" src="https://img.shields.io/badge/pnpm-workspace-F69220?style=flat-square&logo=pnpm&logoColor=white">
+  <img alt="npm" src="https://img.shields.io/badge/npm-package-CB3837?style=flat-square&logo=npm&logoColor=white">
   <img alt="License" src="https://img.shields.io/badge/license-private-lightgrey?style=flat-square">
 </p>
 
@@ -58,9 +58,10 @@ The other piece that sets Evven apart is **ghost users** — placeholder people 
 - Hero insight cards and SVG ring stat components summarizing balances at a glance
 - Editable profile, including profile picture
 
-**Marketing site**
-- Landing pages for three audiences — personal, teams, enterprise — each with its own hero, features, pricing, FAQ, testimonials, and use-cases sections, and its own CSS theme (see [Design system](#design-system))
-- Static pages: About, Guides, Support, Security, Status, Privacy, Terms
+**Deployment split**
+- This repo is the authenticated app deployed at `app.evven.xyz`
+- Marketing, legal, and public content live in the separate landing repo deployed at `evven.xyz`
+- Auth links in this app can point back to the landing site through `NEXT_PUBLIC_LANDING_URL`
 
 ## Tech stack
 
@@ -72,13 +73,12 @@ The other piece that sets Evven apart is **ghost users** — placeholder people 
 | Component primitives | Radix UI / shadcn-style components (`components/ui`) |
 | Icons | lucide-react |
 | Animation | Framer Motion, GSAP |
-| 3D / shaders | three.js, ogl (landing page visuals) |
 | Forms | react-hook-form + zod resolvers |
 | State | Zustand (`store/auth-store.ts`) |
 | Server state / caching | TanStack Query |
 | HTTP client | Axios, shared instance + interceptors (`lib/api.ts`) |
 | Notifications | sonner (toasts) |
-| Package manager | pnpm (see `pnpm-workspace.yaml`) |
+| Package manager | npm (`package-lock.json`) |
 
 ## Architecture
 
@@ -96,15 +96,15 @@ FastAPI backend (external, not in this repo)
 ```
 
 - **`store/auth-store.ts`** is the single source of truth for `user`, `isAuthenticated`, and `isInitialized`. `AppLayout` (`app/(app)/layout.tsx`) reads this store and redirects to `/login` once initialization completes without an authenticated user.
-- **`lib/desktop.ts`** centralizes "am I running inside the desktop wrapper" detection (user-agent sniffing for `tauri` / `pake` / `evven`, plus a session-storage override) and the localStorage-backed token helpers used by both `lib/api.ts` and `store/auth-store.ts`.
+- **`lib/desktop.ts`** centralizes "am I running inside the desktop wrapper" detection (user-agent sniffing for `tauri` / `pake` / `evven`, plus a session-storage override) and token helpers used by both `lib/api.ts` and `store/auth-store.ts`. Desktop persists the access/refresh pair in `localStorage`; browser web keeps only the short-lived access token in `sessionStorage`.
 - **`lib/api.ts`** attaches the bearer token to every request and, on a 401 in desktop mode, transparently refreshes the access token (de-duped via a shared in-flight promise) and retries the original request once. If refresh fails, tokens are cleared and the user is redirected to the desktop login route.
-- **`proxy.ts`** runs at the edge and redirects desktop-wrapper traffic hitting `/` straight to `/desktop`, so the native shell lands on a dedicated entry screen instead of the marketing homepage.
+- **`proxy.ts`** runs at the edge and redirects desktop-wrapper traffic hitting `/` straight to `/desktop`, so the native shell lands on a dedicated entry screen.
 - **API responses** are consistently shaped as `{ message, data }` (`types/common.ts` → `ApiResponse<T>`); service functions unwrap `.data` before returning to callers. The `ghosts` service additionally normalizes a couple of inconsistent backend field names (`id`/`ghost_id`, `group_id`/`shadow_group_id`).
-- **Route groups**: `app/(app)/*` holds the authenticated product behind the dock-navigated shell; `app/(auth)/*` holds login/signup/password flows behind a shared `AuthShell` / `AuthSlideShell`; everything else at the top level of `app/` is public marketing/legal content.
+- **Route groups**: `app/(app)/*` holds the authenticated product behind the dock-navigated shell; `app/(auth)/*` holds login/signup/password flows behind a shared `AuthShell` / `AuthSlideShell`; `app/page.tsx` redirects into the authenticated app.
 
 ## Design system
 
-Evven's visual identity is documented in full in [`mobileui.md`](./mobileui.md), written as a spec detailed enough to port the same look to a native mobile app. Short version:
+Evven's visual identity is implemented through shared CSS tokens and product components. Short version:
 
 - **Tokens** live as CSS custom properties in `app/globals.css`, re-exposed to Tailwind v4 via `@theme inline`:
   - `--evven-background`, `--evven-surface`, `--evven-card-background`, `--evven-border`
@@ -112,8 +112,8 @@ Evven's visual identity is documented in full in [`mobileui.md`](./mobileui.md),
   - `--evven-accent-primary` (`#2d5a4f` — deep green), `--evven-accent-secondary`, `--evven-error`
   - `--evven-radius-card` (16px), `--evven-radius-hero` (20px)
 - **Typography**: Satoshi for body copy, Xanh Mono (italic accents) for headings, JetBrains Mono (bold) for numeric/data values, Baskervville italic for hero display type.
-- **Theming**: the base palette is the "personal" theme. `.theme-teams` (navy) and `.theme-enterprise` (maroon) classes swap the same token set for the teams/enterprise marketing surfaces.
-- **Components**: shadcn-style primitives configured via `components.json` (style: `radix-luma`, base color: `mist`, icon library: `lucide`), extended with bespoke pieces like `Grainient`, `GridDistortion`, and `pixel-trail` for landing-page visual flair.
+- **Theming**: the base palette is the authenticated app theme. Audience-specific marketing themes now belong to the landing repo.
+- **Components**: shadcn-style primitives configured via `components.json` (style: `radix-luma`, base color: `mist`, icon library: `lucide`) plus product-specific components for app workflows.
 - Working rule for this codebase: mock the UI before writing code, and keep presentation changes strictly scoped away from data/logic.
 
 ## Project structure
@@ -128,10 +128,11 @@ app/
     profile/
     layout.tsx        # app shell: mobile dock, desktop dock, identity chip, logout
   (auth)/            # login, signup, forgot/reset password
+  avatar-setup/      # required profile-picture step before entering the app shell
   desktop/           # entry surface for the native desktop wrapper
-  about/ enterprise/ guides/ privacy/ security/ status/ support/ teams/ terms/
   layout.tsx          # root layout: fonts, ThemeProvider, AuthProvider
-  page.tsx            # marketing homepage (personal theme)
+  page.tsx            # redirects to /dashboard; app layout handles auth/profile routing
+  not-found.tsx       # product 404
 
 components/
   auth/               # AuthShell, AuthSlideShell, GoogleSignInButton
@@ -141,7 +142,6 @@ components/
     ExpenseForm.tsx
   groups/             # group detail tabs, modals, balance/settlement UI
   hooks/              # use-screen-size, use-debounced-dimensions
-  landing/            # personal/ enterprise/ teams/ marketing sections
   shared/             # auth-provider, LoadingScreen, desktop-version-badge
   ui/                 # shadcn-style primitives (button, dialog, tabs, sheet, ...)
 
@@ -157,25 +157,23 @@ store/
 types/                 # shared TS types, re-exported from types/index.ts
 providers/
   theme-provider.tsx
-notes/                  # working notes / bug drafts (see Known issues)
 public/                 # logo marks, hero art
 proxy.ts                 # edge redirect for the desktop wrapper
-mobileui.md               # full design-system spec for native app parity
 ```
 
 ## Getting started
 
-**Prerequisites**: Node 20+, pnpm, and a running instance of the Evven backend (or a reachable API URL).
+**Prerequisites**: Node 20+, npm, and a running instance of the Evven backend (or a reachable API URL).
 
 ```bash
 # install dependencies
-pnpm install
+npm install
 
 # configure the API URL (see below)
 cp .env.example .env.local   # if present, otherwise create .env.local manually
 
 # run the dev server
-pnpm dev
+npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000).
@@ -185,14 +183,15 @@ Open [http://localhost:3000](http://localhost:3000).
 | Variable | Required | Default | Purpose |
 |---|---|---|---|
 | `NEXT_PUBLIC_API_URL` | No | `http://localhost:8000` | Base URL for the FastAPI backend used by `lib/api.ts` |
+| `NEXT_PUBLIC_LANDING_URL` | Yes | None | External origin for the marketing site, used by auth-flow logo links. Use `https://evven.xyz` in production and a local landing URL such as `http://localhost:3001` in development. |
 
 ## Scripts
 
 ```bash
-pnpm dev      # start the Next.js dev server
-pnpm build    # production build
-pnpm start    # run the production build
-pnpm lint     # eslint
+npm run dev      # start the Next.js dev server
+npm run build    # production build
+npm run start    # run the production build
+npm run lint     # eslint
 ```
 
 ## The desktop build
@@ -200,20 +199,20 @@ pnpm lint     # eslint
 Evven ships the same web app inside a native desktop shell. The frontend detects that context rather than shipping a separate codebase:
 
 - `lib/desktop.ts` → `isDesktop()` checks a session-storage flag and sniffs the user agent for `tauri`, `pake`, or `evven`.
-- `proxy.ts` redirects desktop traffic away from the marketing homepage to `/desktop` on first load.
+- `proxy.ts` redirects desktop traffic hitting `/` to `/desktop` on first load.
 - `app/desktop/` contains the dedicated entry page, loading, and error states for that context.
-- Auth in desktop mode uses the localStorage-backed access/refresh token pair (`lib/desktop.ts`), with `lib/api.ts` handling silent refresh on 401 and redirecting to `/login?reason=session-expired` if refresh fails.
+- Auth in desktop mode uses the localStorage-backed access/refresh token pair (`lib/desktop.ts`), with `lib/api.ts` handling silent refresh on 401 and redirecting to `/login?reason=session-expired` if refresh fails. Desktop logout sends the current refresh token to `/auth/logout` so the backend can revoke that session row. Browser web does not store or use refresh tokens; it keeps the access token in `sessionStorage` so the normal web app remains a short-lived session.
 - `DesktopVersionBadge` (mounted in the root layout) surfaces build/version info only when running inside the wrapper.
 
 ## Marketing surface
 
-`app/page.tsx`, `app/teams/page.tsx`, and `app/enterprise/page.tsx` each render a themed landing experience assembled from `components/landing/{personal,teams,enterprise}/*` — hero, features, how-it-works, pricing, testimonials, FAQ, and CTA sections — plus shared static pages for About, Guides, Support, Security, Status, Privacy, and Terms.
+The marketing surface no longer lives in this repository. This repo deploys only the authenticated product at `app.evven.xyz`; `app/page.tsx` redirects to `/dashboard`, and the app shell decides whether the visitor should continue to `/dashboard`, `/login`, or `/avatar-setup`.
+
+The public website, including marketing, legal, and CTA pages, lives in the separate landing repo deployed at `evven.xyz`. Set `NEXT_PUBLIC_LANDING_URL` here so auth pages can link their logo back to that external site.
 
 ## Known issues / open work
 
-Tracked informally in `notes/`:
-
-- **Profile picture not shown in the app shell** — the authenticated layout currently renders initials only in the profile chip, even when `user.profile_picture` is set (the profile page itself already reads/writes this field correctly). Fix involves making a shared avatar component (image with initials fallback) and using it consistently across the app shell and profile page. See `notes/profile-picture-issue-draft.md` for the full writeup.
+- **Resolved: AuthProvider mount regression** — `AuthProvider` is now mounted once from the root layout, with a module-level guard so `restoreSession()` is not duplicated by React Strict Mode remounts in dev. Manual route trace completed: unauthenticated `/` → `/dashboard` → `/login`; authenticated `/` → `/dashboard`; authenticated user without `profile_picture` → `/avatar-setup`.
 
 ## Contributing
 

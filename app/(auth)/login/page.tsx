@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -11,7 +11,7 @@ import Link from "next/link";
 import { useAuthStore } from "@/store/auth-store";
 import { GoogleSignInButton } from "@/components/auth/GoogleSignInButton";
 
-export default function Login() {
+function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const login = useAuthStore((state) => state.login);
@@ -154,5 +154,19 @@ export default function Login() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function Login() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex h-screen items-center justify-center bg-background">
+          <div className="size-5 animate-spin rounded-full border-2 border-r-transparent" style={{ borderColor: "var(--evven-accent-primary)", borderRightColor: "transparent" }} />
+        </div>
+      }
+    >
+      <LoginForm />
+    </Suspense>
   );
 }

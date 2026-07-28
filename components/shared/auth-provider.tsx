@@ -4,6 +4,8 @@ import React, { useEffect } from 'react'
 import { useAuthStore } from '@/store/auth-store'
 import { LoadingScreen } from './LoadingScreen';
 
+let restoreSessionPromise: Promise<void> | null = null;
+
 const AuthProvider = (
   { children } : { children : React.ReactNode }
 ) => {
@@ -13,7 +15,7 @@ const AuthProvider = (
   const isInitialized = useAuthStore((state) => state.isInitialized)
 
   useEffect(() => {
-      restoreSession()
+      restoreSessionPromise ??= restoreSession()
     }, [restoreSession])
 
   if (!isInitialized || isLoading){

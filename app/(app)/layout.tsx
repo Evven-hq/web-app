@@ -299,8 +299,8 @@ function AppShell({ children }: { children: React.ReactNode }) {
     }
   }, [isInitialized, isAuthenticated, user, router]);
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     router.replace("/login");
   };
 

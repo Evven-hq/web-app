@@ -3,9 +3,9 @@ import "./globals.css";
 
 import { ThemeProvider } from "@/providers/theme-provider";
 import { JetBrains_Mono, Xanh_Mono, Homemade_Apple, Baskervville, Crimson_Text, Instrument_Serif } from "next/font/google";
-import AuthProvider from "@/components/shared/auth-provider";
 import { QueryProvider } from "@/providers/query-provider";
 import DesktopVersionBadge from "@/components/shared/desktop-version-badge";
+import AuthProvider from "@/components/shared/auth-provider";
 
 const jetBrains = JetBrains_Mono({
   subsets: ['latin'],
@@ -51,6 +51,7 @@ const instrumentSerif = Instrument_Serif({
 export const metadata: Metadata = {
   title: "Evven",
   description: "Keep shared costs fair, clear, and totally handled. Evven makes group expense tracking simple and automated.",
+  robots: { index: false, follow: false },
 
   icons: {
     icon: "/EvenUp-white.svg",

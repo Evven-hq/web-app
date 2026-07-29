@@ -54,6 +54,14 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   loginWithGoogle: async (credential) => {
     const data = await googleLogin(credential);
+    const provider = data.user.auth_provider?.toLowerCase() ?? "";
+
+    if (!provider.includes("google")) {
+      throw new Error(
+        "An account with this email already uses a password. Log in with your email and password instead.",
+      );
+    }
+
     storeAuthTokens(data.tokens);
     set({ user: data.user, isAuthenticated: true, token: data.tokens.access_token });
   },

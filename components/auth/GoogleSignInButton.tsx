@@ -35,12 +35,53 @@ declare global {
 // client-side navigation (login <-> signup), only resets on a full page reload.
 let gsiInitialized = false;
 
+function getGoogleSignInError(err: unknown) {
+  if (!isAxiosError(err)) {
+    return err instanceof Error
+      ? err.message
+      : "Something went wrong with Google sign-in. Please try again.";
+  }
+
+  const detail = err.response?.data?.detail;
+  const message = err.response?.data?.message;
+  const status = err.response?.status;
+
+  if (typeof detail === "string") {
+    return detail;
+  }
+
+  if (Array.isArray(detail)) {
+    const firstMessage = detail.find(
+      (item): item is { msg: string } =>
+        typeof item === "object" &&
+        item !== null &&
+        "msg" in item &&
+        typeof item.msg === "string",
+    );
+
+    if (firstMessage) {
+      return firstMessage.msg;
+    }
+  }
+
+  if (typeof message === "string") {
+    return message;
+  }
+
+  if (status === 409 || status === 400) {
+    return "An account with this email already uses a password. Log in with your email and password instead.";
+  }
+
+  return "Something went wrong with Google sign-in. Please try again.";
+}
+
 export function GoogleSignInButton() {
   const router = useRouter();
   const loginWithGoogle = useAuthStore((state) => state.loginWithGoogle);
   const buttonRef = useRef<HTMLDivElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [error, setError] = useState("");
+  const [isSigningIn, setIsSigningIn] = useState(false);
   const [buttonWidth, setButtonWidth] = useState(336);
   const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
 
@@ -72,9 +113,11 @@ export function GoogleSignInButton() {
   }, []);
 
   const setErrorRef = useRef(setError);
+  const setIsSigningInRef = useRef(setIsSigningIn);
   useEffect(() => {
     setErrorRef.current = setError;
-  }, [setError]);
+    setIsSigningInRef.current = setIsSigningIn;
+  }, [setError, setIsSigningIn]);
 
   const initializeGoogle = useCallback(() => {
     if (!clientId || !window.google || !buttonRef.current) return;
@@ -83,18 +126,14 @@ export function GoogleSignInButton() {
       window.google.accounts.id.initialize({
         client_id: clientId,
         callback: async ({ credential }) => {
-          setErrorRef.current(""); // was: setError("")
+          setErrorRef.current("");
+          setIsSigningInRef.current(true);
           try {
             await loginWithGoogleRef.current(credential);
             routerRef.current.push("/dashboard");
           } catch (err) {
-            if (isAxiosError(err) && err.response?.data?.detail) {
-              setErrorRef.current(err.response.data.detail); // was: setError(...)
-            } else {
-              setErrorRef.current(
-                "Something went wrong with Google sign-in. Please try again.",
-              );
-            }
+            setErrorRef.current(getGoogleSignInError(err));
+            setIsSigningInRef.current(false);
           }
         },
       });
@@ -133,9 +172,27 @@ export function GoogleSignInButton() {
         strategy="afterInteractive"
         onLoad={initializeGoogle}
       />
-      <div ref={buttonRef} className="flex min-h-11 justify-center" />
+      <div className="relative min-h-11">
+        <div
+          ref={buttonRef}
+          className={isSigningIn ? "flex min-h-11 justify-center opacity-0" : "flex min-h-11 justify-center"}
+          aria-hidden={isSigningIn}
+        />
+        {isSigningIn && (
+          <div
+            role="status"
+            aria-live="polite"
+            className="absolute inset-0 flex min-h-11 items-center justify-center rounded-full border border-border/70 bg-background/80 px-4 text-sm font-medium text-foreground shadow-sm backdrop-blur-sm"
+          >
+            <span className="mr-2 inline-block size-4 animate-spin rounded-full border-2 border-primary border-r-transparent" />
+            Signing in with Google...
+          </div>
+        )}
+      </div>
       {error && (
-        <p className="mt-2 text-center text-xs text-destructive">{error}</p>
+        <div className="mt-3 rounded-2xl border border-red-900/30 bg-red-950/20 p-3 text-sm leading-6 text-red-300 animate-in fade-in duration-200">
+          {error}
+        </div>
       )}
     </div>
   );

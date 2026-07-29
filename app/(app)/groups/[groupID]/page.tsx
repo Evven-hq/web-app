@@ -472,6 +472,14 @@ export default function GroupDetailPage() {
     [members]
   );
 
+  const memberAvatars = useMemo(
+    () =>
+      Object.fromEntries(
+        members.map((member) => [member.user_id, member.profile_picture ?? null])
+      ),
+    [members]
+  );
+
   const splitParticipantIds = (() => {
     const ids = new Set<string>();
 
@@ -484,6 +492,11 @@ export default function GroupDetailPage() {
   const userName = (id: string) => {
     if (id === currentUserId) return currentUser?.name ?? id.slice(0, 8);
     return memberNames[id] ?? id.slice(0, 8);
+  };
+
+  const userAvatar = (id: string) => {
+    if (id === currentUserId) return currentUser?.profile_picture ?? null;
+    return memberAvatars[id] ?? null;
   };
 
   const fillSplitsEqually = () => {
@@ -538,8 +551,11 @@ export default function GroupDetailPage() {
         <div className="shrink-0">
           <GroupHeader
             group={group}
+            members={members}
             membersCount={members.length}
             expensesCount={expenses.length}
+            userName={userName}
+            userAvatar={userAvatar}
             onAddMember={() => setShowAddMember(true)}
             onAddExpense={openAddExpense}
           />
@@ -575,6 +591,7 @@ export default function GroupDetailPage() {
               currentUserId={currentUserId}
               members={members}
               userName={userName}
+              userAvatar={userAvatar}
               onSettle={openSettle}
             />
           )}
@@ -587,6 +604,7 @@ export default function GroupDetailPage() {
               breakdownError={breakdownError}
               currentUserId={currentUserId}
               userName={userName}
+              userAvatar={userAvatar}
               onReloadBreakdown={refreshBreakdown}
             />
           )}
@@ -598,6 +616,7 @@ export default function GroupDetailPage() {
               currentUserId={currentUserId}
               isCreator={isCreator}
               userName={userName}
+              userAvatar={userAvatar}
               onRemoveMember={handleRemoveMember}
               removingMemberId={removingMemberId}
               onAddMember={() => setShowAddMember(true)}
@@ -640,6 +659,7 @@ export default function GroupDetailPage() {
         splitParticipantIds={splitParticipantIds}
         currentUserId={currentUserId}
         userName={userName}
+        userAvatar={userAvatar}
         onSelectSplitType={selectSplitType}
         onFillSplitsEqually={fillSplitsEqually}
         onSave={handleSaveExpense}

@@ -1,10 +1,11 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
-import { ArrowLeftRight, CheckCircle, Receipt, Split, Banknote } from "lucide-react";
+import { ArrowLeftRight, CheckCircle, ChevronRight, Receipt, RefreshCw, Split, Banknote } from "lucide-react";
 import type { GroupBalances, GroupDebtBreakdown, Settlement } from "@/types";
-import { formatAmount } from "./group-detail-utils";
-import type { UserNameFn } from "./group-detail-shared";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { COLORS, formatAmount, getInitials } from "./group-detail-utils";
+import type { UserAvatarFn, UserNameFn } from "./group-detail-shared";
 
 type SettlementsSubTab = "past" | "final" | "receivables" | "breakdown";
 type SettlementEntry = {
@@ -17,6 +18,14 @@ type SettlementRow = {
   total: number;
 };
 
+function colorForId(id: string) {
+  let hash = 0;
+  for (let i = 0; i < id.length; i += 1) {
+    hash = (hash * 31 + id.charCodeAt(i)) >>> 0;
+  }
+  return COLORS[hash % COLORS.length];
+}
+
 export function SettlementsTab({
   settlements,
   balances,
@@ -24,6 +33,7 @@ export function SettlementsTab({
   breakdownError,
   currentUserId,
   userName,
+  userAvatar,
   onReloadBreakdown,
 }: {
   settlements: Settlement[];
@@ -32,6 +42,7 @@ export function SettlementsTab({
   breakdownError: string | null;
   currentUserId?: string;
   userName: UserNameFn;
+  userAvatar: UserAvatarFn;
   onReloadBreakdown: () => void;
 }) {
   const [subTab, setSubTab] = useState<SettlementsSubTab>("past");
@@ -124,33 +135,39 @@ export function SettlementsTab({
     { key: "past", label: "Settled", icon: CheckCircle },
     { key: "final", label: "To settle", icon: ArrowLeftRight },
     { key: "receivables", label: "To collect", icon: Split },
-    { key: "breakdown", label: "Expense breakdown", icon: Receipt },
+    { key: "breakdown", label: "Breakdown", icon: Receipt },
   ];
 
   return (
     <div className="h-full overflow-hidden flex flex-col">
-      <div className="shrink-0 mb-4">
-        <div className="card grid grid-cols-2 gap-2 rounded-2xl p-1">
-          {subTabs.map(({ key, label, icon: Icon }) => {
-            const active = subTab === key;
-            return (
-              <button
-                key={key}
-                type="button"
-                onClick={() => setSubTab(key)}
-                className="flex items-center justify-center gap-1.5 rounded-xl px-3 py-2 text-xs font-medium transition-all"
-                style={{
-                  background: active ? "var(--evven-surface)" : "transparent",
-                  color: active ? "var(--evven-text-primary)" : "var(--evven-text-muted)",
-                  boxShadow: active ? "0 1px 3px rgba(0,0,0,0.06)" : "none",
-                }}
-              >
-                <Icon size={12} />
-                <span className="truncate">{label}</span>
-              </button>
-            );
-          })}
-        </div>
+      {/* Compact 4-up segmented control: icon-over-label, tighter grid instead of
+          the previous 2x2 card grid, so it reads as one control, not a second
+          stacked tab bar. */}
+      <div
+        className="shrink-0 mb-4 grid grid-cols-4 gap-1 rounded-2xl p-1"
+        style={{ background: "var(--evven-surface)", border: "1px solid var(--evven-border)" }}
+        role="tablist"
+      >
+        {subTabs.map(({ key, label, icon: Icon }) => {
+          const active = subTab === key;
+          return (
+            <button
+              key={key}
+              type="button"
+              role="tab"
+              aria-selected={active}
+              onClick={() => setSubTab(key)}
+              className="flex flex-col items-center justify-center gap-1 rounded-xl py-2 px-1 text-[10.5px] font-medium leading-tight transition-all"
+              style={{
+                background: active ? "var(--evven-accent-secondary)" : "transparent",
+                color: active ? "#6b4f18" : "var(--evven-text-muted)",
+              }}
+            >
+              <Icon size={14} />
+              <span className="truncate w-full text-center">{label}</span>
+            </button>
+          );
+        })}
       </div>
 
       <div className="min-h-0 flex-1 overflow-hidden">
@@ -287,16 +304,17 @@ export function SettlementsTab({
               <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: "var(--evven-text-muted)" }}>
                 Expense breakdown
               </p>
-                <button
-                  type="button"
-                  onClick={onReloadBreakdown}
-                  className="text-xs font-medium px-3 py-1.5 rounded-lg border transition-all hover:opacity-80"
-                  style={{
-                    borderColor: "var(--evven-border)",
-                    background: "var(--evven-card-background)",
-                    color: "var(--evven-text-primary)",
-                  }}
-                >
+              <button
+                type="button"
+                onClick={onReloadBreakdown}
+                className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg border transition-all hover:opacity-80"
+                style={{
+                  borderColor: "var(--evven-border)",
+                  background: "var(--evven-card-background)",
+                  color: "var(--evven-text-primary)",
+                }}
+              >
+                <RefreshCw size={12} />
                 Reload
               </button>
             </div>
@@ -319,71 +337,88 @@ export function SettlementsTab({
                 icon={<Receipt size={18} style={{ color: "var(--evven-text-muted)" }} />}
               />
             ) : (
+              // One card per debtor holding everyone they owe, instead of a card
+              // nested inside a card inside a card. A header row identifies who
+              // owes, internal dividers separate each creditor, and a thin rule
+              // groups that creditor's line items — so the hierarchy reads through
+              // spacing and rules rather than repeated borders.
               <div className="space-y-3">
-                {detailedBreakdown.map(({ debtorId, creditors }) => (
-                  <div
-                    key={debtorId}
-                    className="card rounded-2xl p-4"
-                  >
-                    <div className="flex items-start justify-between gap-3 mb-3">
-                      <div>
-                        <p className="text-sm font-semibold" style={{ color: "var(--evven-text-primary)" }}>
-                          {displayName(debtorId)}
-                        </p>
-                        <p className="text-xs mt-0.5" style={{ color: "var(--evven-text-muted)" }}>
-                          Pays {creditors.length} member{creditors.length !== 1 ? "s" : ""}
-                        </p>
-                      </div>
-                      <span
-                        className="text-xs font-medium px-2.5 py-1 rounded-full"
-                        style={{ background: "var(--evven-surface)", color: "var(--evven-text-muted)" }}
+                {detailedBreakdown.map(({ debtorId, creditors, total }) => {
+                  const color = colorForId(debtorId);
+                  return (
+                    <div key={debtorId} className="card rounded-2xl overflow-hidden">
+                      <div
+                        className="flex items-center gap-3 px-4 py-3"
+                        style={{ borderBottom: "1px solid var(--evven-border)" }}
                       >
-                        {formatAmount(creditors.reduce((sum, entry) => sum + entry.total, 0))}
-                      </span>
-                    </div>
-
-                    <div className="space-y-2">
-                      {creditors.map(({ creditorId, items, total }) => (
-                        <div
-                          key={creditorId}
-                          className="card rounded-xl p-3"
-                        >
-                          <div className="flex items-center justify-between gap-2 mb-2">
-                            <p
-                              className="text-xs font-semibold uppercase tracking-widest"
-                              style={{ color: "var(--evven-text-muted)" }}
-                            >
-                              Paid to {displayName(creditorId)}
-                            </p>
-                            <p className="text-xs font-medium" style={{ color: "var(--evven-text-primary)" }}>
-                              {formatAmount(total)}
-                            </p>
-                          </div>
-                          <div className="space-y-2">
-                            {items.map((item) => (
-                              <div
-                                key={item.expense_id}
-                                className="card flex items-center justify-between gap-3 rounded-lg px-3 py-2"
-                              >
-                                <div className="min-w-0">
-                                  <p className="text-sm font-medium truncate" style={{ color: "var(--evven-text-primary)" }}>
-                                    {item.title}
-                                  </p>
-                                  <p className="text-xs mt-0.5" style={{ color: "var(--evven-text-muted)" }}>
-                                    Expense split
-                                  </p>
-                                </div>
-                                <span className="text-sm font-semibold shrink-0" style={{ color: "var(--evven-text-primary)" }}>
-                                  {formatAmount(item.amount)}
-                                </span>
-                              </div>
-                            ))}
-                          </div>
+                        <Avatar aria-label={displayName(debtorId)}>
+                          <AvatarImage src={userAvatar(debtorId) ?? undefined} alt={displayName(debtorId)} />
+                          <AvatarFallback
+                            className="text-[11px] font-semibold"
+                            style={{ background: color.bg, color: color.text }}
+                          >
+                            {getInitials(displayName(debtorId))}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-semibold truncate" style={{ color: "var(--evven-text-primary)" }}>
+                            {displayName(debtorId)}
+                          </p>
+                          <p className="text-xs mt-0.5" style={{ color: "var(--evven-text-muted)" }}>
+                            pays {creditors.length} member{creditors.length !== 1 ? "s" : ""}
+                          </p>
                         </div>
-                      ))}
+                        <span className="text-sm font-semibold shrink-0" style={{ color: "var(--evven-text-primary)" }}>
+                          {formatAmount(total)}
+                        </span>
+                      </div>
+
+                      <div>
+                        {creditors.map(({ creditorId, items, total: creditorTotal }, index) => (
+                          <div
+                            key={creditorId}
+                            className="px-4 py-3"
+                            style={{
+                              borderBottom:
+                                index < creditors.length - 1 ? "1px solid var(--evven-border)" : "none",
+                            }}
+                          >
+                            <div className="flex items-center gap-1.5 mb-2">
+                              <ChevronRight size={12} style={{ color: "var(--evven-text-muted)" }} />
+                              <p className="text-xs font-medium flex-1" style={{ color: "var(--evven-text-muted)" }}>
+                                to {displayName(creditorId)}
+                              </p>
+                              <p className="text-xs font-semibold" style={{ color: "var(--evven-text-primary)" }}>
+                                {formatAmount(creditorTotal)}
+                              </p>
+                            </div>
+                            <div
+                              className="space-y-1.5 pl-3"
+                              style={{ borderLeft: "2px solid var(--evven-border)" }}
+                            >
+                              {items.map((item) => (
+                                <div key={item.expense_id} className="flex items-center justify-between gap-3">
+                                  <span
+                                    className="text-xs truncate"
+                                    style={{ color: "var(--evven-text-primary)" }}
+                                  >
+                                    {item.title}
+                                  </span>
+                                  <span
+                                    className="text-xs font-medium shrink-0"
+                                    style={{ color: "var(--evven-text-muted)" }}
+                                  >
+                                    {formatAmount(item.amount)}
+                                  </span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>

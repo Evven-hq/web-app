@@ -2,21 +2,39 @@
 
 import Link from "next/link";
 import { ArrowLeft, Plus, UserPlus } from "lucide-react";
-import type { Group } from "@/types";
+import type { Group, GroupMember } from "@/types";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarGroup,
+  AvatarGroupCount,
+  AvatarImage,
+} from "@/components/ui/avatar";
+import { COLORS, getInitials } from "./group-detail-utils";
+import type { UserAvatarFn, UserNameFn } from "./group-detail-shared";
 
 export function GroupHeader({
   group,
+  members,
   membersCount,
   expensesCount,
+  userName,
+  userAvatar,
   onAddMember,
   onAddExpense,
 }: {
   group: Group;
+  members: GroupMember[];
   membersCount: number;
   expensesCount: number;
+  userName: UserNameFn;
+  userAvatar: UserAvatarFn;
   onAddMember: () => void;
   onAddExpense: () => void;
 }) {
+  const visibleMembers = members.slice(0, 4);
+  const hiddenMembersCount = Math.max(0, members.length - visibleMembers.length);
+
   return (
     <div className="mb-6">
       <Link
@@ -36,6 +54,30 @@ export function GroupHeader({
             {membersCount} member{membersCount !== 1 ? "s" : ""} · {expensesCount} expense
             {expensesCount !== 1 ? "s" : ""}
           </p>
+          {visibleMembers.length > 0 && (
+            <AvatarGroup className="mt-3">
+              {visibleMembers.map((member, index) => {
+                const color = COLORS[index % COLORS.length];
+
+                return (
+                  <Avatar key={member.id} size="sm" aria-label={userName(member.user_id)}>
+                    <AvatarImage src={userAvatar(member.user_id) ?? undefined} alt={userName(member.user_id)} />
+                    <AvatarFallback
+                      className="text-[10px] font-semibold"
+                      style={{ background: color.bg, color: color.text }}
+                    >
+                      {getInitials(userName(member.user_id))}
+                    </AvatarFallback>
+                  </Avatar>
+                );
+              })}
+              {hiddenMembersCount > 0 && (
+                <AvatarGroupCount className="text-[10px] font-semibold">
+                  +{hiddenMembersCount}
+                </AvatarGroupCount>
+              )}
+            </AvatarGroup>
+          )}
         </div>
         <div className="flex gap-2 shrink-0">
           <button

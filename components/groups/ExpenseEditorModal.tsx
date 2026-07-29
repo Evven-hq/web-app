@@ -4,9 +4,10 @@ import { Loader2, Plus, CheckCircle, X } from "lucide-react";
 import type { Dispatch, SetStateAction } from "react";
 import { EXPENSE_CATEGORIES } from "@/lib/expense-categories";
 import { PAYMENT_MODES } from "@/lib/payment-modes";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import type { GroupExpense, PaymentMethod } from "@/types";
-import { formatAmount } from "./group-detail-utils";
-import type { UserNameFn } from "./group-detail-shared";
+import { COLORS, formatAmount, getInitials } from "./group-detail-utils";
+import type { UserAvatarFn, UserNameFn } from "./group-detail-shared";
 
 type SplitType = "equal" | "exact" | "percentage";
 
@@ -30,6 +31,7 @@ export function ExpenseEditorModal({
   splitParticipantIds,
   currentUserId,
   userName,
+  userAvatar,
   onSelectSplitType,
   onFillSplitsEqually,
   onSave,
@@ -55,6 +57,7 @@ export function ExpenseEditorModal({
   splitParticipantIds: string[];
   currentUserId?: string;
   userName: UserNameFn;
+  userAvatar: UserAvatarFn;
   onSelectSplitType: (splitType: SplitType) => void;
   onFillSplitsEqually: () => void;
   onSave: () => void;
@@ -172,8 +175,9 @@ export function ExpenseEditorModal({
               Participants
             </label>
             <div className="grid grid-cols-2 gap-2">
-              {splitParticipantIds.map((userId) => {
+              {splitParticipantIds.map((userId, index) => {
                 const selected = selectedParticipants.includes(userId);
+                const color = COLORS[index % COLORS.length];
 
                 return (
                   <button
@@ -190,7 +194,18 @@ export function ExpenseEditorModal({
                       borderColor: selected ? "#534AB7" : "var(--evven-border)",
                     }}
                   >
-                    <span className="truncate">{userName(userId)}</span>
+                    <span className="flex min-w-0 items-center gap-2">
+                      <Avatar size="sm" aria-label={userName(userId)}>
+                        <AvatarImage src={userAvatar(userId) ?? undefined} alt={userName(userId)} />
+                        <AvatarFallback
+                          className="font-semibold"
+                          style={{ background: color.bg, color: color.text }}
+                        >
+                          {getInitials(userName(userId))}
+                        </AvatarFallback>
+                      </Avatar>
+                      <span className="truncate">{userName(userId)}</span>
+                    </span>
                     {selected && <CheckCircle size={14} color="#534AB7" />}
                   </button>
                 );
@@ -239,6 +254,12 @@ export function ExpenseEditorModal({
                 <div className="space-y-2">
                   {selectedParticipants.map((userId) => (
                     <div key={userId} className="flex items-center gap-3">
+                      <Avatar size="sm" aria-label={userName(userId)}>
+                        <AvatarImage src={userAvatar(userId) ?? undefined} alt={userName(userId)} />
+                        <AvatarFallback className="text-[10px] font-semibold">
+                          {getInitials(userName(userId))}
+                        </AvatarFallback>
+                      </Avatar>
                       <div className="min-w-0 flex-1">
                         <p className="truncate text-sm font-medium" style={{ color: "var(--evven-text-primary)" }}>
                           {userName(userId)}

@@ -2,8 +2,9 @@
 
 import { Loader2, Trash2, UserPlus } from "lucide-react";
 import type { GroupMember } from "@/types";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { COLORS, formatDate, getInitials } from "./group-detail-utils";
-import type { UserNameFn } from "./group-detail-shared";
+import type { UserAvatarFn, UserNameFn } from "./group-detail-shared";
 
 export function MembersTab({
   members,
@@ -11,6 +12,7 @@ export function MembersTab({
   currentUserId,
   isCreator,
   userName,
+  userAvatar,
   onRemoveMember,
   removingMemberId,
   onAddMember,
@@ -20,6 +22,7 @@ export function MembersTab({
   currentUserId?: string;
   isCreator: boolean;
   userName: UserNameFn;
+  userAvatar: UserAvatarFn;
   onRemoveMember: (member: GroupMember) => void;
   removingMemberId: string | null;
   onAddMember: () => void;
@@ -36,12 +39,15 @@ export function MembersTab({
             key={member.id}
             className="card flex items-center gap-3 px-4 py-3.5 rounded-2xl"
           >
-            <div
-              className="w-9 h-9 rounded-full flex items-center justify-center text-xs font-semibold shrink-0"
-              style={{ background: color.bg, color: color.text }}
-            >
-              {getInitials(userName(member.user_id))}
-            </div>
+            <Avatar className="size-9" aria-label={userName(member.user_id)}>
+              <AvatarImage src={userAvatar(member.user_id) ?? undefined} alt={userName(member.user_id)} />
+              <AvatarFallback
+                className="text-xs font-semibold"
+                style={{ background: color.bg, color: color.text }}
+              >
+                {getInitials(userName(member.user_id))}
+              </AvatarFallback>
+            </Avatar>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium truncate" style={{ color: "var(--evven-text-primary)" }}>
                 {userName(member.user_id)}

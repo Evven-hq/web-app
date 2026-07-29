@@ -2,8 +2,9 @@
 
 import { Scale } from "lucide-react";
 import type { GroupBalances } from "@/types";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { formatAmount } from "./group-detail-utils";
-import type { SettleFn, UserNameFn } from "./group-detail-shared";
+import type { SettleFn, UserAvatarFn, UserNameFn } from "./group-detail-shared";
 
 const COLORS = [
   { bg: "#EEEDFE", text: "#534AB7" },
@@ -28,12 +29,14 @@ export function BalancesTab({
   currentUserId,
   members,
   userName,
+  userAvatar,
   onSettle,
 }: {
   balances: GroupBalances;
   currentUserId?: string;
   members: { user_id: string }[];
   userName: UserNameFn;
+  userAvatar: UserAvatarFn;
   onSettle: SettleFn;
 }) {
   const colorFor = (uid: string) => {
@@ -69,12 +72,15 @@ export function BalancesTab({
                 key={uid}
                 className="card flex items-center gap-3 px-4 py-3.5 rounded-2xl"
               >
-                <div
-                  className="w-9 h-9 rounded-full flex items-center justify-center text-xs font-semibold shrink-0"
-                  style={{ background: color.bg, color: color.text }}
-                >
-                  {getInitials(userName(uid))}
-                </div>
+                <Avatar className="size-9" aria-label={userName(uid)}>
+                  <AvatarImage src={userAvatar(uid) ?? undefined} alt={userName(uid)} />
+                  <AvatarFallback
+                    className="text-xs font-semibold"
+                    style={{ background: color.bg, color: color.text }}
+                  >
+                    {getInitials(userName(uid))}
+                  </AvatarFallback>
+                </Avatar>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium" style={{ color: "var(--evven-text-primary)" }}>
                     {userName(uid)}

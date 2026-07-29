@@ -22,45 +22,53 @@ export function BalanceSummary({
   if (myBalances.length === 0) return null;
 
   return (
-    <div className="card mb-5 rounded-2xl p-4">
-      <p
-        className="text-xs font-semibold uppercase tracking-widest mb-3"
-        style={{ color: "var(--evven-text-muted)" }}
-      >
-        Your balances
-      </p>
-      <div className="space-y-2">
-        {myBalances
-          .map(([uid, n]) => {
-            const youOwe = n < 0;
-            const displayAmount = Math.abs(n);
-            return (
-              <div key={uid} className="flex items-center justify-between">
-                <span className="text-sm" style={{ color: "var(--evven-text-primary)" }}>
-                  {userName(uid)}
-                </span>
-                <div className="flex items-center gap-3">
+    <div
+      className="mb-5 rounded-2xl px-3.5 py-3"
+      style={{ background: "var(--evven-surface)", border: "1px solid var(--evven-border)" }}
+    >
+      <div className="flex items-center gap-2 mb-2">
+        <span
+          className="w-1.5 h-1.5 rounded-full shrink-0"
+          style={{ background: "var(--evven-accent-primary)" }}
+        />
+        <p
+          className="text-[11px] font-semibold uppercase tracking-wide"
+          style={{ color: "var(--evven-text-muted)" }}
+        >
+          Your balances
+        </p>
+      </div>
+
+      <div className="space-y-1.5">
+        {myBalances.map(([uid, n]) => {
+          const youOwe = n < 0;
+          const displayAmount = Math.abs(n);
+
+          return (
+            <div key={uid} className="flex items-center justify-between gap-2">
+              <span className="text-xs truncate" style={{ color: "var(--evven-text-primary)" }}>
+                {userName(uid)}
+              </span>
+              <div className="flex items-center gap-2 shrink-0">
                 <span
-                    className="text-sm font-medium"
-                    style={{ color: youOwe ? "#A32D2D" : "#0F6E56" }}
+                  className="text-xs font-medium whitespace-nowrap"
+                  style={{ color: youOwe ? "#A32D2D" : "#0F6E56" }}
+                >
+                  {youOwe ? `you owe ${formatAmount(displayAmount)}` : `owes you ${formatAmount(displayAmount)}`}
+                </span>
+                {youOwe ? (
+                  <button
+                    onClick={() => onSettle(uid, displayAmount)}
+                    className="text-[11px] px-2 py-1 rounded-lg font-medium text-white"
+                    style={{ background: "var(--evven-accent-primary)" }}
                   >
-                    {youOwe
-                      ? `you paid ${formatAmount(displayAmount)} more`
-                      : `${userName(uid)} paid ${formatAmount(displayAmount)} more`}
-                  </span>
-                  {youOwe ? (
-                    <button
-                      onClick={() => onSettle(uid, displayAmount)}
-                      className="text-xs px-2.5 py-1 rounded-lg font-medium text-white"
-                      style={{ background: "var(--evven-accent-primary)" }}
-                    >
-                      Settle
-                    </button>
-                  ) : null}
-                </div>
+                    Settle
+                  </button>
+                ) : null}
               </div>
-            );
-          })}
+            </div>
+          );
+        })}
       </div>
     </div>
   );

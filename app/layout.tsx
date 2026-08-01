@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { Viewport } from "next";
 import "./globals.css";
 
 import { ThemeProvider } from "@/providers/theme-provider";
@@ -56,6 +57,12 @@ export const metadata: Metadata = {
   icons: {
     icon: "/EvenUp-white.svg",
   },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  interactiveWidget: "resizes-content",
 };
 
 export default function RootLayout({

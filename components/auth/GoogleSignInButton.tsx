@@ -5,6 +5,7 @@ import Script from "next/script";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/auth-store";
 import { isAxiosError } from "axios";
+import { Capacitor } from "@capacitor/core";
 
 declare global {
   interface Window {
@@ -34,6 +35,7 @@ declare global {
 // Module-level, not component-level: survives unmount/remount across
 // client-side navigation (login <-> signup), only resets on a full page reload.
 let gsiInitialized = false;
+let nativeGoogleSignInInitialized = false;
 
 function getGoogleSignInError(err: unknown) {
   if (!isAxiosError(err)) {
@@ -84,6 +86,14 @@ export function GoogleSignInButton() {
   const [isSigningIn, setIsSigningIn] = useState(false);
   const [buttonWidth, setButtonWidth] = useState(336);
   const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+
+  // Google blocks its own Sign-In flow inside any embedded WebView
+  // (disallowed_useragent policy, enforced since 2023 — not something we
+  // can configure around). Inside the Capacitor native app, we bypass
+  // Google's JS SDK entirely and use the native Android/iOS Sign-In SDK
+  // via @capawesome/capacitor-google-sign-in instead, which returns the
+  // same kind of ID token our backend already expects.
+  const isNativeApp = Capacitor.isNativePlatform();
 
   // Keep latest router / loginWithGoogle in refs so the GSI callback
   // (captured only once, at first-ever initialize) never goes stale.
@@ -151,17 +161,77 @@ export function GoogleSignInButton() {
   }, [buttonWidth, clientId]);
 
   useEffect(() => {
+    if (isNativeApp) return; 
     if (!clientId || !buttonRef.current) return;
     if (window.google?.accounts?.id) {
       initializeGoogle();
     }
-  }, [initializeGoogle, clientId]);
+  }, [initializeGoogle, clientId, isNativeApp]);
+
+  const handleNativeSignIn = useCallback(async () => {
+    if (!clientId) return;
+
+    setError("");
+    setIsSigningIn(true);
+    try {
+      const { GoogleSignIn } = await import("@capawesome/capacitor-google-sign-in");
+
+      if (!nativeGoogleSignInInitialized) {
+        await GoogleSignIn.initialize({ clientId });
+        nativeGoogleSignInInitialized = true;
+      }
+
+      const result = await GoogleSignIn.signIn();
+      await loginWithGoogleRef.current(result.idToken);
+      routerRef.current.push("/dashboard");
+    } catch (err) {
+      setError(getGoogleSignInError(err));
+      setIsSigningIn(false);
+    }
+  }, [clientId]);
 
   if (!clientId) {
     return (
       <p className="text-center text-s text-muted-foreground">
         Google Sign-Up and Login will be here in future.
       </p>
+    );
+  }
+
+  if (isNativeApp) {
+    return (
+      <div ref={wrapperRef} className="w-full">
+        <div className="relative min-h-11">
+          <button
+            type="button"
+            onClick={handleNativeSignIn}
+            disabled={isSigningIn}
+            className={
+              isSigningIn
+                ? "flex min-h-11 w-full items-center justify-center rounded-full border border-border/70 px-4 text-sm font-medium opacity-0"
+                : "flex min-h-11 w-full items-center justify-center rounded-full border border-border/70 px-4 text-sm font-medium hover:bg-secondary/50 transition-colors"
+            }
+            aria-hidden={isSigningIn}
+          >
+            Continue with Google
+          </button>
+          {isSigningIn && (
+            <div
+              role="status"
+              aria-live="polite"
+              className="absolute inset-0 flex min-h-11 items-center justify-center rounded-full border border-border/70 bg-background/80 px-4 text-sm font-medium text-foreground shadow-sm backdrop-blur-sm"
+            >
+              <span className="mr-2 inline-block size-4 animate-spin rounded-full border-2 border-primary border-r-transparent" />
+              Signing in with Google...
+            </div>
+          )}
+        </div>
+        {error && (
+          <div className="mt-3 rounded-2xl border border-red-900/30 bg-red-950/20 p-3 text-sm leading-6 text-red-300 animate-in fade-in duration-200">
+            {error}
+          </div>
+        )}
+      </div>
     );
   }
 

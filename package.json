@@ -12,6 +12,8 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@capacitor/core": "^8.5.0",
+    "@capawesome/capacitor-google-sign-in": "^0.1.2",
     "@fontsource/jetbrains-mono": "^5.2.8",
     "@hookform/resolvers": "^5.4.0",
     "@radix-ui/react-slot": "^1.2.4",

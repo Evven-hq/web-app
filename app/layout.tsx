@@ -7,6 +7,7 @@ import { JetBrains_Mono, Xanh_Mono, Homemade_Apple, Baskervville, Crimson_Text, 
 import { QueryProvider } from "@/providers/query-provider";
 import DesktopVersionBadge from "@/components/shared/desktop-version-badge";
 import AuthProvider from "@/components/shared/auth-provider";
+import NativeShellStyles from "@/components/shared/native-shell-styles";
 
 const jetBrains = JetBrains_Mono({
   subsets: ['latin'],
@@ -87,6 +88,7 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full flex flex-col">
+        <NativeShellStyles />
         <QueryProvider>
           <ThemeProvider>
             <AuthProvider>

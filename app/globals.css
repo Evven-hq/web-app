@@ -106,6 +106,15 @@
     height: 0;
   }
 
+  @keyframes google-btn-shimmer {
+    from {
+      background-position: -200px 0;
+    }
+    to {
+      background-position: 200px 0;
+    }
+  }
+
   button,
   input,
   textarea {

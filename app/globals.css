@@ -93,6 +93,18 @@
   body {
     overflow-x: hidden;
   }
+  
+  html.native-shell,
+  html.native-shell body {
+    scrollbar-width: none;   /* Firefox */
+    -ms-overflow-style: none; /* old Edge/IE */
+  }
+  html.native-shell::-webkit-scrollbar,
+  html.native-shell body::-webkit-scrollbar {
+    display: none;
+   width: 0;
+    height: 0;
+  }
 
   button,
   input,
@@ -195,4 +207,20 @@
 ::selection {
   background-color: #2d5a4f; 
   color: #f9f7f4;            
+}
+
+@media (max-width: 768px) {
+  html {
+    scrollbar-width: none;      /* Firefox */
+    -ms-overflow-style: none;   /* IE/old Edge */
+  }
+
+  html::-webkit-scrollbar,
+  body::-webkit-scrollbar,
+  *::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    display: none;
+    background: transparent;
+  }
 }

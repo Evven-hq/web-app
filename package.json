@@ -12,6 +12,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@capacitor-community/safe-area": "^8.0.1",
     "@capacitor/core": "^8.5.0",
     "@capawesome/capacitor-google-sign-in": "^0.1.2",
     "@fontsource/jetbrains-mono": "^5.2.8",

@@ -8,6 +8,7 @@ import { QueryProvider } from "@/providers/query-provider";
 import DesktopVersionBadge from "@/components/shared/desktop-version-badge";
 import AuthProvider from "@/components/shared/auth-provider";
 import NativeShellStyles from "@/components/shared/native-shell-styles";
+import NativeSafeArea from "@/components/shared/native-safe-area";
 
 const jetBrains = JetBrains_Mono({
   subsets: ['latin'],
@@ -90,6 +91,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-full flex flex-col">
         <NativeShellStyles />
+        <NativeSafeArea />
         <QueryProvider>
           <ThemeProvider>
             <AuthProvider>

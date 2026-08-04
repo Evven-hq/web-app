@@ -57,8 +57,13 @@ function Dock({ pathname, variant }: { pathname: string; variant: "mobile" | "de
         "pointer-events-none fixed z-40",
         isDesktop
           ? "bottom-6 left-1/2 hidden -translate-x-1/2 px-0 md:block"
-          : "inset-x-0 bottom-0 px-4 pb-4 md:hidden"
-      )}
+          : "inset-x-0 bottom-0 px-4 md:hidden"
+          )}
+      style={
+        !isDesktop
+          ? { paddingBottom: "calc(var(--safe-area-inset-bottom, env(safe-area-inset-bottom, 0px)) + 1rem)" }
+          : undefined
+      }
     >
       <div
         className={cn(
@@ -235,7 +240,10 @@ function MobileFloatingChrome({
   showAddExpense: boolean;
 }) {
   return (
-    <div className="pointer-events-none fixed inset-x-0 top-0 z-40 flex items-start justify-between px-4 pt-4 md:hidden">
+     <div
+        className="pointer-events-none fixed inset-x-0 top-0 z-40 flex items-start justify-between px-4 md:hidden"
+        style={{ paddingTop: "calc(var(--safe-area-inset-top, env(safe-area-inset-top, 0px)) + 1rem)" }}
+      >
       <Link
         href="/profile"
         className="pointer-events-auto flex size-11 items-center justify-center overflow-hidden rounded-full text-xs font-semibold shadow-lg"

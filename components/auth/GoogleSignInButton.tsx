@@ -32,8 +32,6 @@ declare global {
   }
 }
 
-// Module-level, not component-level: survives unmount/remount across
-// client-side navigation (login <-> signup), only resets on a full page reload.
 let gsiInitialized = false;
 let nativeGoogleSignInInitialized = false;
 
@@ -75,6 +73,29 @@ function getGoogleSignInError(err: unknown) {
   }
 
   return "Something went wrong with Google sign-in. Please try again.";
+}
+
+function GoogleLogo() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
+      <path
+        fill="#4285F4"
+        d="M17.64 9.2c0-.64-.06-1.25-.16-1.84H9v3.48h4.84a4.14 4.14 0 0 1-1.8 2.72v2.26h2.9c1.7-1.57 2.7-3.87 2.7-6.62z"
+      />
+      <path
+        fill="#34A853"
+        d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.9-2.26c-.8.54-1.83.86-3.06.86-2.35 0-4.34-1.59-5.05-3.72H.96v2.33A9 9 0 0 0 9 18z"
+      />
+      <path
+        fill="#FBBC05"
+        d="M3.95 10.7A5.4 5.4 0 0 1 3.67 9c0-.59.1-1.17.28-1.7V4.97H.96A9 9 0 0 0 0 9c0 1.45.35 2.83.96 4.03l2.99-2.33z"
+      />
+      <path
+        fill="#EA4335"
+        d="M9 3.58c1.32 0 2.5.45 3.44 1.35l2.58-2.58C13.46.89 11.43 0 9 0A9 9 0 0 0 .96 4.97l2.99 2.33C4.66 5.17 6.65 3.58 9 3.58z"
+      />
+    </svg>
+  );
 }
 
 export function GoogleSignInButton() {
@@ -201,31 +222,25 @@ export function GoogleSignInButton() {
   if (isNativeApp) {
     return (
       <div ref={wrapperRef} className="w-full">
-        <div className="relative min-h-11">
-          <button
-            type="button"
-            onClick={handleNativeSignIn}
-            disabled={isSigningIn}
-            className={
-              isSigningIn
-                ? "flex min-h-11 w-full items-center justify-center rounded-full border border-border/70 px-4 text-sm font-medium opacity-0"
-                : "flex min-h-11 w-full items-center justify-center rounded-full border border-border/70 px-4 text-sm font-medium hover:bg-secondary/50 transition-colors"
-            }
-            aria-hidden={isSigningIn}
-          >
-            Continue with Google
-          </button>
-          {isSigningIn && (
-            <div
-              role="status"
-              aria-live="polite"
-              className="absolute inset-0 flex min-h-11 items-center justify-center rounded-full border border-border/70 bg-background/80 px-4 text-sm font-medium text-foreground shadow-sm backdrop-blur-sm"
-            >
-              <span className="mr-2 inline-block size-4 animate-spin rounded-full border-2 border-primary border-r-transparent" />
-              Signing in with Google...
-            </div>
-          )}
-        </div>
+        <button
+          type="button"
+          onClick={handleNativeSignIn}
+          disabled={isSigningIn}
+          className="flex h-12 w-full items-center justify-center gap-2.5 rounded-full border border-border/70 bg-white text-[15px] font-medium text-foreground transition-colors"
+          style={
+            isSigningIn
+              ? {
+                  backgroundImage:
+                    "linear-gradient(90deg, #fff 0%, #f0ece0 50%, #fff 100%)",
+                  backgroundSize: "400px 100%",
+                  animation: "google-btn-shimmer 1s linear infinite",
+                }
+              : undefined
+          }
+        >
+          <GoogleLogo />
+          <span>{isSigningIn ? "Signing in..." : "Continue with Google"}</span>
+        </button>
         {error && (
           <div className="mt-3 rounded-2xl border border-red-900/30 bg-red-950/20 p-3 text-sm leading-6 text-red-300 animate-in fade-in duration-200">
             {error}

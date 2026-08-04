@@ -4,29 +4,22 @@ import { useEffect } from "react";
 import { Capacitor } from "@capacitor/core";
 
 /**
- * Enables @capacitor-community/safe-area so it injects --safe-area-inset-top
- * / -bottom / -left / -right CSS variables into the document. Without this,
- * those variables are never set and any fixed-position UI (the top avatar
- * chip, the add-expense button, the bottom dock) ends up padded by a flat
- * guess instead of the device's actual status bar / gesture bar height.
+ * Loads @capacitor-community/safe-area on native builds so its Android
+ * edge-to-edge safe-area handling is registered, then applies readable system
+ * bar content styling. The plugin handles safe areas natively in v8; CSS
+ * should continue using env(safe-area-inset-*) with local fallbacks.
  *
- * Native app only — web and iOS already get correct env(safe-area-inset-*)
- * values for free; this plugin exists specifically to patch Android's
- * edge-to-edge WebView, which doesn't report them correctly on its own.
+ * Native app only. Web and iOS already get correct env(safe-area-inset-*)
+ * values for free; this plugin exists specifically to patch Android
+ * edge-to-edge WebViews that don't report them correctly on their own.
  */
 export default function NativeSafeArea() {
   useEffect(() => {
     if (!Capacitor.isNativePlatform()) return;
 
-    import("@capacitor-community/safe-area").then(({ SafeArea }) => {
-      SafeArea.enable({
-        config: {
-          customColorsForSystemBars: true,
-          statusBarColor: "#00000000",
-          statusBarContent: "dark",
-          navigationBarColor: "#00000000",
-          navigationBarContent: "dark",
-        },
+    import("@capacitor-community/safe-area").then(({ SafeArea, SystemBarsStyle }) => {
+      void SafeArea.setSystemBarsStyle({
+        style: SystemBarsStyle.Light,
       });
     });
   }, []);

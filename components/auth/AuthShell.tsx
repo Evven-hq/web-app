@@ -45,9 +45,8 @@ export function AuthShell({
                   src="/EvenUp-white.svg"
                   alt="EvenUp"
                   width={40}
-                  height={40}
+                  height={34}
                   className="invert"
-                  priority
                 />
               </a>
             </div>
@@ -81,9 +80,8 @@ export function AuthShell({
                 src="/EvenUp-white.svg"
                 alt="EvenUp"
                 width={70}
-                height={70}
+                height={60}
                 className="invert"
-                priority
               />
             </a>
           </div>

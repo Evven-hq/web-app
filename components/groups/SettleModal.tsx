@@ -2,6 +2,7 @@
 
 import { CheckCircle, Loader2, X } from "lucide-react";
 import type { Dispatch, SetStateAction } from "react";
+import { createPortal } from "react-dom";
 import { PAYMENT_MODES } from "@/lib/payment-modes";
 import type { PaymentMethod } from "@/types";
 import type { UserNameFn } from "./group-detail-shared";
@@ -31,13 +32,13 @@ export function SettleModal({
   savingSettle: boolean;
   settleError: string;
 }) {
-  if (!open) return null;
+  if (!open || typeof document === "undefined") return null;
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" onClick={onClose} />
+      <div className="premium-modal-backdrop absolute inset-0" onClick={onClose} />
       <div
-        className="card relative w-full max-w-sm rounded-3xl p-6 shadow-xl"
+        className="premium-modal-panel card relative w-full max-w-sm rounded-3xl p-6 shadow-xl"
       >
         <button onClick={onClose} className="absolute right-4 top-4 rounded-lg p-1.5" style={{ background: "var(--evven-surface)" }}>
           <X size={15} />
@@ -94,6 +95,7 @@ export function SettleModal({
           {savingSettle ? "Saving…" : "Confirm"}
         </button>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { CheckCircle, Loader2, X } from "lucide-react";
+import { createPortal } from "react-dom";
 import type { GroupExpense, ExpenseSplit } from "@/types";
 import { getCategoryMeta } from "@/lib/expense-categories";
 import { getPaymentModeMeta } from "@/lib/payment-modes";
@@ -30,11 +31,13 @@ export function ExpenseDetailsModal({
 }) {
   const paymentModeMeta = getPaymentModeMeta(detailExpense.payment_method);
 
-  return (
+  if (typeof document === "undefined") return null;
+
+  return createPortal(
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" onClick={onClose} />
+      <div className="premium-modal-backdrop absolute inset-0" onClick={onClose} />
       <div
-        className="card relative w-full max-w-md rounded-3xl p-6 shadow-xl"
+        className="premium-modal-panel card relative w-full max-w-md rounded-3xl p-6 shadow-xl"
       >
         <button onClick={onClose} className="absolute right-4 top-4 rounded-lg p-1.5" style={{ background: "var(--evven-surface)" }}>
           <X size={15} />
@@ -126,6 +129,7 @@ export function ExpenseDetailsModal({
           </button>
         )}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

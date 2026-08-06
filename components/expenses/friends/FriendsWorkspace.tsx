@@ -264,7 +264,7 @@ export function FriendsWorkspace() {
                 </p>
                 {friends.length === 0 && (
                   <Button className="mt-4 w-full sm:w-auto" asChild>
-                    <Link href="/expenses/new">
+                    <Link href="/expenses?new=1">
                       <Plus />
                       Add expense
                     </Link>

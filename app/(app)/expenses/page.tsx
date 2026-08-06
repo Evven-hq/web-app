@@ -1,11 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
-import { Edit3, Loader2, Plus, Receipt, Search, Trash2 } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { createPortal } from "react-dom";
+import { Edit3, Loader2, Plus, Receipt, Search, Trash2, X } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { FriendSummaryLine, getGhostExpenseSummary } from "@/components/expenses/friends";
-import { deletePersonalExpense, getPersonalExpenses } from "@/services/expenses";
+import { ExpenseForm, type ExpenseFormValues } from "@/components/expenses/ExpenseForm";
+import { createPersonalExpense, deletePersonalExpense, getPersonalExpenses } from "@/services/expenses";
 import { EXPENSE_CATEGORIES, getCategoryMeta } from "@/lib/expense-categories";
 import type { PersonalExpense } from "@/types";
 
@@ -23,8 +26,41 @@ function formatDate(expense: PersonalExpense) {
 
 export default function ExpensesPage() {
   const queryClient = useQueryClient();
+  const searchParams = useSearchParams();
   const [query, setQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
+  const [showAddExpense, setShowAddExpense] = useState(false);
+
+  const initialExpenseValues = useMemo<ExpenseFormValues>(() => {
+    const direction = searchParams.get("direction");
+
+    return {
+      title: "",
+      amount: "",
+      category: "",
+      date: new Date().toISOString().slice(0, 10),
+      notes: "",
+      payment_method: "upi",
+      ghost_id: searchParams.get("ghost_id") ?? "",
+      settlement_direction:
+        direction === "you_owe" || direction === "they_owe" ? direction : "they_owe",
+      settlement_amount: "",
+    };
+  }, [searchParams]);
+
+  useEffect(() => {
+    if (searchParams.get("new") === "1" || searchParams.get("ghost_id")) {
+      setShowAddExpense(true);
+    }
+  }, [searchParams]);
+
+  const closeAddExpenseModal = () => {
+    setShowAddExpense(false);
+
+    if (typeof window !== "undefined" && window.location.search) {
+      window.history.replaceState(null, "", "/expenses");
+    }
+  };
 
   const { data: expenses = [], isLoading, error } = useQuery({
     queryKey: ["expenses"],
@@ -74,13 +110,14 @@ export default function ExpensesPage() {
             </p>
             <h1 className="text-2xl font-medium">Expenses</h1>
           </div>
-          <Link
-            href="/expenses/new"
+          <button
+            type="button"
+            onClick={() => setShowAddExpense(true)}
             className="flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground"
           >
             <Plus size={15} />
             Add expense
-          </Link>
+          </button>
         </div>
 
         <div className="mb-3 grid gap-3 sm:grid-cols-[1fr_auto]">
@@ -184,13 +221,14 @@ export default function ExpensesPage() {
                 : "Try a different search term."}
             </p>
             {expenses.length === 0 && (
-              <Link
-                href="/expenses/new"
+              <button
+                type="button"
+                onClick={() => setShowAddExpense(true)}
                 className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground"
               >
                 <Plus size={15} />
                 Add expense
-              </Link>
+              </button>
             )}
           </div>
         ) : (
@@ -248,6 +286,44 @@ export default function ExpensesPage() {
           </div>
         )}
       </div>
+
+      {showAddExpense && typeof document !== "undefined" && createPortal(
+        <div className="fixed inset-0 z-50 flex items-end justify-center p-4 sm:items-center">
+          <div
+            className="premium-modal-backdrop absolute inset-0"
+            onClick={closeAddExpenseModal}
+          />
+          <div className="premium-modal-panel card relative max-h-[90vh] w-full max-w-xl overflow-y-auto rounded-3xl p-5 shadow-xl sm:p-6">
+            <button
+              type="button"
+              onClick={closeAddExpenseModal}
+              className="absolute right-4 top-4 rounded-lg p-1.5"
+              style={{ background: "var(--evven-surface)" }}
+              aria-label="Close add expense form"
+            >
+              <X size={15} />
+            </button>
+
+            <div className="mb-5 pr-9">
+              <p className="mb-1 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+                Personal ledger
+              </p>
+              <h2 className="text-xl font-medium">Add expense</h2>
+            </div>
+
+            <ExpenseForm
+              initialValues={initialExpenseValues}
+              submitLabel="Add expense"
+              onSubmit={async (expense) => {
+                await createPersonalExpense(expense);
+                await queryClient.invalidateQueries({ queryKey: ["expenses"] });
+                closeAddExpenseModal();
+              }}
+            />
+          </div>
+        </div>,
+        document.body
+      )}
     </div>
   );
 }

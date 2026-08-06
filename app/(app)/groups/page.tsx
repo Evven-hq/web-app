@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { createPortal } from "react-dom";
 import { Plus, Users, ChevronRight, Loader2, X } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getGroups, createGroup } from "@/services/groups";
@@ -162,15 +163,14 @@ export default function GroupsPage() {
       </div>
 
       {/* Create group modal */}
-      {showCreate && (
+      {showCreate && typeof document !== "undefined" && createPortal(
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div
-            className="absolute inset-0 backdrop-blur-sm"
-            style={{ background: "color-mix(in srgb, var(--evven-text-primary) 30%, transparent)" }}
+            className="premium-modal-backdrop absolute inset-0"
             onClick={() => setShowCreate(false)}
           />
           <div
-            className="card relative w-full max-w-sm rounded-[var(--evven-radius-hero)] p-6 shadow-xl"
+            className="premium-modal-panel card relative w-full max-w-sm rounded-[var(--evven-radius-hero)] p-6 shadow-xl"
           >
             <button
               onClick={() => setShowCreate(false)}
@@ -218,7 +218,8 @@ export default function GroupsPage() {
               {createMutation.isPending ? "Creating…" : "Create group"}
             </button>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );

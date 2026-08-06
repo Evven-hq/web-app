@@ -2,6 +2,7 @@
 
 import { Loader2, Plus, CheckCircle, X } from "lucide-react";
 import type { Dispatch, SetStateAction } from "react";
+import { createPortal } from "react-dom";
 import { EXPENSE_CATEGORIES } from "@/lib/expense-categories";
 import { PAYMENT_MODES } from "@/lib/payment-modes";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -64,13 +65,13 @@ export function ExpenseEditorModal({
   expError: string;
   savingExp: boolean;
 }) {
-  if (!open) return null;
+  if (!open || typeof document === "undefined") return null;
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" onClick={onClose} />
+      <div className="premium-modal-backdrop absolute inset-0" onClick={onClose} />
       <div
-        className="card relative max-h-[90vh] w-full max-w-md overflow-y-auto rounded-3xl p-6 shadow-xl"
+        className="premium-modal-panel card relative max-h-[90vh] w-full max-w-md overflow-y-auto rounded-3xl p-6 shadow-xl"
       >
         <button onClick={onClose} className="absolute right-4 top-4 rounded-lg p-1.5" style={{ background: "var(--evven-surface)" }}>
           <X size={15} />
@@ -308,6 +309,7 @@ export function ExpenseEditorModal({
           {savingExp ? "Saving…" : editingExpense ? "Save changes" : "Add expense"}
         </button>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

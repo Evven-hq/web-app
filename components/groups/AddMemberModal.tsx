@@ -2,6 +2,7 @@
 
 import { Loader2, UserPlus, X } from "lucide-react";
 import type { Dispatch, SetStateAction } from "react";
+import { createPortal } from "react-dom";
 
 export function AddMemberModal({
   open,
@@ -20,13 +21,13 @@ export function AddMemberModal({
   savingMember: boolean;
   memberError: string;
 }) {
-  if (!open) return null;
+  if (!open || typeof document === "undefined") return null;
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" onClick={onClose} />
+      <div className="premium-modal-backdrop absolute inset-0" onClick={onClose} />
       <div
-        className="card relative w-full max-w-sm rounded-3xl p-6 shadow-xl"
+        className="premium-modal-panel card relative w-full max-w-sm rounded-3xl p-6 shadow-xl"
       >
         <button onClick={onClose} className="absolute top-4 right-4 rounded-lg p-1.5" style={{ background: "var(--evven-surface)" }}>
           <X size={15} />
@@ -58,6 +59,7 @@ export function AddMemberModal({
           {savingMember ? "Adding…" : "Add member"}
         </button>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

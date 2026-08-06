@@ -1,6 +1,7 @@
 "use client";
 
 import { Loader2, Trash2, X } from "lucide-react";
+import { createPortal } from "react-dom";
 import type { GroupMember } from "@/types";
 
 export function ConfirmRemoveMemberModal({
@@ -16,13 +17,13 @@ export function ConfirmRemoveMemberModal({
   onConfirm: () => void;
   removing: boolean;
 }) {
-  if (!member) return null;
+  if (!member || typeof document === "undefined") return null;
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" onClick={removing ? undefined : onClose} />
+      <div className="premium-modal-backdrop absolute inset-0" onClick={removing ? undefined : onClose} />
       <div
-        className="card relative w-full max-w-sm rounded-3xl p-6 shadow-xl"
+        className="premium-modal-panel card relative w-full max-w-sm rounded-3xl p-6 shadow-xl"
       >
         <button
           onClick={onClose}
@@ -72,6 +73,7 @@ export function ConfirmRemoveMemberModal({
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

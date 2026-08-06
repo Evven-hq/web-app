@@ -9,11 +9,13 @@ import DesktopVersionBadge from "@/components/shared/desktop-version-badge";
 import AuthProvider from "@/components/shared/auth-provider";
 import NativeShellStyles from "@/components/shared/native-shell-styles";
 import NativeSafeArea from "@/components/shared/native-safe-area";
+import { ConsoleNote } from "@/components/shared/ConsoleNote";
 
 const jetBrains = JetBrains_Mono({
   subsets: ['latin'],
   weight: ['100','200','300','400','500','600','700','800'],
   display: 'swap',
+  preload: false,
 });
 
 export const homemadeApple = Homemade_Apple({
@@ -21,18 +23,21 @@ export const homemadeApple = Homemade_Apple({
   weight: "400",
   display: "swap",
   variable: "--font-homemade-apple",
+  preload: false,
 });
 
 const xanh = Xanh_Mono({
   subsets: ['latin'],
   weight: ['400'],
   display: 'swap',
+  preload: false,
 });
 
 const baskervville = Baskervville({
   subsets: ["latin"],
   weight: ["400"],
   variable: "--font-baskervville",
+  preload: false,
 });
 
 const crimsonText = Crimson_Text({
@@ -41,6 +46,7 @@ const crimsonText = Crimson_Text({
   style: ["italic"],
   display: "swap",
   variable: "--font-crimson-text",
+  preload: false,
 });
 
 const instrumentSerif = Instrument_Serif({
@@ -49,6 +55,7 @@ const instrumentSerif = Instrument_Serif({
   style: ["italic"],
   display: "swap",
   variable: "--font-instrument-serif",
+  preload: false,
 });
 
 export const metadata: Metadata = {
@@ -90,6 +97,7 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full flex flex-col">
+        <ConsoleNote />
         <NativeShellStyles />
         <NativeSafeArea />
         <QueryProvider>

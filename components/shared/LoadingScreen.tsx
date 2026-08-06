@@ -17,7 +17,7 @@ export function LoadingScreen() {
             boxShadow: "0 16px 40px rgba(26, 24, 22, 0.08)",
           }}
         >
-          <Image src="/EvenUp-black.svg" alt="Evven" width={30} height={30} priority />
+          <Image src="/EvenUp-black.svg" alt="Evven" width={30} height={26} />
         </div>
 
         <p

@@ -273,7 +273,7 @@ function MobileFloatingChrome({
 
       {showAddExpense ? (
         <Link
-          href="/expenses/new"
+          href="/expenses?new=1"
           aria-label="Add expense"
           className="pointer-events-auto inline-flex size-11 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition-all hover:opacity-90"
         >
@@ -326,7 +326,7 @@ function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex h-screen overflow-hidden bg-background">
       <RouteProgressBar />
-      <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
+      <div className="app-modal-blur-target flex min-w-0 flex-1 flex-col overflow-hidden">
         <MobileFloatingChrome user={user} showAddExpense={pathname === "/dashboard"} />
         <DesktopIdentityChip user={user} />
 

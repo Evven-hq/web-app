@@ -216,7 +216,7 @@ export default function DashboardPage() {
           </div>
 
           <Link
-            href="/expenses/new"
+            href="/expenses?new=1"
             className="hidden shrink-0 items-center justify-center rounded-xl bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground transition-all hover:opacity-90 sm:inline-flex"
           >
             <Plus size={15} />
@@ -277,7 +277,7 @@ export default function DashboardPage() {
 
           <div className="relative z-10 mt-5 flex flex-wrap items-center gap-3">
             <Link
-              href="/expenses/new"
+              href="/expenses?new=1"
               className="inline-flex items-center gap-2 rounded-full bg-background px-4 py-2.5 text-sm font-medium text-foreground transition-all hover:opacity-90"
             >
               <Plus size={15} />
@@ -521,7 +521,7 @@ export default function DashboardPage() {
                   style={{ color: "var(--evven-text-muted)" }}
                 >
                   No personal expenses yet.{" "}
-                  <Link href="/expenses/new" className="underline">
+                  <Link href="/expenses?new=1" className="underline">
                     Add one
                   </Link>
                 </div>

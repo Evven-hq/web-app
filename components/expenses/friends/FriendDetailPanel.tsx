@@ -136,7 +136,7 @@ export function FriendDetailPanel({
         <div className="mt-5 flex flex-col gap-2 sm:flex-row">
           <Button asChild variant="default" size="sm" className="w-full sm:w-auto">
             <Link
-              href={`/expenses/new?ghost_id=${friend.id}&direction=${getDefaultSettlementDirection(
+              href={`/expenses?new=1&ghost_id=${friend.id}&direction=${getDefaultSettlementDirection(
                 friend.net_balance
               )}`}
             >

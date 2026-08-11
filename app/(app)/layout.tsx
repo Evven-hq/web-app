@@ -80,7 +80,7 @@ function Dock({ pathname, variant }: { pathname: string; variant: "mobile" | "de
           : undefined
       }
     >
-      {isOnline ? (
+      {!isOnline ? (
         <div
           className={cn(
             "pointer-events-none mb-2 flex",

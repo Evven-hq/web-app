@@ -3,6 +3,7 @@
 import React, { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
+import { isAxiosError } from "axios";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -32,7 +33,18 @@ function LoginForm() {
       await login(email, password);
       router.push("/dashboard");
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Invalid email or password.");
+      if (isAxiosError(err) && err.response?.status === 403) {
+        router.push(`/verify-otp?email=${encodeURIComponent(email)}&reason=unverified`);
+        return;
+      }
+
+      setError(
+        isAxiosError(err) && typeof err.response?.data?.detail === "string"
+          ? err.response.data.detail
+          : err instanceof Error
+            ? err.message
+            : "Invalid email or password."
+      );
     } finally {
       setIsLoading(false);
     }

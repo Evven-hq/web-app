@@ -2,7 +2,13 @@ import axios from "axios";
 import api from "@/lib/api";
 import { getAccessToken } from "@/lib/desktop";
 import { User } from "@/types/user";
-import { AuthResponse, TokenResponse } from "@/types/auth";
+import {
+    AuthResponse,
+    RegisterResponse,
+    SendOtpRequest,
+    TokenResponse,
+    VerifyOtpRequest,
+} from "@/types/auth";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
@@ -26,7 +32,11 @@ export async function getCurrentUser(): Promise<User> {
         return response.data;
 }
 
-export async function register( name: string , email: string , password: string): Promise<AuthResponse> {
+export async function register(
+    name: string,
+    email: string,
+    password: string
+): Promise<RegisterResponse> {
     const response = await api.post("/auth/register", {email, password, name});
     return response.data;
 }
@@ -41,6 +51,24 @@ export async function resetPassword(token: string, password: string): Promise<vo
 
 export async function googleLogin(credential: string): Promise<AuthResponse> {
     const response = await api.post("/auth/google", { token: credential });
+    return response.data;
+}
+
+export async function sendOtp(
+    email: string,
+    purpose = "email_verification"
+): Promise<void> {
+    const payload: SendOtpRequest = { email, purpose };
+    await api.post("/auth/send-otp", payload);
+}
+
+export async function verifyOtp(
+    email: string,
+    otp: string,
+    purpose = "email_verification"
+): Promise<AuthResponse> {
+    const payload: VerifyOtpRequest = { email, otp, purpose };
+    const response = await api.post("/auth/verify-otp", payload);
     return response.data;
 }
 

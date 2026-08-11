@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
+import { isAxiosError } from "axios";
 
 import { useAuthStore } from "@/store/auth-store";
 import { GoogleSignInButton } from "@/components/auth/GoogleSignInButton";
@@ -28,9 +29,15 @@ export default function Register() {
     setIsLoading(true);
     try {
       await signup(name, email, password);
-      router.push("/avatar-setup");
+      router.push(`/verify-otp?email=${encodeURIComponent(email)}&reason=signup`);
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Something went wrong.");
+      setError(
+        isAxiosError(err) && typeof err.response?.data?.detail === "string"
+          ? err.response.data.detail
+          : err instanceof Error
+            ? err.message
+            : "Something went wrong."
+      );
     } finally {
       setIsLoading(false);
     }

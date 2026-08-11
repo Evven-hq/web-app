@@ -5,6 +5,8 @@ import {
   logoutSession,
   refreshSession,
   register as registerUser,
+  sendOtp,
+  verifyOtp as verifyOtpRequest,
 } from "@/services/auth";
 import { User } from "@/types/user";
 import { create } from "zustand";
@@ -27,6 +29,8 @@ interface AuthState {
 
   login: (email: string, password: string) => Promise<void>;
   signup: (name: string, email: string, password: string) => Promise<void>;
+  verifyOtp: (email: string, otp: string) => Promise<User>;
+  resendOtp: (email: string) => Promise<void>;
   loginWithGoogle: (credential: string) => Promise<void>;
   logout: () => Promise<void>;
   restoreSession: () => Promise<void>;
@@ -47,9 +51,18 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
 
   signup: async (name, email, password) => {
-    const data = await registerUser(name, email, password);
+    await registerUser(name, email, password);
+  },
+
+  verifyOtp: async (email, otp) => {
+    const data = await verifyOtpRequest(email, otp);
     storeAuthTokens(data.tokens);
     set({ user: data.user, isAuthenticated: true, token: data.tokens.access_token });
+    return data.user;
+  },
+
+  resendOtp: async (email) => {
+    await sendOtp(email);
   },
 
   loginWithGoogle: async (credential) => {

@@ -15,6 +15,20 @@ export interface AuthResponse {
 export interface RegisterResponse {
     message: string;
     user: User;
+    tokens?: TokenResponse | null;
+}
+
+export interface SendOtpResponse {
+    message: string;
+    challenge_token?: string | null;
+}
+
+export interface VerifyOtpResponse {
+    message: string;
+    user?: User | null;
+    tokens?: TokenResponse | null;
+    signup_token?: string | null;
+    email?: string | null;
 }
 
 export interface SendOtpRequest {
@@ -23,7 +37,8 @@ export interface SendOtpRequest {
 }
 
 export interface VerifyOtpRequest {
-    email: string;
+    email?: string | null;
     otp: string;
     purpose?: string;
+    challenge_token?: string | null;
 }

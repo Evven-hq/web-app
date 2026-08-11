@@ -28,7 +28,7 @@ interface AuthState {
   token: string | null;
 
   login: (email: string, password: string) => Promise<void>;
-  signup: (name: string, email: string, password: string) => Promise<void>;
+  signup: (name: string, email: string, password: string, signupToken?: string | null) => Promise<User>;
   verifyOtp: (email: string, otp: string) => Promise<User>;
   resendOtp: (email: string) => Promise<void>;
   loginWithGoogle: (credential: string) => Promise<void>;
@@ -50,12 +50,22 @@ export const useAuthStore = create<AuthState>((set) => ({
     set({ user: data.user, isAuthenticated: true, token: data.tokens.access_token });
   },
 
-  signup: async (name, email, password) => {
-    await registerUser(name, email, password);
+  signup: async (name, email, password, signupToken) => {
+    const data = await registerUser(name, email, password, signupToken);
+    if (data.tokens) {
+      storeAuthTokens(data.tokens);
+      set({ user: data.user, isAuthenticated: true, token: data.tokens.access_token });
+    } else {
+      set({ user: data.user, isAuthenticated: false, token: null });
+    }
+    return data.user;
   },
 
   verifyOtp: async (email, otp) => {
     const data = await verifyOtpRequest(email, otp);
+    if (!data.user || !data.tokens) {
+      throw new Error("Could not verify email right now.");
+    }
     storeAuthTokens(data.tokens);
     set({ user: data.user, isAuthenticated: true, token: data.tokens.access_token });
     return data.user;

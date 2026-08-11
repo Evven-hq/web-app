@@ -6,8 +6,10 @@ import {
     AuthResponse,
     RegisterResponse,
     SendOtpRequest,
+    SendOtpResponse,
     TokenResponse,
     VerifyOtpRequest,
+    VerifyOtpResponse,
 } from "@/types/auth";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
@@ -35,9 +37,15 @@ export async function getCurrentUser(): Promise<User> {
 export async function register(
     name: string,
     email: string,
-    password: string
+    password: string,
+    signupToken?: string | null,
 ): Promise<RegisterResponse> {
-    const response = await api.post("/auth/register", {email, password, name});
+    const response = await api.post("/auth/register", {
+        email,
+        password,
+        name,
+        signup_token: signupToken,
+    });
     return response.data;
 }
 
@@ -57,17 +65,33 @@ export async function googleLogin(credential: string): Promise<AuthResponse> {
 export async function sendOtp(
     email: string,
     purpose = "email_verification"
-): Promise<void> {
+): Promise<SendOtpResponse> {
     const payload: SendOtpRequest = { email, purpose };
-    await api.post("/auth/send-otp", payload);
+    const response = await api.post("/auth/send-otp", payload);
+    return response.data;
 }
 
 export async function verifyOtp(
     email: string,
     otp: string,
     purpose = "email_verification"
-): Promise<AuthResponse> {
+): Promise<VerifyOtpResponse> {
     const payload: VerifyOtpRequest = { email, otp, purpose };
+    const response = await api.post("/auth/verify-otp", payload);
+    return response.data;
+}
+
+export async function verifySignupOtp(
+    email: string,
+    otp: string,
+    challengeToken: string,
+): Promise<VerifyOtpResponse> {
+    const payload: VerifyOtpRequest = {
+        email,
+        otp,
+        purpose: "signup",
+        challenge_token: challengeToken,
+    };
     const response = await api.post("/auth/verify-otp", payload);
     return response.data;
 }

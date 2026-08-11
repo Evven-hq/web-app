@@ -12,6 +12,7 @@ import {
   CircleUserRound,
   LogOut,
   Plus,
+  WifiOff,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { NavigationProvider, useNavigation } from "@/components/shared/NavigationProvider";
@@ -50,6 +51,20 @@ function Dock({ pathname, variant }: { pathname: string; variant: "mobile" | "de
   const isDesktop = variant === "desktop";
   const { navigate } = useNavigation();
   const router = useRouter();
+  const [isOnline, setIsOnline] = React.useState(true);
+
+  useEffect(() => {
+    const updateOnlineState = () => setIsOnline(window.navigator.onLine);
+
+    updateOnlineState();
+    window.addEventListener("online", updateOnlineState);
+    window.addEventListener("offline", updateOnlineState);
+
+    return () => {
+      window.removeEventListener("online", updateOnlineState);
+      window.removeEventListener("offline", updateOnlineState);
+    };
+  }, []);
 
   return (
     <nav
@@ -65,6 +80,24 @@ function Dock({ pathname, variant }: { pathname: string; variant: "mobile" | "de
           : undefined
       }
     >
+      {isOnline ? (
+        <div
+          className={cn(
+            "pointer-events-none mb-2 flex",
+            isDesktop ? "justify-center" : "justify-center"
+          )}
+        >
+          <div
+            className="pointer-events-auto inline-flex items-center gap-2 rounded-full border bg-[var(--evven-offline-card)] px-3 py-2 text-xs font-medium text-[var(--evven-text-primary)] shadow-lg"
+            style={{ borderColor: "var(--evven-border)" }}
+            role="status"
+            aria-live="polite"
+          >
+            <WifiOff size={14} className="text-[var(--evven-error)]" />
+            Gang check yo internet 😭
+          </div>
+        </div>
+      ) : null}
       <div
         className={cn(
           "pointer-events-auto grid items-center rounded-full border shadow-2xl shadow-black/20",
@@ -94,6 +127,10 @@ function Dock({ pathname, variant }: { pathname: string; variant: "mobile" | "de
                 if (!active) router.prefetch(href);
               }}
               onClick={(e) => {
+                if (!isOnline) {
+                  e.preventDefault();
+                  return;
+                }
                 if (active || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) {
                   return;
                 }
@@ -140,7 +177,7 @@ function DesktopIdentityChip({
     <Link
       href="/profile"
       className={`
-        group pointer-events-auto fixed left-6 top-6 z-40 hidden items-center gap-3 
+        group pointer-events-auto fixed left-6 top-[18px] z-40 hidden items-center gap-3 
         rounded-(--evven-radius-hero) px-4 py-3 
         transition-colors duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]
         hover:bg-red-500
@@ -240,9 +277,9 @@ function MobileFloatingChrome({
   showAddExpense: boolean;
 }) {
   return (
-     <div
+    <div
         className="pointer-events-none fixed inset-x-0 top-0 z-40 flex items-start justify-between px-4 md:hidden"
-        style={{ paddingTop: "calc(var(--safe-area-inset-top, env(safe-area-inset-top, 0px)) + 1rem)" }}
+        style={{ paddingTop: "calc(var(--safe-area-inset-top, env(safe-area-inset-top, 0px)) + 0.625rem)" }}
       >
       <Link
         href="/profile"

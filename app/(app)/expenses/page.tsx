@@ -32,7 +32,7 @@ export default function ExpensesPage() {
   const [showAddExpense, setShowAddExpense] = useState(false);
 
   const initialExpenseValues = useMemo<ExpenseFormValues>(() => {
-    const direction = searchParams.get("direction");
+      const direction = searchParams.get("direction");
 
     return {
       title: "",
@@ -41,7 +41,7 @@ export default function ExpensesPage() {
       date: new Date().toISOString().slice(0, 10),
       notes: "",
       payment_method: "upi",
-      ghost_id: searchParams.get("ghost_id") ?? "",
+      friend_id: searchParams.get("friend_id") ?? searchParams.get("ghost_id") ?? "",
       settlement_direction:
         direction === "you_owe" || direction === "they_owe" ? direction : "they_owe",
       settlement_amount: "",
@@ -49,7 +49,7 @@ export default function ExpensesPage() {
   }, [searchParams]);
 
   useEffect(() => {
-    if (searchParams.get("new") === "1" || searchParams.get("ghost_id")) {
+    if (searchParams.get("new") === "1" || searchParams.get("friend_id") || searchParams.get("ghost_id")) {
       setShowAddExpense(true);
     }
   }, [searchParams]);
@@ -82,7 +82,7 @@ export default function ExpensesPage() {
     return expenses.filter((expense) => {
       const matchesQuery =
         !normalizedQuery ||
-        [expense.title, expense.category, expense.notes, expense.ghost?.name, getGhostExpenseSummary(expense)]
+        [expense.title, expense.category, expense.notes, expense.friend?.name, expense.ghost?.name, getGhostExpenseSummary(expense)]
           .filter(Boolean)
           .some((value) => value?.toLowerCase().includes(normalizedQuery));
 

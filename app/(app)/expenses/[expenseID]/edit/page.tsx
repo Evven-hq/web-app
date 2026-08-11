@@ -23,7 +23,7 @@ export default function EditExpensePage() {
           date: expense.date ? expense.date.slice(0, 10) : "",
           notes: expense.notes ?? "",
           payment_method: expense.payment_method ?? "upi",
-          ghost_id: expense.ghost_id ?? expense.ghost?.id ?? "",
+          friend_id: expense.friend_id ?? expense.friend?.id ?? expense.ghost_id ?? expense.ghost?.id ?? "",
           settlement_direction: expense.settlement_direction ?? "they_owe",
           settlement_amount: expense.settlement_amount ?? "",
         });

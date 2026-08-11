@@ -9,7 +9,7 @@ import { createPersonalExpense } from "@/services/expenses";
 export default function NewExpensePage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const ghostId = searchParams.get("ghost_id") ?? "";
+  const friendId = searchParams.get("friend_id") ?? searchParams.get("ghost_id") ?? "";
   const direction = searchParams.get("direction");
 
   const initialValues: ExpenseFormValues = {
@@ -19,7 +19,7 @@ export default function NewExpensePage() {
     date: new Date().toISOString().slice(0, 10),
     notes: "",
     payment_method: "upi",
-    ghost_id: ghostId,
+    friend_id: friendId,
     settlement_direction:
       direction === "you_owe" || direction === "they_owe" ? direction : "they_owe",
     settlement_amount: "",

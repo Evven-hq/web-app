@@ -14,7 +14,7 @@ export interface ExpenseFormValues {
   date: string;
   notes: string;
   payment_method: PaymentMethod;
-  ghost_id: string;
+  friend_id: string;
   settlement_direction: SettlementDirection;
   settlement_amount: string;
 }
@@ -32,7 +32,7 @@ const DEFAULT_VALUES: ExpenseFormValues = {
   date: new Date().toISOString().slice(0, 10),
   notes: "",
   payment_method: "upi",
-  ghost_id: "",
+  friend_id: "",
   settlement_direction: "they_owe",
   settlement_amount: "",
 };
@@ -47,16 +47,16 @@ export function ExpenseForm({
   const [error, setError] = useState("");
 
   const updateValue = (field: keyof ExpenseFormValues, value: string) => {
-    setValues((current) => {
-      const next = { ...current, [field]: value };
+      setValues((current) => {
+        const next = { ...current, [field]: value };
 
-      if (
-        field === "amount" &&
-        current.ghost_id &&
+        if (
+          field === "amount" &&
+          current.friend_id &&
         (!current.settlement_amount || current.settlement_amount === current.amount)
-      ) {
-        next.settlement_amount = value;
-      }
+        ) {
+          next.settlement_amount = value;
+        }
 
       return next;
     });
@@ -73,7 +73,7 @@ export function ExpenseForm({
     }
 
     if (
-      values.ghost_id &&
+      values.friend_id &&
       (!Number.isFinite(settlementAmount) || settlementAmount <= 0)
     ) {
       setError("Enter a settlement amount greater than zero.");
@@ -93,8 +93,8 @@ export function ExpenseForm({
         payment_method: values.payment_method,
       };
 
-      if (values.ghost_id) {
-        payload.ghost_id = values.ghost_id;
+      if (values.friend_id) {
+        payload.friend_id = values.friend_id;
         payload.settlement_direction = values.settlement_direction;
         payload.settlement_amount = settlementAmount;
       }
@@ -239,7 +239,7 @@ export function ExpenseForm({
       <FriendExpenseFields
         amount={values.amount}
         values={{
-          ghost_id: values.ghost_id,
+          friend_id: values.friend_id,
           settlement_direction: values.settlement_direction,
           settlement_amount: values.settlement_amount,
         }}

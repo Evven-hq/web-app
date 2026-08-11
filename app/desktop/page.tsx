@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/auth-store";
-import { AlertCircle, ShieldAlert } from "lucide-react";
+import { AlertCircle, ShieldAlert, WifiOff } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
@@ -12,6 +12,7 @@ export default function DesktopPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const reason = searchParams.get("reason");
+  const [isOnline, setIsOnline] = useState(true);
 
   const isAuthenticated = useAuthStore(
     (state) => state.isAuthenticated
@@ -26,7 +27,20 @@ export default function DesktopPage() {
   );
 
   useEffect(() => {
-    if (loading) return;
+    const updateOnlineState = () => setIsOnline(window.navigator.onLine);
+
+    updateOnlineState();
+    window.addEventListener("online", updateOnlineState);
+    window.addEventListener("offline", updateOnlineState);
+
+    return () => {
+      window.removeEventListener("online", updateOnlineState);
+      window.removeEventListener("offline", updateOnlineState);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (loading || !isOnline) return;
 
     if (isAuthenticated && user) {
       router.replace("/dashboard");
@@ -42,9 +56,35 @@ export default function DesktopPage() {
     user,
     reason,
     router,
+    isOnline,
   ]);
 
   const expiredSession = reason === "session-expired";
+
+  if (!isOnline) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background px-6">
+        <div className="card w-full max-w-md rounded-3xl bg-card/80 p-8 text-center shadow-2xl backdrop-blur-xl">
+          <div className="mx-auto mb-4 flex size-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+            <WifiOff className="size-6" />
+          </div>
+
+          <h1 className="mb-2 text-2xl font-semibold">You’re offline</h1>
+
+          <p className="mb-6 text-sm text-muted-foreground">
+            Evven needs an internet connection to open your workspace on desktop. Reconnect to continue.
+          </p>
+
+          <Button
+            className="w-full rounded-xl"
+            onClick={() => setIsOnline(window.navigator.onLine)}
+          >
+            Check again
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-6">

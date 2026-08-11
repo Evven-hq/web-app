@@ -1,4 +1,4 @@
-import type { Ghost, PersonalExpense, SettlementDirection } from "@/types";
+import type { Friend, PersonalExpense, SettlementDirection } from "@/types";
 
 export function formatMoney(value: string | number | null | undefined) {
   const amount = Number(value ?? 0);
@@ -20,8 +20,12 @@ export function getInitials(name: string) {
     .toUpperCase();
 }
 
-export function getGhostBalanceLabel(friend: Ghost) {
-  const balance = Number(friend.net_balance ?? 0);
+export function getFriendBalance(friend: Pick<Friend, "balance" | "net_balance" | "name">) {
+  return Number(friend.balance ?? friend.net_balance ?? 0);
+}
+
+export function getFriendBalanceLabel(friend: Pick<Friend, "balance" | "net_balance" | "name">) {
+  const balance = getFriendBalance(friend);
 
   if (!Number.isFinite(balance) || balance === 0) {
     return "Settled up";
@@ -32,8 +36,8 @@ export function getGhostBalanceLabel(friend: Ghost) {
     : `You paid ${formatMoney(balance)} more`;
 }
 
-export function getGhostBalanceState(friend: Ghost) {
-  const balance = Number(friend.net_balance ?? 0);
+export function getFriendBalanceState(friend: Pick<Friend, "balance" | "net_balance" | "name">) {
+  const balance = getFriendBalance(friend);
 
   if (!Number.isFinite(balance) || balance === 0) {
     return {
@@ -61,7 +65,7 @@ export function getGhostBalanceState(friend: Ghost) {
   };
 }
 
-export function getGhostExpenseDirectionLabel(
+export function getFriendExpenseDirectionLabel(
   direction: SettlementDirection,
   friendName?: string | null
 ) {
@@ -72,9 +76,9 @@ export function getGhostExpenseDirectionLabel(
   return friendName ? `${friendName} paid` : "They paid";
 }
 
-export function getGhostExpenseSummary(expense: PersonalExpense) {
-  const friendName = expense.ghost?.name ?? null;
-  if (!friendName && !expense.ghost_id) return null;
+export function getFriendExpenseSummary(expense: PersonalExpense) {
+  const friendName = expense.friend?.name ?? expense.ghost?.name ?? null;
+  if (!friendName && !expense.friend_id && !expense.ghost_id) return null;
 
   const amount = expense.settlement_amount ?? expense.amount;
   const displayName = friendName ?? "Friend";
@@ -90,7 +94,7 @@ export function getGhostExpenseSummary(expense: PersonalExpense) {
   return `With ${displayName}`;
 }
 
-export function getGhostHistoryStatus(expense: PersonalExpense) {
+export function getFriendHistoryStatus(expense: PersonalExpense) {
   if (expense.settlement_amount) {
     return "Settled";
   }
@@ -98,7 +102,7 @@ export function getGhostHistoryStatus(expense: PersonalExpense) {
   return "Pending";
 }
 
-export function getGhostHistoryDirection(expense: PersonalExpense) {
+export function getFriendHistoryDirection(expense: PersonalExpense) {
   if (expense.settlement_direction === "you_owe") {
     return "They paid";
   }
@@ -114,3 +118,10 @@ export function getDefaultSettlementDirection(balance: string | number | null | 
   const numericBalance = Number(balance ?? 0);
   return numericBalance > 0 ? "they_owe" : "you_owe";
 }
+
+export const getGhostBalanceLabel = getFriendBalanceLabel;
+export const getGhostBalanceState = getFriendBalanceState;
+export const getGhostExpenseDirectionLabel = getFriendExpenseDirectionLabel;
+export const getGhostExpenseSummary = getFriendExpenseSummary;
+export const getGhostHistoryStatus = getFriendHistoryStatus;
+export const getGhostHistoryDirection = getFriendHistoryDirection;

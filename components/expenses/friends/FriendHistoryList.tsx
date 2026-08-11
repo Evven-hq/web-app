@@ -1,19 +1,21 @@
 "use client";
 
 import { Clock3, Loader2 } from "lucide-react";
-import type { PersonalExpense } from "@/types";
+import type { FriendActivity, PersonalExpense } from "@/types";
 import { getPaymentModeMeta } from "@/lib/payment-modes";
 import { formatMoney, getGhostHistoryDirection, getGhostHistoryStatus } from "./friend-utils";
 
+type HistoryItem = PersonalExpense | FriendActivity;
+
 interface FriendHistoryListProps {
-  expenses: PersonalExpense[];
+  expenses: HistoryItem[];
   loading?: boolean;
   error?: string;
   emptyLabel?: string;
 }
 
-function formatDate(expense: PersonalExpense) {
-  return new Date(expense.date ?? expense.created_at).toLocaleDateString("en-IN", {
+function formatDate(expense: HistoryItem) {
+  return new Date(expense.date ?? expense.created_at ?? Date.now()).toLocaleDateString("en-IN", {
     day: "numeric",
     month: "short",
     year: "numeric",
@@ -55,8 +57,8 @@ export function FriendHistoryList({
     <div className="space-y-2">
       {expenses.map((expense) => {
         const amount = expense.settlement_amount ?? expense.amount;
-        const direction = getGhostHistoryDirection(expense);
-        const status = getGhostHistoryStatus(expense);
+        const direction = getGhostHistoryDirection(expense as PersonalExpense);
+        const status = getGhostHistoryStatus(expense as PersonalExpense);
 
         return (
           <div

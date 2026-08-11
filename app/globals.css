@@ -5,6 +5,7 @@
   --evven-surface: #f5f3f0;
   --evven-border: #c4bfb7;
   --evven-card-background: #fefefe;
+  --evven-offline-card: #47ebe5;
 
   --evven-text-primary: #1a1816;
   --evven-text-muted: #8b8480;
@@ -293,12 +294,29 @@ body:has(.premium-modal-backdrop) .app-modal-blur-target {
   }
 }
 
+@keyframes evven-tab-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .premium-modal-backdrop,
   .premium-modal-panel,
   .app-modal-blur-target {
     animation: none;
     transition: none;
+  }
+
+  .animate-\[evven-tab-panel-in_220ms_ease-out\] {
+    animation: none !important;
   }
 }
 

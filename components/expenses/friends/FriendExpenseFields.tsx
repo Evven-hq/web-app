@@ -1,18 +1,21 @@
 "use client";
 
-import { UserRoundPlus } from "lucide-react";
-import { FriendCreateDialog } from "./FriendCreateDialog";
+import Link from "next/link";
+import { useMemo } from "react";
+import { HandCoins, UserRoundPlus } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import type { Friend, SettlementDirection } from "@/types";
+import { Button } from "@/components/ui/button";
+import { getFriends } from "@/services/friends";
 import {
   getDefaultSettlementDirection,
-  getGhostBalanceLabel,
-  getGhostExpenseDirectionLabel,
+  getFriendBalanceLabel,
+  getFriendExpenseDirectionLabel,
   getInitials,
 } from "./friend-utils";
-import { useFriendsDirectory } from "./use-friends-directory";
-import type { Ghost, SettlementDirection } from "@/types";
 
 interface FriendExpenseValues {
-  ghost_id: string;
+  friend_id: string;
   settlement_direction: SettlementDirection;
   settlement_amount: string;
 }
@@ -23,68 +26,97 @@ interface FriendExpenseFieldsProps {
   onChange: (updates: Partial<FriendExpenseValues>) => void;
 }
 
-export function FriendExpenseFields({ amount, values, onChange }: FriendExpenseFieldsProps) {
-  const { friends, loading, error, createFriend } = useFriendsDirectory();
-  const activeFriend = friends.find((friend) => friend.id === values.ghost_id) ?? null;
+function FriendPill({ friend }: { friend: Friend }) {
+  return (
+    <div
+      className="flex min-w-0 items-center gap-2 rounded-2xl border px-3 py-2"
+      style={{
+        background: "var(--evven-surface)",
+        borderColor: "var(--evven-border)",
+      }}
+    >
+      <span
+        className="flex size-8 shrink-0 items-center justify-center rounded-full text-[11px] font-semibold"
+        style={{
+          background: "color-mix(in srgb, var(--evven-accent-secondary) 28%, var(--evven-background))",
+          color: "var(--evven-accent-primary)",
+        }}
+      >
+        {getInitials(friend.name)}
+      </span>
+      <span className="min-w-0">
+        <span className="block truncate text-xs font-medium">{friend.name}</span>
+        <span className="block truncate text-[11px] text-muted-foreground">
+          {getFriendBalanceLabel(friend)}
+        </span>
+      </span>
+    </div>
+  );
+}
 
-  const handleFriendCreated = (friend: Ghost) => {
-    onChange({
-      ghost_id: friend.id,
-      settlement_direction: getDefaultSettlementDirection(friend.net_balance),
-      settlement_amount: amount || values.settlement_amount || "",
-    });
-  };
+export function FriendExpenseFields({ amount, values, onChange }: FriendExpenseFieldsProps) {
+  const { data: friends = [], isLoading, error } = useQuery({
+    queryKey: ["friends"],
+    queryFn: getFriends,
+    staleTime: 30_000,
+  });
+
+  const activeFriend = useMemo(
+    () => friends.find((friend) => friend.id === values.friend_id) ?? null,
+    [friends, values.friend_id]
+  );
 
   return (
     <section
-      className="card rounded-xl p-4"
+      className="card rounded-3xl p-4 sm:p-5"
+      style={{ background: "var(--evven-card-background)" }}
     >
       <div className="mb-4 flex items-start gap-3">
         <div
-          className="flex size-9 shrink-0 items-center justify-center rounded-xl"
+          className="flex size-10 shrink-0 items-center justify-center rounded-2xl"
           style={{
-            background: "var(--color-background-primary, var(--evven-background))",
+            background: "color-mix(in srgb, var(--evven-accent-secondary) 38%, var(--evven-background))",
             color: "var(--evven-accent-primary)",
           }}
         >
-          <UserRoundPlus size={17} />
+          <HandCoins size={18} />
         </div>
-        <div>
+        <div className="min-w-0">
           <p className="text-sm font-medium">Friend</p>
           <p className="text-xs text-muted-foreground">
-            Optional context for who paid.
+            Attach this expense to someone you already split with.
           </p>
         </div>
       </div>
 
-      <div className="space-y-3">
+      <div className="space-y-4">
         <div>
           <label className="mb-2 block text-xs font-semibold uppercase tracking-widest text-muted-foreground">
             Select friend
           </label>
-            <select
-              value={values.ghost_id}
+          <select
+            value={values.friend_id}
             onChange={(event) => {
-              const ghostId = event.target.value;
-              const friend = friends.find((item) => item.id === ghostId) ?? null;
+              const friendId = event.target.value;
+              const friend = friends.find((item) => item.id === friendId) ?? null;
               onChange({
-                ghost_id: ghostId,
+                friend_id: friendId,
                 settlement_direction: friend
-                  ? getDefaultSettlementDirection(friend.net_balance)
+                  ? getDefaultSettlementDirection(friend.net_balance ?? friend.balance)
                   : values.settlement_direction,
-                settlement_amount: ghostId ? values.settlement_amount || amount : "",
+                settlement_amount: friendId ? values.settlement_amount || amount : "",
               });
             }}
-            disabled={loading}
-            className="w-full rounded-xl border px-4 py-2.5 text-sm outline-none focus:ring-2"
+            disabled={isLoading}
+            className="w-full rounded-2xl border px-4 py-2.5 text-sm outline-none transition focus:ring-2"
             style={{
-              background: "var(--color-background-primary, var(--evven-background))",
+              background: "var(--evven-background)",
               borderColor: "var(--evven-border)",
             }}
           >
-            <option value="">{loading ? "Loading friends..." : "No friend selected"}</option>
-            {friends.map((friend, index) => (
-              <option key={`${friend.id}-${index}`} value={friend.id}>
+            <option value="">{isLoading ? "Loading friends..." : "No friend selected"}</option>
+            {friends.map((friend) => (
+              <option key={friend.id} value={friend.id}>
                 {friend.name}
               </option>
             ))}
@@ -92,35 +124,41 @@ export function FriendExpenseFields({ amount, values, onChange }: FriendExpenseF
         </div>
 
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <FriendCreateDialog
-            compact
-            onCreate={createFriend}
-            triggerLabel="Create new friend"
-            title="Create a friend"
-            description="Create someone once and attach them to this expense right away."
-            onCreated={handleFriendCreated}
-          />
-          {activeFriend ? (
-            <div className="flex min-w-0 items-center gap-2 rounded-full px-3 py-2 text-xs font-medium"
-              style={{
-                background: "var(--color-background-primary, var(--evven-background))",
-                color: "var(--evven-text-muted)",
-              }}
-            >
-              <span
-                className="flex size-6 shrink-0 items-center justify-center rounded-full text-[10px] font-semibold"
-                style={{ background: "var(--evven-surface)" }}
-              >
-                {getInitials(activeFriend.name)}
-              </span>
-              <span className="truncate">{getGhostBalanceLabel(activeFriend)}</span>
-            </div>
-          ) : null}
+          <div className="text-xs text-muted-foreground">
+            Need to add someone first? Open the Friends screen and send a request by code.
+          </div>
+          <Button asChild size="sm" variant="outline" className="w-full sm:w-auto">
+            <Link href="/friends">
+              <UserRoundPlus />
+              Friends
+            </Link>
+          </Button>
         </div>
 
-        {error && <p className="text-sm" style={{ color: "var(--evven-error)" }}>{error}</p>}
+        {error ? (
+          <p className="text-sm" style={{ color: "var(--evven-error)" }}>
+            Could not load your friends.
+          </p>
+        ) : null}
 
-        {values.ghost_id && (
+        {values.friend_id && activeFriend ? (
+          <div
+            className="flex flex-wrap items-center gap-2 rounded-2xl border px-3 py-3"
+            style={{
+              background: "color-mix(in srgb, var(--evven-background) 82%, white)",
+              borderColor: "var(--evven-border)",
+            }}
+          >
+            <FriendPill friend={activeFriend} />
+            <div className="text-xs text-muted-foreground">
+              {values.settlement_direction === "you_owe"
+                ? `${activeFriend.name} paid ${Number(amount || 0).toLocaleString("en-IN", { maximumFractionDigits: 2 })}.`
+                : `You paid ${Number(amount || 0).toLocaleString("en-IN", { maximumFractionDigits: 2 })}.`}
+            </div>
+          </div>
+        ) : null}
+
+        {values.friend_id && (
           <div className="grid gap-3 sm:grid-cols-2">
             <div>
               <label className="mb-2 block text-xs font-semibold uppercase tracking-widest text-muted-foreground">
@@ -133,48 +171,40 @@ export function FriendExpenseFields({ amount, values, onChange }: FriendExpenseF
                     settlement_direction: event.target.value as SettlementDirection,
                   })
                 }
-                className="w-full rounded-xl border px-4 py-2.5 text-sm outline-none focus:ring-2"
+                className="w-full rounded-2xl border px-4 py-2.5 text-sm outline-none transition focus:ring-2"
                 style={{
-                  background: "var(--color-background-primary, var(--evven-background))",
+                  background: "var(--evven-background)",
                   borderColor: "var(--evven-border)",
                 }}
               >
                 <option value="they_owe">
-                  {getGhostExpenseDirectionLabel("they_owe", activeFriend?.name)}
+                  {getFriendExpenseDirectionLabel("they_owe", activeFriend?.name)}
                 </option>
                 <option value="you_owe">
-                  {getGhostExpenseDirectionLabel("you_owe", activeFriend?.name)}
+                  {getFriendExpenseDirectionLabel("you_owe", activeFriend?.name)}
                 </option>
               </select>
             </div>
+
             <div>
               <label className="mb-2 block text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-                Expense amount
+                Settlement amount
               </label>
               <div
-                className="flex w-full items-center rounded-xl border px-4 py-2.5 text-sm"
+                className="flex w-full items-center rounded-2xl border px-4 py-2.5 text-sm"
                 style={{
-                  background: "var(--color-background-primary, var(--evven-background))",
+                  background: "var(--evven-background)",
                   borderColor: "var(--evven-border)",
                 }}
               >
                 <span style={{ fontFamily: "var(--font-mono)" }}>
-                  ₹{Number(amount || 0).toLocaleString("en-IN", { maximumFractionDigits: 2 })}
+                  ₹{Number(values.settlement_amount || amount || 0).toLocaleString("en-IN", {
+                    maximumFractionDigits: 2,
+                  })}
                 </span>
               </div>
-              <p className="mt-2 text-xs text-muted-foreground">
-                This mirrors the main expense amount above.
-              </p>
             </div>
           </div>
-        )}
-
-        {values.ghost_id && activeFriend && amount && (
-          <p className="text-xs text-muted-foreground">
-            {values.settlement_direction === "you_owe"
-              ? `${activeFriend.name} paid ₹${Number(amount).toLocaleString("en-IN", { maximumFractionDigits: 2 })}.`
-              : `You paid ₹${Number(amount).toLocaleString("en-IN", { maximumFractionDigits: 2 })}.`}
-          </p>
         )}
       </div>
     </section>

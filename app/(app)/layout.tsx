@@ -18,6 +18,7 @@ import { cn } from "@/lib/utils";
 import { NavigationProvider, useNavigation } from "@/components/shared/NavigationProvider";
 import { RouteProgressBar } from "@/components/shared/RouteProgressbar";
 import { PageTransition } from "@/components/shared/PageTransition";
+import { ThemeProvider } from "@/providers/theme-context";
 
 type DockItem = {
   href: string;
@@ -382,7 +383,9 @@ function AppShell({ children }: { children: React.ReactNode }) {
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <NavigationProvider>
-      <AppShell>{children}</AppShell>
+      <ThemeProvider>
+        <AppShell>{children}</AppShell>
+      </ThemeProvider>
     </NavigationProvider>
   );
 }

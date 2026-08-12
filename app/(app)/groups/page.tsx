@@ -8,19 +8,11 @@ import { Plus, Users, ChevronRight, Loader2, X } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getGroups, createGroup } from "@/services/groups";
 import type { Group } from "@/types";
+import { COLORS } from "@/components/groups/group-detail-utils";
 
 function getInitials(name: string) {
   return name.split(" ").map((w) => w[0]).join("").slice(0, 2).toUpperCase();
 }
-
-const GROUP_COLORS = [
-  { bg: "#EEEDFE", text: "#534AB7" },
-  { bg: "#E1F5EE", text: "#0F6E56" },
-  { bg: "#FAECE7", text: "#993C1D" },
-  { bg: "#FBEAF0", text: "#993556" },
-  { bg: "#E6F1FB", text: "#185FA5" },
-  { bg: "#FEF9E7", text: "#8A6C0A" },
-];
 
 function formatDate(d: string) {
   return new Date(d).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
@@ -132,7 +124,7 @@ export default function GroupsPage() {
         {!isLoading && groups.length > 0 && (
           <div className="space-y-2">
             {groups.map((g, i) => {
-              const color = GROUP_COLORS[i % GROUP_COLORS.length];
+              const color = COLORS[i % COLORS.length];
               return (
                 <Link
                   key={g.id}

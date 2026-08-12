@@ -160,7 +160,7 @@ export function SettlementsTab({
               className="flex flex-col items-center justify-center gap-1 rounded-xl py-2 px-1 text-[10.5px] font-medium leading-tight transition-all"
               style={{
                 background: active ? "var(--evven-accent-secondary)" : "transparent",
-                color: active ? "#6b4f18" : "var(--evven-text-muted)",
+                color: active ? "var(--evven-warning-text)" : "var(--evven-text-muted)",
               }}
             >
               <Icon size={14} />
@@ -180,11 +180,11 @@ export function SettlementsTab({
                     key={settlement.id}
                     className="card flex items-center gap-3 rounded-2xl px-4 py-3"
                   >
-                    <CheckCircle size={15} style={{ color: "#0F6E56" }} className="shrink-0" />
+                    <CheckCircle size={15} style={{ color: "var(--evven-success-text)" }} className="shrink-0" />
                     <p className="text-sm flex-1 font-medium" style={{ color: "var(--evven-text-primary)" }}>
                       {formatGaveLine(settlement.payer_id, settlement.receiver_id)}
                     </p>
-                    <span className="text-sm font-semibold" style={{ color: "#0F6E56" }}>
+                    <span className="text-sm font-semibold" style={{ color: "var(--evven-success-text)" }}>
                       {formatAmount(settlement.amount)}
                     </span>
                   </div>
@@ -323,9 +323,9 @@ export function SettlementsTab({
               <div
                 className="card rounded-2xl px-4 py-3 text-sm"
                 style={{
-                  background: "#FEF2F2",
-                  borderColor: "#FECACA",
-                  color: "#B91C1C",
+                  background: "var(--evven-error-bg)",
+                  borderColor: "var(--evven-error-border)",
+                  color: "var(--evven-error-text)",
                 }}
               >
                 {breakdownError}

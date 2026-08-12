@@ -3,16 +3,8 @@
 import { Scale } from "lucide-react";
 import type { GroupBalances } from "@/types";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { formatAmount } from "./group-detail-utils";
+import { COLORS, formatAmount } from "./group-detail-utils";
 import type { SettleFn, UserAvatarFn, UserNameFn } from "./group-detail-shared";
-
-const COLORS = [
-  { bg: "#EEEDFE", text: "#534AB7" },
-  { bg: "#E1F5EE", text: "#0F6E56" },
-  { bg: "#FAECE7", text: "#993C1D" },
-  { bg: "#FBEAF0", text: "#993556" },
-  { bg: "#E6F1FB", text: "#185FA5" },
-];
 
 function getInitials(name: string) {
   return name
@@ -89,7 +81,7 @@ export function BalancesTab({
                   <p
                     className="text-xs mt-0.5"
                     style={{
-                      color: youOwe ? "#A32D2D" : "#0F6E56",
+                      color: youOwe ? "var(--evven-destructive-text)" : "var(--evven-success-text)",
                     }}
                   >
                     {youOwe

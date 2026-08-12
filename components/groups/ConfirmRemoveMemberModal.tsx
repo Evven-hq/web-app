@@ -36,7 +36,7 @@ export function ConfirmRemoveMemberModal({
 
         <div
           className="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl"
-          style={{ background: "#FEF2F2", color: "#A32D2D" }}
+          style={{ background: "var(--evven-destructive-bg)", color: "var(--evven-destructive-text)" }}
         >
           <Trash2 size={18} />
         </div>
@@ -52,13 +52,13 @@ export function ConfirmRemoveMemberModal({
             type="button"
             onClick={onClose}
             disabled={removing}
-          className="flex-1 rounded-xl border px-4 py-2.5 text-sm font-medium disabled:opacity-50"
-          style={{
-            borderColor: "var(--evven-border)",
-            color: "var(--evven-text-primary)",
-            background: "var(--evven-card-background)",
-          }}
-        >
+            className="flex-1 rounded-xl border px-4 py-2.5 text-sm font-medium disabled:opacity-50"
+            style={{
+              borderColor: "var(--evven-border)",
+              color: "var(--evven-text-primary)",
+              background: "var(--evven-card-background)",
+            }}
+          >
             Cancel
           </button>
           <button
@@ -66,7 +66,7 @@ export function ConfirmRemoveMemberModal({
             onClick={onConfirm}
             disabled={removing}
             className="flex-1 rounded-xl px-4 py-2.5 text-sm font-medium text-white flex items-center justify-center gap-2 disabled:opacity-50"
-            style={{ background: "#A32D2D" }}
+            style={{ background: "var(--evven-destructive-text)" }}
           >
             {removing ? <Loader2 size={15} className="animate-spin" /> : <Trash2 size={15} />}
             {removing ? "Removing..." : "Remove"}

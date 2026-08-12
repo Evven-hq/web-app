@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import type { Viewport } from "next";
 import "./globals.css";
 
-import { ThemeProvider } from "@/providers/theme-provider";
 import { JetBrains_Mono, Xanh_Mono, Homemade_Apple, Baskervville, Crimson_Text, Instrument_Serif } from "next/font/google";
 import { QueryProvider } from "@/providers/query-provider";
 import DesktopVersionBadge from "@/components/shared/desktop-version-badge";
@@ -101,12 +100,10 @@ export default function RootLayout({
         <NativeShellStyles />
         <NativeSafeArea />
         <QueryProvider>
-          <ThemeProvider>
-            <AuthProvider>
-              {children}
-              <DesktopVersionBadge />
-            </AuthProvider>
-          </ThemeProvider>
+          <AuthProvider>
+            {children}
+            <DesktopVersionBadge />
+          </AuthProvider>
         </QueryProvider>
       </body>
     </html>

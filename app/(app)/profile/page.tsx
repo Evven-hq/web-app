@@ -14,6 +14,7 @@ import {
   UserRound,
 } from "lucide-react";
 import { getInitials } from "@/components/expenses/friends";
+import { ThemeSwitcher } from "@/components/shared/ThemeSwitcher";
 import { updateCurrentUser } from "@/services/users";
 import { useAuthStore } from "@/store/auth-store";
 import type { User } from "@/types/user";
@@ -248,6 +249,10 @@ function ProfileEditor({
               </Link>
             </div>
           </div>
+        </div>
+
+        <div className="mb-4">
+          <ThemeSwitcher />
         </div>
 
         {/* Edit account */}

@@ -6,5 +6,6 @@ export interface User {
     email: string;
     auth_provider: string;
     profile_picture: string | null;
+    preferred_theme: string | null;
     created_at: string;
 }

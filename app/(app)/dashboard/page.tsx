@@ -8,6 +8,7 @@ import { getCategoryMeta } from "@/lib/expense-categories";
 import { Plus, Receipt, Users } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import PixelShadowCanvas from "@/components/dashboard/PixelShadowCanvas";
+import { COLORS } from "@/components/groups/group-detail-utils";
 
 function formatAmount(amount: string | number, currency = "₹") {
   const n = Number(amount);
@@ -40,14 +41,6 @@ function getInitials(name: string) {
     .slice(0, 2)
     .toUpperCase();
 }
-
-const GROUP_COLORS = [
-  { bg: "#EEEDFE", text: "#534AB7" },
-  { bg: "#E1F5EE", text: "#0F6E56" },
-  { bg: "#FAECE7", text: "#993C1D" },
-  { bg: "#FBEAF0", text: "#993556" },
-  { bg: "#E6F1FB", text: "#185FA5" },
-];
 
 function RingStat({
   label,
@@ -357,7 +350,7 @@ export default function DashboardPage() {
             ) : (
               <div className="space-y-0">
                 {groups.slice(0, 4).map((g, i) => {
-                  const color = GROUP_COLORS[i % GROUP_COLORS.length];
+                  const color = COLORS[i % COLORS.length];
                   return (
                     <Link
                       href={`/groups/${g.id}`}

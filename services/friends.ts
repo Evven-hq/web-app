@@ -11,7 +11,7 @@ import type {
   FriendRequestsResponse,
 } from "@/types";
 
-const FRIEND_API_BASE = "/friend";
+const FRIEND_API_BASE = "/friends";
 
 function unwrapData<T>(payload: unknown): T {
   if (payload && typeof payload === "object" && payload !== null && "data" in payload) {
@@ -99,7 +99,8 @@ function normalizeFriend(raw: unknown): Friend {
     : [];
 
   return {
-    id: asString(friend.id ?? friend.friend_id ?? friend.ghost_id ?? ""),
+    // The backend routes friend detail/unfriend/expense actions by friendship group id.
+    id: asString(friend.group_id ?? friend.id ?? friend.friend_id ?? friend.ghost_id ?? ""),
     name: asString(friend.name ?? friend.full_name ?? friend.display_name ?? "Friend"),
     user_code: friend.user_code === undefined ? null : asString(friend.user_code),
     profile_picture:
@@ -132,7 +133,7 @@ function normalizeFriendList(payload: unknown): FriendListItem[] {
 function normalizeFriendRequest(raw: unknown, direction?: FriendRequest["direction"]): FriendRequest {
   const item = isPlainObject(raw) ? raw : {};
   return {
-    id: asString(item.id ?? item.request_id ?? item.friend_id ?? item.group_id ?? crypto.randomUUID?.() ?? ""),
+    id: asString(item.group_id ?? item.id ?? item.request_id ?? item.friend_id ?? crypto.randomUUID?.() ?? ""),
     name: asString(item.name ?? item.user_name ?? item.requester_name ?? "Friend"),
     user_code: item.user_code === undefined ? null : asString(item.user_code),
     profile_picture:

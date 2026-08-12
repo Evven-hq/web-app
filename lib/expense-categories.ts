@@ -19,14 +19,14 @@ export interface ExpenseCategory {
 }
 
 export const EXPENSE_CATEGORIES: ExpenseCategory[] = [
-  { value: "food", label: "Food", icon: UtensilsCrossed, bg: "#FAEEDA", text: "#854F0B" },
-  { value: "travel", label: "Travel", icon: Plane, bg: "#E6F1FB", text: "#185FA5" },
-  { value: "home", label: "Home", icon: House , bg: "#EAF3DE", text: "#3B6D11" },
-  { value: "entertainment", label: "Entertainment", icon: Film, bg: "#FBEAF0", text: "#993556" },
-  { value: "utilities", label: "Utilities", icon: Lightbulb, bg: "#FEF6E0", text: "#8A6C0A" },
-  { value: "shopping", label: "Shopping", icon: ShoppingBag, bg: "#EEEDFE", text: "#534AB7" },
-  { value: "health", label: "Health", icon: HeartPulse, bg: "#E1F5EE", text: "#0F6E56" },
-  { value: "other", label: "Other", icon: CircleEllipsis, bg: "#EEEDFE", text: "#534AB7" },
+  { value: "food", label: "Food", icon: UtensilsCrossed, bg: "var(--evven-category-food-bg)", text: "var(--evven-category-food-text)" },
+  { value: "travel", label: "Travel", icon: Plane, bg: "var(--evven-category-travel-bg)", text: "var(--evven-category-travel-text)" },
+  { value: "home", label: "Home", icon: House , bg: "var(--evven-category-home-bg)", text: "var(--evven-category-home-text)" },
+  { value: "entertainment", label: "Entertainment", icon: Film, bg: "var(--evven-category-entertainment-bg)", text: "var(--evven-category-entertainment-text)" },
+  { value: "utilities", label: "Utilities", icon: Lightbulb, bg: "var(--evven-category-utilities-bg)", text: "var(--evven-category-utilities-text)" },
+  { value: "shopping", label: "Shopping", icon: ShoppingBag, bg: "var(--evven-category-shopping-bg)", text: "var(--evven-category-shopping-text)" },
+  { value: "health", label: "Health", icon: HeartPulse, bg: "var(--evven-category-health-bg)", text: "var(--evven-category-health-text)" },
+  { value: "other", label: "Other", icon: CircleEllipsis, bg: "var(--evven-category-other-bg)", text: "var(--evven-category-other-text)" },
 ];
 
 const FALLBACK = EXPENSE_CATEGORIES[EXPENSE_CATEGORIES.length - 1];

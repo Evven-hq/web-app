@@ -15,6 +15,63 @@
   --evven-accent-secondary: #e8dcc8;
   --evven-error: #c0392b;
 
+  /* Status colors */
+  --evven-success-bg: #E1F5EE;
+  --evven-success-text: #0F6E56;
+
+  --evven-warning-bg: #FFF8E7;
+  --evven-warning-border: #F3D08A;
+  --evven-warning-text: #7A4A00;
+
+  --evven-error-bg: #FEF2F2;
+  --evven-error-border: #FECACA;
+  --evven-error-text: #B91C1C;
+
+  --evven-destructive-bg: #FEF2F2;
+  --evven-destructive-text: #A32D2D;
+
+  /* Selection / active state */
+  --evven-selected-bg: #EEEDFE;
+  --evven-selected-text: #534AB7;
+
+  /* Avatar palette (rotates by member index) */
+  --evven-avatar-1-bg: #EEEDFE;
+  --evven-avatar-1-text: #534AB7;
+  --evven-avatar-2-bg: #E1F5EE;
+  --evven-avatar-2-text: #0F6E56;
+  --evven-avatar-3-bg: #FAECE7;
+  --evven-avatar-3-text: #993C1D;
+  --evven-avatar-4-bg: #FBEAF0;
+  --evven-avatar-4-text: #993556;
+  --evven-avatar-5-bg: #E6F1FB;
+  --evven-avatar-5-text: #185FA5;
+  --evven-avatar-6-bg: #FEF9E7;
+  --evven-avatar-6-text: #8A6C0A;
+
+  /* Expense category colors */
+  --evven-category-food-bg: #FAEEDA;
+  --evven-category-food-text: #854F0B;
+  --evven-category-travel-bg: #E6F1FB;
+  --evven-category-travel-text: #185FA5;
+  --evven-category-home-bg: #EAF3DE;
+  --evven-category-home-text: #3B6D11;
+  --evven-category-entertainment-bg: #FBEAF0;
+  --evven-category-entertainment-text: #993556;
+  --evven-category-utilities-bg: #FEF6E0;
+  --evven-category-utilities-text: #8A6C0A;
+  --evven-category-shopping-bg: #EEEDFE;
+  --evven-category-shopping-text: #534AB7;
+  --evven-category-health-bg: #E1F5EE;
+  --evven-category-health-text: #0F6E56;
+  --evven-category-other-bg: #EEEDFE;
+  --evven-category-other-text: #534AB7;
+
+  /* Payment mode colors */
+  --evven-payment-upi-bg: #E6F1FB;
+  --evven-payment-upi-text: #185FA5;
+  --evven-payment-cash-bg: #EAF3DE;
+  --evven-payment-cash-text: #3B6D11;
+
   --evven-modal-page-blur: 20px;
   --evven-modal-page-opacity: 0.72;
   --evven-modal-page-scale: 1.018;
@@ -35,19 +92,425 @@
 .handwritten {
   font-family: var(--font-homemade-apple);
 }
-/* .dark {
+/* ===== THEME VARIANTS ===== */
+
+.theme-L3 {
+  --evven-background: #f5f8fa;
+  --evven-surface: #eef3f6;
+  --evven-border: #c3d2da;
+  --evven-card-background: #ffffff;
+  --evven-text-primary: #16232b;
+  --evven-text-muted: #7c8f99;
+  --evven-text-inverse: #ffffff;
+  --evven-accent-primary: #2e6f8e;
+  --evven-accent-secondary: #d9e8ee;
+  --evven-error: #c0392b;
+}
+
+.theme-L4 {
+  --evven-background: #faf5f7;
+  --evven-surface: #f5ebef;
+  --evven-border: #ddc2ce;
+  --evven-card-background: #fffbfc;
+  --evven-text-primary: #2a1620;
+  --evven-text-muted: #9c7f8c;
+  --evven-text-inverse: #ffffff;
+  --evven-accent-primary: #6b3a5e;
+  --evven-accent-secondary: #f2d9e0;
+  --evven-error: #c0392b;
+}
+
+.theme-Sunset-market {
+  --evven-background: #fdf6ee;
+  --evven-surface: #f7ece0;
+  --evven-border: #e8dcc9;
+  --evven-card-background: #ffffff;
+  --evven-text-primary: #2b1e12;
+  --evven-text-muted: #8f8071;
+  --evven-text-inverse: #ffffff;
+  --evven-accent-primary: #e0592f;
+  --evven-accent-secondary: #fbe0d5;
+  --evven-error: #c0392b;
+}
+
+.theme-Botanical {
+  --evven-background: #f6f7f0;
+  --evven-surface: #eef0e6;
+  --evven-border: #dbe0ce;
+  --evven-card-background: #ffffff;
+  --evven-text-primary: #1c2318;
+  --evven-text-muted: #818c74;
+  --evven-text-inverse: #ffffff;
+  --evven-accent-primary: #3f6b45;
+  --evven-accent-secondary: #dbe8dc;
+  --evven-error: #c0392b;
+}
+
+.theme-D1 {
   --evven-background: #2c2924;
   --evven-surface: #262424;
   --evven-border: #332c2c;
-
+  --evven-card-background: #322f2a;
   --evven-text-primary: #ffffff;
   --evven-text-muted: #888888;
   --evven-text-inverse: #f1efe9;
-
-  --evven-accent-hero: #ffffff;
+  --evven-accent-primary: #7a9e8e;
+  --evven-accent-secondary: #3a3530;
   --evven-error: #e57373;
-  --evven-accent-slate: #9ca3af;
-} */
+
+  --evven-success-bg: #1a3a30;
+  --evven-success-text: #5fd6c7;
+  --evven-warning-bg: #3a2608;
+  --evven-warning-border: #8a7c0a;
+  --evven-warning-text: #ffd966;
+  --evven-error-bg: #3a1010;
+  --evven-error-border: #8a5a5a;
+  --evven-error-text: #ff8a8a;
+  --evven-destructive-bg: #3a1010;
+  --evven-destructive-text: #ff8a8a;
+  --evven-selected-bg: #2a1a35;
+  --evven-selected-text: #9d7cff;
+
+  --evven-avatar-1-bg: #2a1a35;
+  --evven-avatar-1-text: #9d7cff;
+  --evven-avatar-2-bg: #1a3a30;
+  --evven-avatar-2-text: #5fd6c7;
+  --evven-avatar-3-bg: #3a2010;
+  --evven-avatar-3-text: #ff9b6b;
+  --evven-avatar-4-bg: #3a1820;
+  --evven-avatar-4-text: #ff8fa0;
+  --evven-avatar-5-bg: #1a2a3a;
+  --evven-avatar-5-text: #7bb8f0;
+  --evven-avatar-6-bg: #3a2808;
+  --evven-avatar-6-text: #ffc94d;
+
+  --evven-category-food-bg: #3a2008;
+  --evven-category-food-text: #ffb86c;
+  --evven-category-travel-bg: #1a2a3a;
+  --evven-category-travel-text: #7bb8f0;
+  --evven-category-home-bg: #1a3a08;
+  --evven-category-home-text: #7bff47;
+  --evven-category-entertainment-bg: #3a1820;
+  --evven-category-entertainment-text: #ff8fa0;
+  --evven-category-utilities-bg: #3a2808;
+  --evven-category-utilities-text: #ffc94d;
+  --evven-category-shopping-bg: #2a1a35;
+  --evven-category-shopping-text: #9d7cff;
+  --evven-category-health-bg: #1a3a30;
+  --evven-category-health-text: #5fd6c7;
+  --evven-category-other-bg: #2a1a35;
+  --evven-category-other-text: #9d7cff;
+
+  --evven-payment-upi-bg: #1a2a3a;
+  --evven-payment-upi-text: #7bb8f0;
+  --evven-payment-cash-bg: #1a3a08;
+  --evven-payment-cash-text: #7bff47;
+}
+
+.theme-D3 {
+  --evven-background: #101c1f;
+  --evven-surface: #14252a;
+  --evven-border: #253d43;
+  --evven-card-background: #172a2f;
+  --evven-text-primary: #eaf3f4;
+  --evven-text-muted: #7f9ba0;
+  --evven-text-inverse: #0c1517;
+  --evven-accent-primary: #3fa3a3;
+  --evven-accent-secondary: #1c363b;
+  --evven-error: #ff7f7f;
+
+  --evven-success-bg: #0d3a36;
+  --evven-success-text: #5cffea;
+  --evven-warning-bg: #3a2a00;
+  --evven-warning-border: #99880a;
+  --evven-warning-text: #ffd966;
+  --evven-error-bg: #3a1515;
+  --evven-error-border: #8a6a6a;
+  --evven-error-text: #ff9999;
+  --evven-destructive-bg: #3a1515;
+  --evven-destructive-text: #ff9999;
+  --evven-selected-bg: #1a1a35;
+  --evven-selected-text: #a87dff;
+
+  --evven-avatar-1-bg: #1a1a35;
+  --evven-avatar-1-text: #a87dff;
+  --evven-avatar-2-bg: #0d3a36;
+  --evven-avatar-2-text: #5cffea;
+  --evven-avatar-3-bg: #3a2010;
+  --evven-avatar-3-text: #ffb070;
+  --evven-avatar-4-bg: #3a1525;
+  --evven-avatar-4-text: #ff7fa0;
+  --evven-avatar-5-bg: #0d2a3a;
+  --evven-avatar-5-text: #60c0ff;
+  --evven-avatar-6-bg: #3a3008;
+  --evven-avatar-6-text: #ffda3d;
+
+  --evven-category-food-bg: #3a2008;
+  --evven-category-food-text: #ffb86c;
+  --evven-category-travel-bg: #0d2a3a;
+  --evven-category-travel-text: #60c0ff;
+  --evven-category-home-bg: #0d3a0d;
+  --evven-category-home-text: #6bff6b;
+  --evven-category-entertainment-bg: #3a1525;
+  --evven-category-entertainment-text: #ff7fa0;
+  --evven-category-utilities-bg: #3a3008;
+  --evven-category-utilities-text: #ffda3d;
+  --evven-category-shopping-bg: #1a1a35;
+  --evven-category-shopping-text: #a87dff;
+  --evven-category-health-bg: #0d3a36;
+  --evven-category-health-text: #5cffea;
+  --evven-category-other-bg: #1a1a35;
+  --evven-category-other-text: #a87dff;
+
+  --evven-payment-upi-bg: #0d2a3a;
+  --evven-payment-upi-text: #60c0ff;
+  --evven-payment-cash-bg: #0d3a0d;
+  --evven-payment-cash-text: #6bff6b;
+}
+
+.theme-D4 {
+  --evven-background: #14171c;
+  --evven-surface: #1a1e25;
+  --evven-border: #2a2f38;
+  --evven-card-background: #1d222a;
+  --evven-text-primary: #f2f4f7;
+  --evven-text-muted: #8992a1;
+  --evven-text-inverse: #10131a;
+  --evven-accent-primary: #5b8def;
+  --evven-accent-secondary: #232a35;
+  --evven-error: #f07178;
+
+  --evven-success-bg: #0d3a33;
+  --evven-success-text: #5effd9;
+  --evven-warning-bg: #3a3008;
+  --evven-warning-border: #9a8808;
+  --evven-warning-text: #ffe74d;
+  --evven-error-bg: #3a1010;
+  --evven-error-border: #8a6565;
+  --evven-error-text: #ff8a8a;
+  --evven-destructive-bg: #3a1010;
+  --evven-destructive-text: #ff8a8a;
+  --evven-selected-bg: #1a1a3a;
+  --evven-selected-text: #9d8dff;
+
+  --evven-avatar-1-bg: #1a1a3a;
+  --evven-avatar-1-text: #9d8dff;
+  --evven-avatar-2-bg: #0d3a33;
+  --evven-avatar-2-text: #5effd9;
+  --evven-avatar-3-bg: #3a2010;
+  --evven-avatar-3-text: #ffb86b;
+  --evven-avatar-4-bg: #3a1820;
+  --evven-avatar-4-text: #ff8fa5;
+  --evven-avatar-5-bg: #0d2a3a;
+  --evven-avatar-5-text: #6bcfff;
+  --evven-avatar-6-bg: #3a3010;
+  --evven-avatar-6-text: #ffe66b;
+
+  --evven-category-food-bg: #3a2010;
+  --evven-category-food-text: #ffb86b;
+  --evven-category-travel-bg: #0d2a3a;
+  --evven-category-travel-text: #6bcfff;
+  --evven-category-home-bg: #0d3a0d;
+  --evven-category-home-text: #6cff6c;
+  --evven-category-entertainment-bg: #3a1820;
+  --evven-category-entertainment-text: #ff8fa5;
+  --evven-category-utilities-bg: #3a3010;
+  --evven-category-utilities-text: #ffe66b;
+  --evven-category-shopping-bg: #1a1a3a;
+  --evven-category-shopping-text: #9d8dff;
+  --evven-category-health-bg: #0d3a33;
+  --evven-category-health-text: #5effd9;
+  --evven-category-other-bg: #1a1a3a;
+  --evven-category-other-text: #9d8dff;
+
+  --evven-payment-upi-bg: #0d2a3a;
+  --evven-payment-upi-text: #6bcfff;
+  --evven-payment-cash-bg: #0d3a0d;
+  --evven-payment-cash-text: #6cff6c;
+}
+
+.theme-D5 {
+  --evven-background: #1c1420;
+  --evven-surface: #241a29;
+  --evven-border: #382a3f;
+  --evven-card-background: #2a1f30;
+  --evven-text-primary: #f4ecf3;
+  --evven-text-muted: #9e879f;
+  --evven-text-inverse: #180f1c;
+  --evven-accent-primary: #a56bc2;
+  --evven-accent-secondary: #3a2a41;
+  --evven-error: #e8798a;
+
+  --evven-success-bg: #1a3a2a;
+  --evven-success-text: #5ce8c6;
+  --evven-warning-bg: #3a2a08;
+  --evven-warning-border: #8a7a0a;
+  --evven-warning-text: #ffc94d;
+  --evven-error-bg: #3a1018;
+  --evven-error-border: #8a6a7a;
+  --evven-error-text: #ff8a9a;
+  --evven-destructive-bg: #3a1018;
+  --evven-destructive-text: #ff8a9a;
+  --evven-selected-bg: #2a1a35;
+  --evven-selected-text: #b09dff;
+
+  --evven-avatar-1-bg: #2a1a35;
+  --evven-avatar-1-text: #b09dff;
+  --evven-avatar-2-bg: #1a3a2a;
+  --evven-avatar-2-text: #5ce8c6;
+  --evven-avatar-3-bg: #3a2010;
+  --evven-avatar-3-text: #ffa86b;
+  --evven-avatar-4-bg: #3a1820;
+  --evven-avatar-4-text: #ff90a0;
+  --evven-avatar-5-bg: #1a2a3a;
+  --evven-avatar-5-text: #7dbdff;
+  --evven-avatar-6-bg: #3a2808;
+  --evven-avatar-6-text: #ffbd3d;
+
+  --evven-category-food-bg: #3a2008;
+  --evven-category-food-text: #ffa86b;
+  --evven-category-travel-bg: #1a2a3a;
+  --evven-category-travel-text: #7dbdff;
+  --evven-category-home-bg: #1a3a1a;
+  --evven-category-home-text: #6be86b;
+  --evven-category-entertainment-bg: #3a1820;
+  --evven-category-entertainment-text: #ff90a0;
+  --evven-category-utilities-bg: #3a2808;
+  --evven-category-utilities-text: #ffbd3d;
+  --evven-category-shopping-bg: #2a1a35;
+  --evven-category-shopping-text: #b09dff;
+  --evven-category-health-bg: #1a3a2a;
+  --evven-category-health-text: #5ce8c6;
+  --evven-category-other-bg: #2a1a35;
+  --evven-category-other-text: #b09dff;
+
+  --evven-payment-upi-bg: #1a2a3a;
+  --evven-payment-upi-text: #7dbdff;
+  --evven-payment-cash-bg: #1a3a1a;
+  --evven-payment-cash-text: #6be86b;
+}
+
+.theme-O2 {
+  --evven-background: #000000;
+  --evven-surface: #0c0c0c;
+  --evven-border: #1e1e1e;
+  --evven-card-background: #0a0a0a;
+  --evven-text-primary: #ffffff;
+  --evven-text-muted: #8a8a8a;
+  --evven-text-inverse: #000000;
+  --evven-accent-primary: #b6ff3c;
+  --evven-accent-secondary: #1f2b0a;
+  --evven-error: #ff5c5c;
+
+  --evven-success-bg: #0a2a0a;
+  --evven-success-text: #5cff5c;
+  --evven-warning-bg: #2a2a00;
+  --evven-warning-border: #8a8a0a;
+  --evven-warning-text: #ffff3c;
+  --evven-error-bg: #2a0a0a;
+  --evven-error-border: #8a5a5a;
+  --evven-error-text: #ff8a8a;
+  --evven-destructive-bg: #2a0a0a;
+  --evven-destructive-text: #ff8a8a;
+  --evven-selected-bg: #0a2a2a;
+  --evven-selected-text: #3cffff;
+
+  --evven-avatar-1-bg: #0a2a2a;
+  --evven-avatar-1-text: #3cffff;
+  --evven-avatar-2-bg: #0a2a0a;
+  --evven-avatar-2-text: #5cff5c;
+  --evven-avatar-3-bg: #2a1a0a;
+  --evven-avatar-3-text: #ffaa3c;
+  --evven-avatar-4-bg: #2a0a1a;
+  --evven-avatar-4-text: #ff3c8a;
+  --evven-avatar-5-bg: #0a1a2a;
+  --evven-avatar-5-text: #3c8aff;
+  --evven-avatar-6-bg: #2a2a0a;
+  --evven-avatar-6-text: #ffff3c;
+
+  --evven-category-food-bg: #2a1a0a;
+  --evven-category-food-text: #ffaa3c;
+  --evven-category-travel-bg: #0a1a2a;
+  --evven-category-travel-text: #3c8aff;
+  --evven-category-home-bg: #0a2a0a;
+  --evven-category-home-text: #5cff5c;
+  --evven-category-entertainment-bg: #2a0a1a;
+  --evven-category-entertainment-text: #ff3c8a;
+  --evven-category-utilities-bg: #2a2a0a;
+  --evven-category-utilities-text: #ffff3c;
+  --evven-category-shopping-bg: #0a2a2a;
+  --evven-category-shopping-text: #3cffff;
+  --evven-category-health-bg: #0a2a0a;
+  --evven-category-health-text: #5cff5c;
+  --evven-category-other-bg: #0a2a2a;
+  --evven-category-other-text: #3cffff;
+
+  --evven-payment-upi-bg: #0a1a2a;
+  --evven-payment-upi-text: #3c8aff;
+  --evven-payment-cash-bg: #0a2a0a;
+  --evven-payment-cash-text: #5cff5c;
+}
+
+.theme-OLED-forest-green {
+  --evven-background: #000000;
+  --evven-surface: #0c0c0c;
+  --evven-border: #1e1e1e;
+  --evven-card-background: #0a0a0a;
+  --evven-text-primary: #ffffff;
+  --evven-text-muted: #8a8a8a;
+  --evven-text-inverse: #ffffff;
+  --evven-accent-primary: #2d5a4f;
+  --evven-accent-secondary: #12241f;
+  --evven-error: #ff5c5c;
+
+  --evven-success-bg: #0a2a0a;
+  --evven-success-text: #5cff5c;
+  --evven-warning-bg: #2a2a00;
+  --evven-warning-border: #8a8a0a;
+  --evven-warning-text: #ffff3c;
+  --evven-error-bg: #2a0a0a;
+  --evven-error-border: #8a5a5a;
+  --evven-error-text: #ff8a8a;
+  --evven-destructive-bg: #2a0a0a;
+  --evven-destructive-text: #ff8a8a;
+  --evven-selected-bg: #0a2a2a;
+  --evven-selected-text: #3cffff;
+
+  --evven-avatar-1-bg: #0a2a2a;
+  --evven-avatar-1-text: #3cffff;
+  --evven-avatar-2-bg: #0a2a0a;
+  --evven-avatar-2-text: #5cff5c;
+  --evven-avatar-3-bg: #2a1a0a;
+  --evven-avatar-3-text: #ffaa3c;
+  --evven-avatar-4-bg: #2a0a1a;
+  --evven-avatar-4-text: #ff3c8a;
+  --evven-avatar-5-bg: #0a1a2a;
+  --evven-avatar-5-text: #3c8aff;
+  --evven-avatar-6-bg: #2a2a0a;
+  --evven-avatar-6-text: #ffff3c;
+
+  --evven-category-food-bg: #2a1a0a;
+  --evven-category-food-text: #ffaa3c;
+  --evven-category-travel-bg: #0a1a2a;
+  --evven-category-travel-text: #3c8aff;
+  --evven-category-home-bg: #0a2a0a;
+  --evven-category-home-text: #5cff5c;
+  --evven-category-entertainment-bg: #2a0a1a;
+  --evven-category-entertainment-text: #ff3c8a;
+  --evven-category-utilities-bg: #2a2a0a;
+  --evven-category-utilities-text: #ffff3c;
+  --evven-category-shopping-bg: #0a2a2a;
+  --evven-category-shopping-text: #3cffff;
+  --evven-category-health-bg: #0a2a0a;
+  --evven-category-health-text: #5cff5c;
+  --evven-category-other-bg: #0a2a2a;
+  --evven-category-other-text: #3cffff;
+
+  --evven-payment-upi-bg: #0a1a2a;
+  --evven-payment-upi-text: #3c8aff;
+  --evven-payment-cash-bg: #0a2a0a;
+  --evven-payment-cash-text: #5cff5c;
+}
 
 @theme inline {
   --color-background: var(--evven-background);

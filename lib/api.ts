@@ -23,7 +23,7 @@ const refreshClient = axios.create({
 
 let refreshPromise: Promise<string | null> | null = null;
 
-async function refreshDesktopAccessToken() {
+async function refreshStoredAccessToken() {
   const refreshToken = getRefreshToken();
   if (!refreshToken) {
     return null;
@@ -44,7 +44,9 @@ async function refreshDesktopAccessToken() {
       })
       .catch(() => {
         clearAuthTokens();
-        redirectToDesktopLogin("session-expired");
+        if (isDesktop()) {
+          redirectToDesktopLogin("session-expired");
+        }
         return null;
       })
       .finally(() => {
@@ -60,7 +62,7 @@ api.interceptors.request.use(async (config) => {
     let token = getAccessToken();
 
     if (isDesktop() && shouldRefreshDesktopAccessToken()) {
-      const refreshedToken = await refreshDesktopAccessToken();
+      const refreshedToken = await refreshStoredAccessToken();
       if (refreshedToken) {
         token = refreshedToken;
       }
@@ -81,7 +83,6 @@ api.interceptors.response.use(
 
     if (
       typeof window === "undefined" ||
-      !isDesktop() ||
       !error.response ||
       error.response.status !== 401 ||
       originalRequest?._retry
@@ -89,10 +90,12 @@ api.interceptors.response.use(
       return Promise.reject(error);
     }
 
-    const newAccessToken = await refreshDesktopAccessToken();
+    const newAccessToken = await refreshStoredAccessToken();
     if (!newAccessToken || !originalRequest) {
       clearAuthTokens();
-      redirectToDesktopLogin("session-expired");
+      if (typeof window !== "undefined" && isDesktop()) {
+        redirectToDesktopLogin("session-expired");
+      }
       return Promise.reject(error);
     }
 

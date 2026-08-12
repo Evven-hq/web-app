@@ -1,9 +1,10 @@
 export const COLORS = [
-  { bg: "#EEEDFE", text: "#534AB7" },
-  { bg: "#E1F5EE", text: "#0F6E56" },
-  { bg: "#FAECE7", text: "#993C1D" },
-  { bg: "#FBEAF0", text: "#993556" },
-  { bg: "#E6F1FB", text: "#185FA5" },
+  { bg: "var(--evven-avatar-1-bg)", text: "var(--evven-avatar-1-text)" },
+  { bg: "var(--evven-avatar-2-bg)", text: "var(--evven-avatar-2-text)" },
+  { bg: "var(--evven-avatar-3-bg)", text: "var(--evven-avatar-3-text)" },
+  { bg: "var(--evven-avatar-4-bg)", text: "var(--evven-avatar-4-text)" },
+  { bg: "var(--evven-avatar-5-bg)", text: "var(--evven-avatar-5-text)" },
+  { bg: "var(--evven-avatar-6-bg)", text: "var(--evven-avatar-6-text)" },
 ];
 
 export function formatAmount(n: string | number) {

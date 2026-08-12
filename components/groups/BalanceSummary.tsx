@@ -52,7 +52,7 @@ export function BalanceSummary({
               <div className="flex items-center gap-2 shrink-0">
                 <span
                   className="text-xs font-medium whitespace-nowrap"
-                  style={{ color: youOwe ? "#A32D2D" : "#0F6E56" }}
+                  style={{ color: youOwe ? "var(--evven-destructive-text)" : "var(--evven-success-text)" }}
                 >
                   {youOwe ? `you owe ${formatAmount(displayAmount)}` : `owes you ${formatAmount(displayAmount)}`}
                 </span>

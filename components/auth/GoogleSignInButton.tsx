@@ -231,7 +231,7 @@ export function GoogleSignInButton() {
             isSigningIn
               ? {
                   backgroundImage:
-                    "linear-gradient(90deg, #fff 0%, #f0ece0 50%, #fff 100%)",
+                    "linear-gradient(90deg, #fff 0%, var(--evven-surface) 50%, #fff 100%)",
                   backgroundSize: "400px 100%",
                   animation: "google-btn-shimmer 1s linear infinite",
                 }

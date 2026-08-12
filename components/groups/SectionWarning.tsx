@@ -5,9 +5,9 @@ export function SectionWarning({ message }: { message: string }) {
     <div
       className="mb-5 rounded-2xl border px-4 py-3 text-sm"
       style={{
-        background: "#FFF8E7",
-        borderColor: "#F3D08A",
-        color: "#7A4A00",
+        background: "var(--evven-warning-bg)",
+        borderColor: "var(--evven-warning-border)",
+        color: "var(--evven-warning-text)",
       }}
     >
       {message}

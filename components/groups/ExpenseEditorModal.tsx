@@ -191,8 +191,8 @@ export function ExpenseEditorModal({
                     }}
                     className="card flex items-center justify-between rounded-xl px-3 py-2 text-sm"
                     style={{
-                      background: selected ? "#EEEDFE" : "var(--evven-card-background)",
-                      borderColor: selected ? "#534AB7" : "var(--evven-border)",
+                      background: selected ? "var(--evven-selected-bg)" : "var(--evven-card-background)",
+                      borderColor: selected ? "var(--evven-selected-text)" : "var(--evven-border)",
                     }}
                   >
                     <span className="flex min-w-0 items-center gap-2">
@@ -207,7 +207,7 @@ export function ExpenseEditorModal({
                       </Avatar>
                       <span className="truncate">{userName(userId)}</span>
                     </span>
-                    {selected && <CheckCircle size={14} color="#534AB7" />}
+                    {selected && <CheckCircle size={14} color="var(--evven-selected-text)" />}
                   </button>
                 );
               })}

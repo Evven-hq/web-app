@@ -4,6 +4,7 @@ const DESKTOP_RUNTIME_VALUE = "desktop";
 const ACCESS_TOKEN_KEY = "access_token";
 const REFRESH_TOKEN_KEY = "refresh_token";
 const WEB_ACCESS_TOKEN_KEY = "evven_web_access_token";
+const WEB_REFRESH_TOKEN_KEY = "evven_web_refresh_token";
 const DESKTOP_LOGIN_PATH = "/login";
 const DESKTOP_REFRESH_SKEW_MS = 2 * 60 * 1000;
 
@@ -37,7 +38,9 @@ export function getAccessToken() {
 export function getRefreshToken() {
   if (typeof window === "undefined") return null;
 
-  if (!isDesktop()) return null;
+  if (!isDesktop()) {
+    return sessionStorage.getItem(WEB_REFRESH_TOKEN_KEY);
+  }
 
   return localStorage.getItem(REFRESH_TOKEN_KEY);
 }
@@ -89,10 +92,16 @@ export function storeAuthTokens(tokens: {
       localStorage.setItem(REFRESH_TOKEN_KEY, tokens.refresh_token);
     }
     sessionStorage.removeItem(WEB_ACCESS_TOKEN_KEY);
+    sessionStorage.removeItem(WEB_REFRESH_TOKEN_KEY);
     return;
   }
 
   sessionStorage.setItem(WEB_ACCESS_TOKEN_KEY, tokens.access_token);
+  if (tokens.refresh_token) {
+    sessionStorage.setItem(WEB_REFRESH_TOKEN_KEY, tokens.refresh_token);
+  } else {
+    sessionStorage.removeItem(WEB_REFRESH_TOKEN_KEY);
+  }
   localStorage.removeItem(ACCESS_TOKEN_KEY);
   localStorage.removeItem(REFRESH_TOKEN_KEY);
 }
@@ -103,6 +112,7 @@ export function clearAuthTokens() {
   localStorage.removeItem(ACCESS_TOKEN_KEY);
   localStorage.removeItem(REFRESH_TOKEN_KEY);
   sessionStorage.removeItem(WEB_ACCESS_TOKEN_KEY);
+  sessionStorage.removeItem(WEB_REFRESH_TOKEN_KEY);
 }
 
 export function redirectToDesktopLogin(reason?: string) {

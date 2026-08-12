@@ -11,8 +11,8 @@ export interface PaymentModeMeta {
 }
 
 export const PAYMENT_MODES: PaymentModeMeta[] = [
-  { value: "upi", label: "UPI", icon: Smartphone, bg: "#E6F1FB", text: "#185FA5" },
-  { value: "cash", label: "Cash", icon: Banknote, bg: "#EAF3DE", text: "#3B6D11" },
+  { value: "upi", label: "UPI", icon: Smartphone, bg: "var(--evven-payment-upi-bg)", text: "var(--evven-payment-upi-text)" },
+  { value: "cash", label: "Cash", icon: Banknote, bg: "var(--evven-payment-cash-bg)", text: "var(--evven-payment-cash-text)" },
 ];
 
 export function getPaymentModeMeta(mode?: string | null): PaymentModeMeta | null {

@@ -4,6 +4,7 @@ import "./globals.css";
 
 import { JetBrains_Mono, Xanh_Mono, Homemade_Apple, Baskervville, Crimson_Text, Instrument_Serif } from "next/font/google";
 import { QueryProvider } from "@/providers/query-provider";
+import { ThemeProvider } from "@/providers/theme-context";
 import DesktopVersionBadge from "@/components/shared/desktop-version-badge";
 import AuthProvider from "@/components/shared/auth-provider";
 import NativeShellStyles from "@/components/shared/native-shell-styles";
@@ -100,10 +101,12 @@ export default function RootLayout({
         <NativeShellStyles />
         <NativeSafeArea />
         <QueryProvider>
-          <AuthProvider>
-            {children}
-            <DesktopVersionBadge />
-          </AuthProvider>
+          <ThemeProvider>
+            <AuthProvider>
+              {children}
+              <DesktopVersionBadge />
+            </AuthProvider>
+          </ThemeProvider>
         </QueryProvider>
       </body>
     </html>

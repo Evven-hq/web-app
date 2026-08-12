@@ -1,18 +1,19 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/auth-store";
 import { AlertCircle, ShieldAlert, WifiOff } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { useConnectivity } from "@/hooks/use-connectivity";
 
 export default function DesktopPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const reason = searchParams.get("reason");
-  const [isOnline, setIsOnline] = useState(true);
+  const { isOnline } = useConnectivity();
 
   const isAuthenticated = useAuthStore(
     (state) => state.isAuthenticated
@@ -25,19 +26,6 @@ export default function DesktopPage() {
   const loading = useAuthStore(
     (state) => state.isLoading
   );
-
-  useEffect(() => {
-    const updateOnlineState = () => setIsOnline(window.navigator.onLine);
-
-    updateOnlineState();
-    window.addEventListener("online", updateOnlineState);
-    window.addEventListener("offline", updateOnlineState);
-
-    return () => {
-      window.removeEventListener("online", updateOnlineState);
-      window.removeEventListener("offline", updateOnlineState);
-    };
-  }, []);
 
   useEffect(() => {
     if (loading || !isOnline) return;
@@ -77,7 +65,7 @@ export default function DesktopPage() {
 
           <Button
             className="w-full rounded-xl"
-            onClick={() => setIsOnline(window.navigator.onLine)}
+            onClick={() => window.location.reload()}
           >
             Check again
           </Button>

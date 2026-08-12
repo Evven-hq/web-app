@@ -12,13 +12,13 @@ import {
   CircleUserRound,
   LogOut,
   Plus,
-  WifiOff,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { NavigationProvider, useNavigation } from "@/components/shared/NavigationProvider";
+import { OfflineBanner } from "@/components/shared/OfflineBanner";
 import { RouteProgressBar } from "@/components/shared/RouteProgressbar";
 import { PageTransition } from "@/components/shared/PageTransition";
-import { ThemeProvider } from "@/providers/theme-context";
+import { useConnectivity } from "@/hooks/use-connectivity";
 
 type DockItem = {
   href: string;
@@ -48,24 +48,18 @@ function isActiveRoute(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-function Dock({ pathname, variant }: { pathname: string; variant: "mobile" | "desktop" }) {
+function Dock({
+  pathname,
+  variant,
+  isOnline,
+}: {
+  pathname: string;
+  variant: "mobile" | "desktop";
+  isOnline: boolean;
+}) {
   const isDesktop = variant === "desktop";
   const { navigate } = useNavigation();
   const router = useRouter();
-  const [isOnline, setIsOnline] = React.useState(true);
-
-  useEffect(() => {
-    const updateOnlineState = () => setIsOnline(window.navigator.onLine);
-
-    updateOnlineState();
-    window.addEventListener("online", updateOnlineState);
-    window.addEventListener("offline", updateOnlineState);
-
-    return () => {
-      window.removeEventListener("online", updateOnlineState);
-      window.removeEventListener("offline", updateOnlineState);
-    };
-  }, []);
 
   return (
     <nav
@@ -81,24 +75,6 @@ function Dock({ pathname, variant }: { pathname: string; variant: "mobile" | "de
           : undefined
       }
     >
-      {!isOnline ? (
-        <div
-          className={cn(
-            "pointer-events-none mb-2 flex",
-            isDesktop ? "justify-center" : "justify-center"
-          )}
-        >
-          <div
-            className="pointer-events-auto inline-flex items-center gap-2 rounded-full border bg-[var(--evven-offline-card)] px-3 py-2 text-xs font-medium text-[var(--evven-text-primary)] shadow-lg"
-            style={{ borderColor: "var(--evven-border)" }}
-            role="status"
-            aria-live="polite"
-          >
-            <WifiOff size={14} className="text-[var(--evven-error)]" />
-            Gang check yo internet 😭
-          </div>
-        </div>
-      ) : null}
       <div
         className={cn(
           "pointer-events-auto grid items-center rounded-full border shadow-2xl shadow-black/20",
@@ -107,11 +83,10 @@ function Dock({ pathname, variant }: { pathname: string; variant: "mobile" | "de
             : "mx-auto h-[76px] max-w-md grid-cols-5 gap-1.5 px-3.5 py-0"
         )}
         style={{
-          background:
-            "linear-gradient(180deg, color-mix(in srgb, var(--evven-surface) 96%, white), color-mix(in srgb, var(--evven-surface) 88%, transparent))",
+          background: "color-mix(in srgb, var(--evven-surface) 92%, var(--evven-card-background))",
           border: "0.5px solid var(--evven-border)",
-          backdropFilter: "blur(18px) saturate(160%)",
-          WebkitBackdropFilter: "blur(18px) saturate(160%)",
+          backdropFilter: "blur(18px) saturate(140%)",
+          WebkitBackdropFilter: "blur(18px) saturate(140%)",
         }}
       >
         {DOCK_ITEMS.map(({ href, label, icon: Icon, center }) => {
@@ -329,6 +304,7 @@ function AppShell({ children }: { children: React.ReactNode }) {
   const logout = useAuthStore((s) => s.logout);
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const isInitialized = useAuthStore((s) => s.isInitialized);
+  const { isOnline } = useConnectivity();
 
   useEffect(() => {
     if (isInitialized && !isAuthenticated) {
@@ -365,6 +341,7 @@ function AppShell({ children }: { children: React.ReactNode }) {
     <div className="flex h-screen overflow-hidden bg-background">
       <RouteProgressBar />
       <div className="app-modal-blur-target flex min-w-0 flex-1 flex-col overflow-hidden">
+        <OfflineBanner isOnline={isOnline} />
         <MobileFloatingChrome user={user} showAddExpense={pathname === "/dashboard"} />
         <DesktopIdentityChip user={user} />
 
@@ -372,8 +349,8 @@ function AppShell({ children }: { children: React.ReactNode }) {
           <PageTransition>{children}</PageTransition>
         </main>
 
-        <Dock pathname={pathname} variant="mobile" />
-        <Dock pathname={pathname} variant="desktop" />
+        <Dock pathname={pathname} variant="mobile" isOnline={isOnline} />
+        <Dock pathname={pathname} variant="desktop" isOnline={isOnline} />
         <DesktopLogoutButton onLogout={handleLogout} />
       </div>
     </div>
@@ -383,9 +360,7 @@ function AppShell({ children }: { children: React.ReactNode }) {
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <NavigationProvider>
-      <ThemeProvider>
-        <AppShell>{children}</AppShell>
-      </ThemeProvider>
+      <AppShell>{children}</AppShell>
     </NavigationProvider>
   );
 }

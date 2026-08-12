@@ -85,6 +85,7 @@ export function ThemeProvider({
 
   const [theme, setThemeState] = useState<ThemeName | null>(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [animationType, setAnimationType] = useState<ThemeAnimationType>(ThemeAnimationType.GIF);
   const pendingThemeRef = useRef<ThemeName | null | undefined>(undefined);
   const transitionTimerRef = useRef<number | null>(null);
 
@@ -151,6 +152,24 @@ export function ThemeProvider({
     [canSyncThemeToBackend, persistTheme, setUser],
   );
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const img = new window.Image();
+    const onLoad = () => setAnimationType(ThemeAnimationType.GIF);
+    const onError = () => setAnimationType(ThemeAnimationType.BLUR_CIRCLE);
+
+    img.onload = onLoad;
+    img.onerror = onError;
+    img.decoding = "sync";
+    img.src = logoGifUrl;
+
+    return () => {
+      img.onload = null;
+      img.onerror = null;
+    };
+  }, [logoGifUrl]);
+
   const onThemeChange = useCallback(() => {
     const nextTheme = pendingThemeRef.current;
     if (nextTheme === undefined) return;
@@ -159,8 +178,9 @@ export function ThemeProvider({
   }, [commitTheme]);
 
   const { ref: animationRef, toggleSwitchTheme } = useModeAnimation({
-    animationType: ThemeAnimationType.GIF,
-    gifUrl: logoGifUrl,
+    animationType,
+    gifUrl: animationType === ThemeAnimationType.GIF ? logoGifUrl : undefined,
+    blurAmount: 8,
     duration: ANIMATION_DURATION,
     globalClassName: TRANSITION_CLASS,
     onDarkModeChange: onThemeChange,

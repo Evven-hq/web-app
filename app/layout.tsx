@@ -87,6 +87,7 @@ export default function RootLayout({
       className={`${jetBrains.className} ${xanh.className} ${homemadeApple.variable} ${baskervville.className} ${crimsonText.variable} ${instrumentSerif.variable} h-full antialiased`}
     >
       <head>
+        <link rel="preload" href="/evven-logo-premium-transition.svg" as="image" type="image/svg+xml" fetchPriority="high" />
         <link 
           href="https://api.fontshare.com/v2/css?f[]=satoshi@300,301,400,401,500,501,700,701,900,901,1&display=swap" 
           rel="stylesheet" 

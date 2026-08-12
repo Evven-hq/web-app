@@ -156,16 +156,16 @@ function DesktopIdentityChip({
         group pointer-events-auto fixed left-6 top-[18px] z-40 hidden items-center gap-3 
         rounded-(--evven-radius-hero) px-4 py-3 
         transition-colors duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]
-        hover:bg-red-500
+       
         focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--evven-accent-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-background
         md:flex
         animate-[fadeIn_0.5s_ease-out]
       `}
       style={
         {
-          "--chip-bg":
+          "--evven-card-background":
             "color-mix(in srgb, white 14%, color-mix(in srgb, var(--evven-background) 72%, var(--evven-surface)))",
-          backgroundColor: "var(--chip-bg)",
+          backgroundColor: "var((--evven-card-background))",
         } as React.CSSProperties
       }
       aria-label="Profile"

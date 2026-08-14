@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeftRight, Plus, UserRound } from "lucide-react";
+import { ArrowLeftRight, Plus, UserRound, Users } from "lucide-react";
 import type { Ghost } from "@/types";
 import { Button } from "@/components/ui/button";
 import { FriendHistoryList } from "./FriendHistoryList";
@@ -133,7 +133,7 @@ export function FriendDetailPanel({
           </div>
         </div>
 
-        <div className="mt-5 flex flex-col gap-2 sm:flex-row">
+        <div className="mt-5 grid gap-2 sm:grid-cols-3">
           <Button asChild variant="default" size="sm" className="w-full sm:w-auto">
             <Link
               href={`/expenses?new=1&ghost_id=${friend.id}&direction=${getDefaultSettlementDirection(
@@ -153,6 +153,16 @@ export function FriendDetailPanel({
           >
             <ArrowLeftRight />
             Settle
+          </Button>
+          <Button asChild variant="outline" size="sm" className="w-full sm:w-auto">
+            <Link
+              href={`/expenses/new?split=true&friend_id=${friend.id}&direction=${getDefaultSettlementDirection(
+                friend.net_balance
+              )}`}
+            >
+              <Users />
+              Split
+            </Link>
           </Button>
         </div>
 

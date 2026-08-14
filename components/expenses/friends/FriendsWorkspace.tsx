@@ -15,6 +15,7 @@ import {
   UserRound,
   UserRoundPlus,
   UserRoundX,
+  Users,
   X,
 } from "lucide-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -48,6 +49,7 @@ import {
   getFriendBalanceLabel,
   getFriendBalanceState,
   getInitials,
+  friendMatchesSearch,
 } from "./friend-utils";
 
 function formatDate(value?: string | null) {
@@ -363,17 +365,19 @@ function UnfriendDialog({
 
   const blocked = balance !== 0;
 
-  useEffect(() => {
-    if (!open) {
-      setError("");
-      mutation.reset();
-    }
-  }, [open, mutation]);
-
   if (!friend) return null;
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={(nextOpen) => {
+        setOpen(nextOpen);
+        if (!nextOpen) {
+          setError("");
+          mutation.reset();
+        }
+      }}
+    >
       <DialogTrigger asChild>
         <Button variant="outline" className="w-full sm:w-auto">
           <UserRoundX />
@@ -477,7 +481,6 @@ export function FriendsWorkspace() {
 
   const friends = useMemo(() => {
     const source = friendsQuery.data ?? [];
-    const normalized = search.trim().toLowerCase();
 
     return [...source]
       .sort((a, b) => {
@@ -486,12 +489,7 @@ export function FriendsWorkspace() {
         if (aTime !== bTime) return bTime - aTime;
         return a.name.localeCompare(b.name);
       })
-      .filter((friend) => {
-        if (!normalized) return true;
-        return [friend.name, friend.user_code, getFriendBalanceLabel(friend)]
-          .filter(Boolean)
-          .some((value) => value?.toLowerCase().includes(normalized));
-      });
+      .filter((friend) => friendMatchesSearch(friend, search));
   }, [friendsQuery.data, search]);
 
   useEffect(() => {
@@ -516,8 +514,20 @@ export function FriendsWorkspace() {
     queryKey: ["friend-detail", selectedFriendId],
     queryFn: () => getFriendDetail(selectedFriendId as string),
     enabled: Boolean(selectedFriendId),
-    staleTime: 15_000,
+    staleTime: 5_000,
+    refetchOnWindowFocus: true,
   });
+
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible" && selectedFriendId) {
+        void queryClient.invalidateQueries({ queryKey: ["friend-detail", selectedFriendId] });
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
+  }, [selectedFriendId, queryClient]);
 
   const selectedFriend = detailQuery.data ?? selectedFriendFromList;
   const friendBalance = selectedFriend ? getFriendBalance(selectedFriend) : 0;
@@ -753,6 +763,15 @@ export function FriendsWorkspace() {
                       Settle
                     </Link>
                   </Button>
+                  <Button asChild variant="outline" size="sm" className="w-full min-w-0 justify-center">
+                    <Link href={`/expenses/new?split=true&friend_id=${selectedFriend.id}&direction=${getDefaultSettlementDirection(friendBalance)}`}>
+                      <Users />
+                      Split
+                    </Link>
+                  </Button>
+                </div>
+
+                <div className="flex justify-end">
                   <UnfriendDialog
                     friend={selectedFriend}
                     balance={friendBalance}

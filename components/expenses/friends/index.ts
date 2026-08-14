@@ -6,6 +6,7 @@ export * from "./FriendHistoryList";
 export * from "./FriendSettlementDialog";
 export * from "./FriendsSection";
 export * from "./FriendExpenseFields";
+export * from "./FriendSplitSection";
 export * from "./FriendsWorkspace";
 export * from "./FriendSummaryLine";
 export * from "./use-friend-detail";

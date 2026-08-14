@@ -8,6 +8,7 @@ import { Edit3, Loader2, Plus, Receipt, Search, Trash2, X } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { FriendSummaryLine, getGhostExpenseSummary } from "@/components/expenses/friends";
 import { ExpenseForm, type ExpenseFormValues } from "@/components/expenses/ExpenseForm";
+import { ExpenseDetailModal } from "@/components/expenses/ExpenseDetailModal";
 import { createPersonalExpense, deletePersonalExpense, getPersonalExpenses } from "@/services/expenses";
 import { EXPENSE_CATEGORIES, getCategoryMeta } from "@/lib/expense-categories";
 import type { PersonalExpense } from "@/types";
@@ -30,9 +31,11 @@ export default function ExpensesPage() {
   const [query, setQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
   const [showAddExpense, setShowAddExpense] = useState(false);
+  const [selectedExpense, setSelectedExpense] = useState<PersonalExpense | null>(null);
+  const splitEnabled = searchParams.get("split") === "1" || searchParams.get("split") === "true";
 
   const initialExpenseValues = useMemo<ExpenseFormValues>(() => {
-      const direction = searchParams.get("direction");
+    const direction = searchParams.get("direction");
 
     return {
       title: "",
@@ -45,11 +48,26 @@ export default function ExpensesPage() {
       settlement_direction:
         direction === "you_owe" || direction === "they_owe" ? direction : "they_owe",
       settlement_amount: "",
+      split_mode: "equal",
+      split_participants:
+        splitEnabled && (searchParams.get("friend_id") ?? searchParams.get("ghost_id"))
+          ? [
+              {
+                friend_id: searchParams.get("friend_id") ?? searchParams.get("ghost_id") ?? "",
+              },
+            ]
+          : [],
     };
   }, [searchParams]);
 
   useEffect(() => {
-    if (searchParams.get("new") === "1" || searchParams.get("friend_id") || searchParams.get("ghost_id")) {
+    if (
+      searchParams.get("new") === "1" ||
+      searchParams.get("split") === "1" ||
+      searchParams.get("split") === "true" ||
+      searchParams.get("friend_id") ||
+      searchParams.get("ghost_id")
+    ) {
       setShowAddExpense(true);
     }
   }, [searchParams]);
@@ -240,7 +258,16 @@ export default function ExpensesPage() {
               return (
                 <div
                   key={expense.id}
-                  className="card flex items-center gap-3 rounded-(--evven-radius-card) px-4 py-3.5 transition-colors hover:bg-(--evven-surface)"
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => setSelectedExpense(expense)}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter" || event.key === " ") {
+                      event.preventDefault();
+                      setSelectedExpense(expense);
+                    }
+                  }}
+                  className="card flex items-center gap-3 rounded-(--evven-radius-card) px-4 py-3.5 text-left transition-colors hover:bg-(--evven-surface) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--evven-accent-primary)] cursor-pointer"
                 >
                   <div
                     className="flex size-10 shrink-0 items-center justify-center rounded-xl"
@@ -260,15 +287,34 @@ export default function ExpensesPage() {
                   <span className="shrink-0 text-sm font-semibold" style={{ fontFamily: "var(--font-mono)" }}>
                     {formatAmount(expense.amount)}
                   </span>
+                  <button
+                    type="button"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      setSelectedExpense(expense);
+                    }}
+                    className="rounded-full border px-3 py-1.5 text-xs font-medium transition-colors hover:bg-(--evven-surface)"
+                    style={{
+                      borderColor: "var(--evven-border)",
+                      color: "var(--evven-text-primary)",
+                    }}
+                    aria-label={`View details for ${expense.title}`}
+                  >
+                    View
+                  </button>
                   <Link
                     href={`/expenses/${expense.id}/edit`}
                     aria-label={`Edit ${expense.title}`}
+                    onClick={(event) => event.stopPropagation()}
                     className="rounded-lg p-2 text-muted-foreground hover:bg-secondary hover:text-foreground"
                   >
                     <Edit3 size={14} />
                   </Link>
                   <button
-                    onClick={() => void handleDelete(expense)}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      void handleDelete(expense);
+                    }}
                     disabled={deleteMutation.isPending}
                     aria-label={`Delete ${expense.title}`}
                     className="rounded-lg p-2 text-muted-foreground hover:bg-(--evven-surface) disabled:opacity-50"
@@ -286,6 +332,18 @@ export default function ExpensesPage() {
           </div>
         )}
       </div>
+
+      {selectedExpense ? (
+        <ExpenseDetailModal
+          expense={selectedExpense}
+          open={Boolean(selectedExpense)}
+          onClose={() => setSelectedExpense(null)}
+          onDelete={(expense) => {
+            handleDelete(expense);
+            setSelectedExpense(null);
+          }}
+        />
+      ) : null}
 
       {showAddExpense && typeof document !== "undefined" && createPortal(
         <div className="fixed inset-0 z-50 flex items-end justify-center p-4 sm:items-center">
@@ -314,8 +372,13 @@ export default function ExpensesPage() {
             <ExpenseForm
               initialValues={initialExpenseValues}
               submitLabel="Add expense"
+              initialSplitEnabled={splitEnabled}
               onSubmit={async (expense) => {
-                await createPersonalExpense(expense);
+                if (Array.isArray(expense)) {
+                  await Promise.all(expense.map((item) => createPersonalExpense(item)));
+                } else {
+                  await createPersonalExpense(expense);
+                }
                 await queryClient.invalidateQueries({ queryKey: ["expenses"] });
                 closeAddExpenseModal();
               }}

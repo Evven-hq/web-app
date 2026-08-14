@@ -34,43 +34,48 @@ export function ExpenseDetailsModal({
   if (typeof document === "undefined") return null;
 
   return createPortal(
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 flex items-end justify-center p-4 sm:items-center">
       <div className="premium-modal-backdrop absolute inset-0" onClick={onClose} />
       <div
-        className="premium-modal-panel card relative w-full max-w-md rounded-3xl p-6 shadow-xl"
+        className="premium-modal-panel card relative max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-3xl p-6 shadow-xl sm:p-7"
       >
-        <button onClick={onClose} className="absolute right-4 top-4 rounded-lg p-1.5" style={{ background: "var(--evven-surface)" }}>
+        <button
+          onClick={onClose}
+          className="absolute right-4 top-4 rounded-lg p-1.5"
+          style={{ background: "var(--evven-surface)" }}
+          aria-label="Close expense details"
+        >
           <X size={15} />
         </button>
 
         <div className="pr-8">
-          <p className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: "var(--evven-text-muted)" }}>
+          <p className="mb-1 text-xs font-semibold uppercase tracking-widest" style={{ color: "var(--evven-text-muted)" }}>
             Expense details
           </p>
           <h2 className="text-lg font-semibold" style={{ color: "var(--evven-text-primary)" }}>
             {detailExpense.title}
           </h2>
-          <p className="text-sm mt-1" style={{ color: "var(--evven-text-muted)" }}>
+          <p className="mt-1 text-sm" style={{ color: "var(--evven-text-muted)" }}>
             Paid by {userName(detailExpense.paid_by)} · {new Date(detailExpense.created_at).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}
           </p>
         </div>
 
-        <div className="mt-5 grid grid-cols-2 gap-3">
+        <div className="mt-5 grid gap-3 sm:grid-cols-2">
           <div className="card rounded-2xl p-4">
-            <p className="text-xs mb-1" style={{ color: "var(--evven-text-muted)" }}>Total</p>
+            <p className="mb-1 text-xs" style={{ color: "var(--evven-text-muted)" }}>Total</p>
             <p className="text-base font-semibold" style={{ color: "var(--evven-text-primary)" }}>
               {formatAmount(detailExpense.amount)}
             </p>
           </div>
           <div className="card rounded-2xl p-4">
-            <p className="text-xs mb-1" style={{ color: "var(--evven-text-muted)" }}>Split</p>
+            <p className="mb-1 text-xs" style={{ color: "var(--evven-text-muted)" }}>Split</p>
             <p className="text-base font-semibold capitalize" style={{ color: "var(--evven-text-primary)" }}>
               {detailExpense.split_type}
             </p>
           </div>
           {detailExpense.category && (
             <div className="card rounded-2xl p-4">
-              <p className="text-xs mb-1" style={{ color: "var(--evven-text-muted)" }}>Category</p>
+              <p className="mb-1 text-xs" style={{ color: "var(--evven-text-muted)" }}>Category</p>
               <p className="text-base font-semibold flex items-center gap-2" style={{ color: "var(--evven-text-primary)" }}>
                 {(() => {
                   const Icon = getCategoryMeta(detailExpense.category).icon;
@@ -82,7 +87,7 @@ export function ExpenseDetailsModal({
           )}
           {paymentModeMeta && (
             <div className="card rounded-2xl p-4">
-              <p className="text-xs mb-1" style={{ color: "var(--evven-text-muted)" }}>Payment mode</p>
+              <p className="mb-1 text-xs" style={{ color: "var(--evven-text-muted)" }}>Payment mode</p>
               <p className="text-base font-semibold flex items-center gap-2" style={{ color: "var(--evven-text-primary)" }}>
                 <paymentModeMeta.icon size={16} />
                 {paymentModeMeta.label}
@@ -92,7 +97,7 @@ export function ExpenseDetailsModal({
         </div>
 
         <div className="mt-5">
-          <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: "var(--evven-text-muted)" }}>
+          <p className="mb-3 text-xs font-semibold uppercase tracking-widest" style={{ color: "var(--evven-text-muted)" }}>
             Breakdown
           </p>
           {loadingDetails ? (

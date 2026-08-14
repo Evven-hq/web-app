@@ -1,6 +1,7 @@
 import { COLORS } from "@/lib/avatar";
 
 export { COLORS };
+export { getInitials } from "@/lib/format";
 
 export function colorForId(id: string) {
   let hash = 0;
@@ -16,16 +17,6 @@ export function formatAmount(n: string | number) {
 
 export function formatDate(d: string) {
   return new Date(d).toLocaleDateString("en-IN", { day: "numeric", month: "short" });
-}
-
-export function getInitials(name: string) {
-  return name
-    .trim()
-    .split(/\s+/)
-    .map((w) => w[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
 }
 
 export function splitEvenly(total: number, count: number) {

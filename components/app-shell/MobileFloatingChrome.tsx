@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Plus } from "lucide-react";
 import { useAuthStore } from "@/store/auth-store";
-import { getInitials } from "./dock-utils";
+import { getInitials } from "@/lib/format";
 
 export function MobileFloatingChrome({
   user,

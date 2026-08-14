@@ -9,10 +9,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getGroups, createGroup } from "@/services/groups";
 import type { Group } from "@/types";
 import { COLORS } from "@/components/groups/group-detail-utils";
-
-function getInitials(name: string) {
-  return name.split(" ").map((w) => w[0]).join("").slice(0, 2).toUpperCase();
-}
+import { getInitials } from "@/lib/format";
 
 function formatDate(d: string) {
   return new Date(d).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });

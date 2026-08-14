@@ -100,7 +100,7 @@ FastAPI backend (external, not in this repo)
 - **`lib/api.ts`** attaches the bearer token to every request and, on a 401 in desktop mode, transparently refreshes the access token (de-duped via a shared in-flight promise) and retries the original request once. If refresh fails, tokens are cleared and the user is redirected to the desktop login route.
 - **`proxy.ts`** runs at the edge and redirects desktop-wrapper traffic hitting `/` straight to `/desktop`, so the native shell lands on a dedicated entry screen.
 - **API responses** are consistently shaped as `{ message, data }` (`types/common.ts` → `ApiResponse<T>`); service functions unwrap `.data` before returning to callers. The `ghosts` service additionally normalizes a couple of inconsistent backend field names (`id`/`ghost_id`, `group_id`/`shadow_group_id`).
-- **Route groups**: `app/(app)/*` holds the authenticated product behind the dock-navigated shell; `app/(auth)/*` holds login/signup/password flows behind a shared `AuthShell` / `AuthSlideShell`; `app/page.tsx` redirects into the authenticated app.
+- **Route groups**: `app/(app)/*` holds the authenticated product behind the dock-navigated shell; `app/(auth)/*` holds login/signup/password flows behind a shared `AuthShell`; `app/page.tsx` redirects into the authenticated app.
 
 ## Design system
 
@@ -135,7 +135,7 @@ app/
   not-found.tsx       # product 404
 
 components/
-  auth/               # AuthShell, AuthSlideShell, GoogleSignInButton
+  auth/               # AuthShell, GoogleSignInButton
   characters/         # illustrated character animation used in auth flows
   expenses/
     friends/          # FriendsWorkspace and its subcomponents/hooks

@@ -3,7 +3,7 @@
 import type { CSSProperties } from "react";
 import Link from "next/link";
 import { useAuthStore } from "@/store/auth-store";
-import { getInitials } from "./dock-utils";
+import { getInitials } from "@/lib/format";
 
 export function DesktopIdentityChip({
   user,

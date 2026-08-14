@@ -16,15 +16,6 @@ export const DOCK_ITEMS: DockItem[] = [
   { href: "/profile", label: "Profile", icon: CircleUserRound },
 ] as const;
 
-export function getInitials(name: string) {
-  return name
-    .split(" ")
-    .map((w) => w[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
-}
-
 export function isActiveRoute(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }

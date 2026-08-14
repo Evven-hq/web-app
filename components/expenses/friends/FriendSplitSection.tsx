@@ -192,7 +192,7 @@ export function FriendSplitSection({
                   style={{
                     background:
                       values.split_mode === mode
-                        ? "var(--evven-text-primary)"
+                        ? "var(--evven-accent-primary)"
                         : "var(--evven-background)",
                     color:
                       values.split_mode === mode
@@ -200,7 +200,7 @@ export function FriendSplitSection({
                         : "var(--evven-text-primary)",
                     borderColor:
                       values.split_mode === mode
-                        ? "var(--evven-text-primary)"
+                        ? "var(--evven-accent-primary)"
                         : "var(--evven-border)",
                   }}
                 >

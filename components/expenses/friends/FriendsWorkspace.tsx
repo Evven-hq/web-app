@@ -645,8 +645,8 @@ export function FriendsWorkspace() {
                   onClick={() => setActiveTab(tab.id)}
                   className="inline-flex flex-1 basis-0 items-center justify-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-all"
                   style={{
-                    background: active ? "var(--evven-text-primary)" : "transparent",
-                    color: active ? "var(--evven-text-inverse)" : "var(--evven-text-primary)",
+                    background: active ? "var(--evven-accent-primary)" : "transparent",
+                    color: active ? "var(--evven-text-inverse)" : "var(--evven-text-muted)",
                   }}
                 >
                   {tab.label}
@@ -655,7 +655,7 @@ export function FriendsWorkspace() {
                       className="rounded-full px-2 py-0.5 text-[11px] font-semibold"
                       style={{
                         background: active
-                          ? "rgba(255,255,255,0.16)"
+                          ? "color-mix(in srgb, var(--evven-text-inverse) 16%, transparent)"
                           : "color-mix(in srgb, var(--evven-accent-secondary) 28%, var(--evven-background))",
                         color: active ? "var(--evven-text-inverse)" : "var(--evven-accent-primary)",
                       }}

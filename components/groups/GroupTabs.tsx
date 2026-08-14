@@ -42,7 +42,9 @@ export function GroupTabs({
               padding: "10px 6px",
               background: active ? "var(--evven-accent-primary)" : "transparent",
               color: active ? "var(--evven-text-inverse)" : "var(--evven-text-muted)",
-              boxShadow: active ? "0 3px 10px -3px rgba(45,90,79,0.5)" : "none",
+              boxShadow: active
+                ? "0 3px 10px -3px color-mix(in srgb, var(--evven-accent-primary) 40%, transparent)"
+                : "none",
             }}
           >
             <Icon size={14} className="shrink-0" />

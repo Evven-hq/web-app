@@ -2,9 +2,10 @@ import { isAxiosError } from "axios";
 
 export function getApiErrorMessage(error: unknown, fallback: string) {
   if (error && typeof error === "object" && "response" in error) {
-    const response = (error as { response?: { data?: { message?: string } } }).response;
-    const message = response?.data?.message;
-    if (message) return message;
+    const response = (error as { response?: { data?: { detail?: unknown; message?: string } } }).response;
+    const data = response?.data;
+    if (typeof data?.detail === "string") return data.detail;
+    if (typeof data?.message === "string") return data.message;
   }
 
   if (error instanceof Error && error.message) {

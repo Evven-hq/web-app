@@ -7,6 +7,14 @@ export const COLORS = [
   { bg: "var(--evven-avatar-6-bg)", text: "var(--evven-avatar-6-text)" },
 ];
 
+export function colorForId(id: string) {
+  let hash = 0;
+  for (let i = 0; i < id.length; i += 1) {
+    hash = (hash * 31 + id.charCodeAt(i)) >>> 0;
+  }
+  return COLORS[hash % COLORS.length];
+}
+
 export function formatAmount(n: string | number) {
   return `₹${Number(n).toLocaleString("en-IN", { maximumFractionDigits: 2 })}`;
 }

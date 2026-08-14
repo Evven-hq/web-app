@@ -11,14 +11,7 @@ export function formatSignedMoney(value: string | number | null | undefined) {
   return `${prefix}${formatMoney(amount)}`;
 }
 
-export function getInitials(name: string) {
-  return name
-    .split(" ")
-    .map((part) => part[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
-}
+export { getInitials } from "@/lib/format";
 
 export function normalizeSearchText(value?: string | number | null) {
   return String(value ?? "")

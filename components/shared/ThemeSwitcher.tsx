@@ -1,4 +1,5 @@
 "use client";
+import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ThemeName, useTheme } from "@/providers/theme-context";
 
@@ -80,13 +81,18 @@ const THEME_SWATCHES: Record<ThemeSwatchKey, ThemeSwatch> = {
   },
 };
 
-const THEME_GROUPS: ThemeSwatchKey[][] = [
-  ["default"],
-  ["L3", "D3"],
-  ["L4", "D5"],
-  ["Sunset-market", "D1"],
-  ["Botanical", "OLED-forest-green"],
-  ["D4", "O2"],
+const THEME_ORDER: ThemeSwatchKey[] = [
+  "default",
+  "L3",
+  "L4",
+  "Sunset-market",
+  "Botanical",
+  "D1",
+  "D3",
+  "D4",
+  "D5",
+  "O2",
+  "OLED-forest-green",
 ];
 
 function ThemeSwatchButton({
@@ -108,22 +114,45 @@ function ThemeSwatchButton({
       onClick={onClick}
       disabled={disabled}
       className={cn(
-        "inline-flex items-center gap-3 rounded-full border px-3 py-2 transition-colors duration-200 ease-out",
+        "flex cursor-pointer flex-col items-center gap-[9px] p-0",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--evven-accent-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--evven-card-background)]",
         disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer",
       )}
-      style={{
-        background: active ? "var(--evven-surface)" : "var(--evven-card-background)",
-        borderColor: active ? "var(--evven-accent-primary)" : "var(--evven-border)",
-        borderWidth: active ? 2 : 1,
-      }}
     >
-      <span className="relative flex size-10 shrink-0 overflow-hidden rounded-full border border-[var(--evven-border)]">
-        <span className="absolute inset-y-0 left-0 w-1/2" style={{ background: swatch.primary }} />
-        <span className="absolute inset-y-0 right-0 w-1/2" style={{ background: swatch.secondary }} />
+      <span
+        className={cn(
+          "relative size-11 rounded-full",
+          "transition-[transform,box-shadow] duration-[180ms] ease-[cubic-bezier(0.4,0,0.2,1)] active:scale-[0.92]",
+        )}
+        style={{
+          border: "1px solid color-mix(in srgb, var(--evven-text-primary) 18%, transparent)",
+          boxShadow: active
+            ? "0 0 0 2px var(--evven-card-background), 0 0 0 3.5px var(--evven-accent-primary)"
+            : undefined,
+        }}
+      >
+        <span className="absolute inset-0 overflow-hidden rounded-full">
+          <span className="absolute inset-0" style={{ background: swatch.secondary }} />
+          <span
+            className="absolute left-0 top-0 size-11 translate-x-[30%] translate-y-[30%] rounded-full"
+            style={{ background: swatch.primary }}
+          />
+        </span>
+        <span
+          className={cn(
+            "absolute -bottom-0.5 -right-0.5 flex size-[15px] items-center justify-center rounded-full border-[1.5px] border-[var(--evven-card-background)] bg-[var(--evven-accent-primary)] text-white",
+            "transition-all duration-[200ms] ease-[cubic-bezier(0.34,1.56,0.64,1)]",
+            active ? "scale-100 opacity-100" : "scale-0 opacity-0",
+          )}
+        >
+          <Check size={8} strokeWidth={4} />
+        </span>
       </span>
       <span
-        className={cn("text-sm leading-none tracking-wide whitespace-nowrap", active ? "font-medium" : "")}
+        className={cn(
+          "max-w-[72px] text-center text-[11.5px] font-medium leading-[1.25] transition-colors duration-[180ms] ease-out",
+          active ? "font-semibold" : "",
+        )}
         style={{ color: active ? "var(--evven-text-primary)" : "var(--evven-text-muted)" }}
       >
         {swatch.label}
@@ -137,45 +166,42 @@ export function ThemeSwitcher() {
 
   return (
     <div
-      className="rounded-[var(--evven-radius-hero)] border p-5 sm:p-6"
+      className="rounded-[var(--evven-radius-hero)] border p-5"
       style={{
         background: "var(--evven-card-background)",
         borderColor: "var(--evven-border)",
       }}
     >
-      <div className="flex items-start justify-between gap-4">
-        <div className="max-w-xl">
-          <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: "var(--evven-text-muted)" }}>
-            Appearance
-          </p>
-          <h2 className="mt-1 text-base font-medium" style={{ color: "var(--evven-text-primary)" }}>
-            Theme
-          </h2>
-          <p className="mt-1 text-sm leading-6" style={{ color: "var(--evven-text-muted)" }}>
-            Pick by color. Matching palettes sit together.
-          </p>
-        </div>
-      </div>
+      <p
+        className="font-mono text-[10.5px] uppercase tracking-[0.14em]"
+        style={{ color: "var(--evven-text-muted)" }}
+      >
+        Appearance
+      </p>
+      <h2
+        className="mt-1.5 text-base font-medium tracking-[-0.01em]"
+        style={{ color: "var(--evven-text-primary)" }}
+      >
+        Theme
+      </h2>
 
-      <div className="mt-5 space-y-4">
-        {THEME_GROUPS.map((group) => (
-          <div key={group.join("-")} className="flex flex-wrap items-center gap-3">
-            {group.map((key) => {
-              const swatch = THEME_SWATCHES[key];
-              const active = key === "default" ? theme === null : theme === key;
+      <div className="my-4 h-px opacity-60" style={{ background: "var(--evven-border)" }} />
 
-              return (
-                <ThemeSwatchButton
-                  key={key}
-                  swatch={swatch}
-                  active={active}
-                  disabled={isTransitioning}
-                  onClick={() => setTheme(key === "default" ? null : key)}
-                />
-              );
-            })}
-          </div>
-        ))}
+      <div className="grid grid-cols-3 gap-x-1 gap-y-5">
+        {THEME_ORDER.map((key) => {
+          const swatch = THEME_SWATCHES[key];
+          const active = key === "default" ? theme === null : theme === key;
+
+          return (
+            <ThemeSwatchButton
+              key={key}
+              swatch={swatch}
+              active={active}
+              disabled={isTransitioning}
+              onClick={() => setTheme(key === "default" ? null : key)}
+            />
+          );
+        })}
       </div>
 
       {isTransitioning && (

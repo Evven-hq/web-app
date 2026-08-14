@@ -5,16 +5,7 @@ import type { GroupBalances } from "@/types";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { COLORS, formatAmount } from "./group-detail-utils";
 import type { SettleFn, UserAvatarFn, UserNameFn } from "./group-detail-shared";
-
-function getInitials(name: string) {
-  return name
-    .trim()
-    .split(/\s+/)
-    .map((word) => word[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
-}
+import { getInitials } from "@/lib/format";
 
 export function BalancesTab({
   balances,

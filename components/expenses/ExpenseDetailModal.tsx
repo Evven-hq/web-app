@@ -5,30 +5,9 @@ import { Loader2, PencilLine, Trash2, X } from "lucide-react";
 import { createPortal } from "react-dom";
 import { getCategoryMeta } from "@/lib/expense-categories";
 import { getPaymentModeMeta } from "@/lib/payment-modes";
+import { formatLongDate } from "@/lib/format";
 import type { PersonalExpense } from "@/types";
-import { formatMoney, getFriendExpenseSummary } from "./friends/friend-utils";
-
-function formatDate(value?: string | null) {
-  if (!value) return "Recently";
-
-  return new Date(value).toLocaleDateString("en-IN", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
-}
-
-function getSettlementLabel(expense: PersonalExpense) {
-  if (expense.settlement_direction === "you_owe") {
-    return "They paid";
-  }
-
-  if (expense.settlement_direction === "they_owe") {
-    return "You paid";
-  }
-
-  return "Expense";
-}
+import { formatMoney, getFriendExpenseSummary, getFriendHistoryDirection } from "./friends/friend-utils";
 
 function getCounterpartyLabel(expense: PersonalExpense) {
   const name = expense.friend?.name ?? expense.ghost?.name;
@@ -111,7 +90,7 @@ export function ExpenseDetailModal({
             {expense.title}
           </h2>
           <p className="mt-1 text-sm" style={{ color: "var(--evven-text-muted)" }}>
-            {summary ?? "Personal expense"} · {formatDate(expense.date ?? expense.created_at)}
+            {summary ?? "Personal expense"} · {formatLongDate(expense.date ?? expense.created_at, "Recently")}
           </p>
         </div>
 
@@ -131,7 +110,7 @@ export function ExpenseDetailModal({
           <div className="card rounded-2xl p-4">
             <p className="mb-1 text-xs" style={{ color: "var(--evven-text-muted)" }}>Date</p>
             <p className="text-sm font-medium" style={{ color: "var(--evven-text-primary)" }}>
-              {formatDate(expense.date ?? expense.created_at)}
+              {formatLongDate(expense.date ?? expense.created_at, "Recently")}
             </p>
           </div>
           <div className="card rounded-2xl p-4">
@@ -151,7 +130,7 @@ export function ExpenseDetailModal({
           <div className="card rounded-2xl p-4">
             <p className="mb-1 text-xs" style={{ color: "var(--evven-text-muted)" }}>Settlement</p>
             <p className="text-sm font-medium" style={{ color: "var(--evven-text-primary)" }}>
-              {getSettlementLabel(expense)}
+              {getFriendHistoryDirection(expense)}
             </p>
           </div>
         </div>
@@ -248,7 +227,7 @@ export function ExpenseDetailModal({
                 Created at
               </p>
               <p className="text-sm font-medium" style={{ color: "var(--evven-text-primary)" }}>
-                {formatDate(expense.created_at)}
+                {formatLongDate(expense.created_at, "Recently")}
               </p>
             </div>
             <div>

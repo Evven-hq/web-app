@@ -815,3 +815,25 @@ body:has(.premium-modal-backdrop) .app-modal-blur-target {
     background: transparent;
   }
 }
+
+#app-scroll-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+#app-scroll-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#app-scroll-container::-webkit-scrollbar-thumb {
+  background: var(--evven-accent-primary);
+  border-radius: 3px;
+}
+
+#app-scroll-container::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--evven-accent-primary) 80%, white);
+}
+
+#app-scroll-container {
+  scrollbar-width: auto;
+  scrollbar-color: var(--evven-accent-primary) transparent;
+}

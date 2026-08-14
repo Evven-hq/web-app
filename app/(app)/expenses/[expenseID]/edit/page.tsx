@@ -26,6 +26,8 @@ export default function EditExpensePage() {
           friend_id: expense.friend_id ?? expense.friend?.id ?? expense.ghost_id ?? expense.ghost?.id ?? "",
           settlement_direction: expense.settlement_direction ?? "they_owe",
           settlement_amount: expense.settlement_amount ?? "",
+          split_mode: "equal",
+          split_participants: [],
         });
       })
       .catch(() => setError("Could not load this expense."));
@@ -59,8 +61,13 @@ export default function EditExpensePage() {
             <ExpenseForm
               initialValues={initialValues}
               submitLabel="Save changes"
+              allowSplit={false}
               onSubmit={async (expense) => {
-                await updatePersonalExpense(expenseID, expense);
+                if (Array.isArray(expense)) {
+                  await updatePersonalExpense(expenseID, expense[0]);
+                } else {
+                  await updatePersonalExpense(expenseID, expense);
+                }
                 router.push("/expenses");
               }}
             />

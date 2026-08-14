@@ -102,7 +102,7 @@ export function FriendExpenseFields({ amount, values, onChange }: FriendExpenseF
               onChange({
                 friend_id: friendId,
                 settlement_direction: friend
-                  ? getDefaultSettlementDirection(friend.net_balance ?? friend.balance)
+                  ? getDefaultSettlementDirection(friend.net_balance ?? friend.balance ?? 0)
                   : values.settlement_direction,
                 settlement_amount: friendId ? values.settlement_amount || amount : "",
               });

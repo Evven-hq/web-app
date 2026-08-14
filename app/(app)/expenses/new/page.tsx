@@ -11,6 +11,7 @@ export default function NewExpensePage() {
   const searchParams = useSearchParams();
   const friendId = searchParams.get("friend_id") ?? searchParams.get("ghost_id") ?? "";
   const direction = searchParams.get("direction");
+  const splitEnabled = searchParams.get("split") === "1" || searchParams.get("split") === "true";
 
   const initialValues: ExpenseFormValues = {
     title: "",
@@ -23,6 +24,8 @@ export default function NewExpensePage() {
     settlement_direction:
       direction === "you_owe" || direction === "they_owe" ? direction : "they_owe",
     settlement_amount: "",
+    split_mode: "equal",
+    split_participants: splitEnabled && friendId ? [{ friend_id: friendId }] : [],
   };
 
   return (
@@ -45,8 +48,13 @@ export default function NewExpensePage() {
           <ExpenseForm
             initialValues={initialValues}
             submitLabel="Add expense"
+            initialSplitEnabled={splitEnabled}
             onSubmit={async (expense) => {
-              await createPersonalExpense(expense);
+              if (Array.isArray(expense)) {
+                await Promise.all(expense.map((item) => createPersonalExpense(item)));
+              } else {
+                await createPersonalExpense(expense);
+              }
               router.push("/expenses");
             }}
           />

@@ -5,16 +5,14 @@ import { Loader2, Search, UserRound } from "lucide-react";
 import { FriendCreateDialog } from "./FriendCreateDialog";
 import { FriendCard } from "./FriendCard";
 import { useFriendsDirectory } from "./use-friends-directory";
+import { friendMatchesSearch } from "./friend-utils";
 
 export function FriendsSection() {
   const { friends, loading, error, setError, createFriend, removeFriend } = useFriendsDirectory();
   const [search, setSearch] = useState("");
 
   const filteredFriends = useMemo(() => {
-    const normalized = search.trim().toLowerCase();
-    if (!normalized) return friends;
-
-    return friends.filter((friend) => friend.name.toLowerCase().includes(normalized));
+    return friends.filter((friend) => friendMatchesSearch(friend, search));
   }, [friends, search]);
 
   const handleDelete = async (friendId: string) => {

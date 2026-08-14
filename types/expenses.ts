@@ -1,5 +1,13 @@
 import type { PaymentMethod } from "./common";
 
+export type SplitMode = "equal" | "percentage" | "custom";
+
+export interface SplitParticipant {
+  friend_id: string;
+  split_amount?: number;
+  split_percentage?: number;
+}
+
 export interface PersonalExpense {
   id: string;
   user_id: string;

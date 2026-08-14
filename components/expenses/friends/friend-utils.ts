@@ -20,6 +20,25 @@ export function getInitials(name: string) {
     .toUpperCase();
 }
 
+export function normalizeSearchText(value?: string | number | null) {
+  return String(value ?? "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+}
+
+export function friendMatchesSearch(
+  friend: Pick<Friend, "name" | "user_code" | "balance" | "net_balance">,
+  query: string
+) {
+  const normalizedQuery = normalizeSearchText(query);
+  if (!normalizedQuery) return true;
+
+  return [friend.name, friend.user_code, getFriendBalanceLabel(friend)]
+    .filter(Boolean)
+    .some((value) => normalizeSearchText(value).includes(normalizedQuery));
+}
+
 export function getFriendBalance(friend: Pick<Friend, "balance" | "net_balance" | "name">) {
   return Number(friend.balance ?? friend.net_balance ?? 0);
 }

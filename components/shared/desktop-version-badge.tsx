@@ -23,7 +23,7 @@ export default function DesktopVersionBadge() {
       aria-hidden="true"
       className="pointer-events-none fixed bottom-3 right-3 z-50 select-none rounded-full border border-border/70 bg-background/80 px-2 py-0.5 text-[9px] font-medium uppercase tracking-[0.35em] text-muted-foreground shadow-sm backdrop-blur"
     >
-      v1.0.0
+      BETA
     </div>
   );
 }

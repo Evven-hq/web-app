@@ -1,7 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState, createElement } from "react";
 import { useParams } from "next/navigation";
+import { Check } from "lucide-react";
 import {
   getGroup,
   getGroupMembers,
@@ -18,8 +19,10 @@ import {
   getGroupExpenseWithSplits,
 } from "@/services/groups";
 import { useAuthStore } from "@/store/auth-store";
-import { formatAmount, splitEvenly } from "./group-detail-utils";
+import { formatAmount, splitEvenly, colorForId, getInitials } from "./group-detail-utils";
+import { getCategoryMeta } from "@/lib/expense-categories";
 import { getApiErrorMessage } from "@/lib/api-error";
+import type { ExpenseSuccessState } from "@/components/expenses/ExpenseSuccessScreen";
 import type {
   Group,
   GroupMember,
@@ -84,6 +87,9 @@ export function useGroupDetail() {
   const [settlePaymentMethod, setSettlePaymentMethod] = useState<PaymentMethod>("upi");
   const [savingSettle, setSavingSettle] = useState(false);
   const [settleError, setSettleError] = useState("");
+
+  // Success celebration
+  const [success, setSuccess] = useState<ExpenseSuccessState | null>(null);
 
   const load = useCallback(async () => {
     if (!groupID) return;
@@ -283,6 +289,25 @@ export function useGroupDetail() {
       } else {
         const created = await createGroupExpense(groupID, payload);
         setExpenses((prev) => [created, ...prev]);
+        const category = getCategoryMeta(expCategory);
+        setSuccess({
+          variant: "group",
+          amount: Number(created.amount),
+          categoryIcon: createElement(category.icon, { size: 38 }),
+          categoryBg: category.bg,
+          categoryText: category.text,
+          merchant: created.title,
+          metaLabel: {
+            prefix: "Split with ",
+            bold: `${selectedParticipants.length} people`,
+            suffix: " · You paid",
+          },
+          avatars: selectedParticipants.map((userId) => {
+            const name = userName(userId);
+            const color = colorForId(userId);
+            return { initials: getInitials(name), bg: color.bg, text: color.text };
+          }),
+        });
       }
 
       setShowExpenseModal(false);
@@ -399,10 +424,14 @@ export function useGroupDetail() {
     setSavingSettle(true);
     setSettleError("");
     try {
+      const receiverName = userName(settleReceiver);
+      const receiverId = settleReceiver;
+      const amount = parseFloat(settleAmount);
+      const paymentMethod = settlePaymentMethod;
       await createSettlement(groupID, {
-        receiver_id: settleReceiver,
-        amount: parseFloat(settleAmount),
-        payment_method: settlePaymentMethod,
+        receiver_id: receiverId,
+        amount,
+        payment_method: paymentMethod,
       });
       const [set, bal] = await Promise.all([
         getGroupSettlements(groupID),
@@ -415,6 +444,21 @@ export function useGroupDetail() {
       setSettleReceiver("");
       setSettleAmount("");
       setSettlePaymentMethod("upi");
+      const color = colorForId(receiverId);
+      setSuccess({
+        variant: "settlement",
+        amount,
+        categoryIcon: createElement(Check, { size: 38 }),
+        categoryBg: "var(--evven-success-bg)",
+        categoryText: "var(--evven-success-text)",
+        merchant: `Settled with ${receiverName}`,
+        metaLabel: {
+          prefix: "You paid ",
+          bold: receiverName,
+          suffix: ` · ${paymentMethod.toUpperCase()}`,
+        },
+        avatars: [{ initials: getInitials(receiverName), bg: color.bg, text: color.text }],
+      });
     } catch {
       setSettleError("Could not record settlement.");
     } finally {
@@ -568,5 +612,7 @@ export function useGroupDetail() {
     selectSplitType,
     fillSplitsEqually,
     refreshBreakdown,
+    success,
+    setSuccess,
   };
 }

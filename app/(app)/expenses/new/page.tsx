@@ -1,14 +1,21 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { ExpenseForm, type ExpenseFormValues } from "@/components/expenses/ExpenseForm";
+import {
+  buildPersonalSuccess,
+  ExpenseSuccessScreen,
+  type ExpenseSuccessState,
+} from "@/components/expenses/ExpenseSuccessScreen";
 import { createPersonalExpense } from "@/services/expenses";
 
 export default function NewExpensePage() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [success, setSuccess] = useState<ExpenseSuccessState | null>(null);
   const friendId = searchParams.get("friend_id") ?? searchParams.get("ghost_id") ?? "";
   const direction = searchParams.get("direction");
   const splitEnabled = searchParams.get("split") === "1" || searchParams.get("split") === "true";
@@ -51,15 +58,29 @@ export default function NewExpensePage() {
             initialSplitEnabled={splitEnabled}
             onSubmit={async (expense) => {
               if (Array.isArray(expense)) {
-                await Promise.all(expense.map((item) => createPersonalExpense(item)));
+                const created = await Promise.all(
+                  expense.map((item) => createPersonalExpense(item))
+                );
+                setSuccess(buildPersonalSuccess(created));
               } else {
-                await createPersonalExpense(expense);
+                const created = await createPersonalExpense(expense);
+                setSuccess(buildPersonalSuccess(created));
               }
-              router.push("/expenses");
             }}
           />
         </div>
       </div>
+
+      {success ? (
+        <ExpenseSuccessScreen
+          open
+          {...success}
+          onDone={() => {
+            setSuccess(null);
+            router.push("/expenses");
+          }}
+        />
+      ) : null}
     </div>
   );
 }

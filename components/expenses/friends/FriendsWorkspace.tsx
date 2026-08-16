@@ -118,6 +118,7 @@ export function FriendsWorkspace() {
       setActiveTab("friend");
     },
     onError: (err) => {
+      // TODO: replace native alert with an in-app error surface.
       window.alert(getApiErrorMessage(err, "Could not accept that request."));
     },
   });
@@ -128,6 +129,7 @@ export function FriendsWorkspace() {
       await queryClient.invalidateQueries({ queryKey: ["friend-requests"] });
     },
     onError: (err) => {
+      // TODO: replace native alert with an in-app error surface.
       window.alert(getApiErrorMessage(err, "Could not update that request."));
     },
   });
@@ -149,6 +151,7 @@ export function FriendsWorkspace() {
       setActiveTab(remaining[0] ? "friend" : "friends");
     },
     onError: (err) => {
+      // TODO: replace native alert with an in-app error surface.
       window.alert(getApiErrorMessage(err, "Could not remove that friend."));
     },
   });

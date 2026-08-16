@@ -13,6 +13,7 @@ import { ProfileIdentityCard } from "@/components/profile/ProfileIdentityCard";
 import { ProfileNameForm } from "@/components/profile/ProfileNameForm";
 import { ProfileQuickLinks } from "@/components/profile/ProfileQuickLinks";
 import { ProfileShareCard } from "@/components/profile/ProfileShareCard";
+import { SoundPreferenceCard } from "@/components/profile/SoundPreferenceCard";
 import type { User } from "@/types/user";
 
 export default function ProfilePage() {
@@ -111,6 +112,10 @@ function ProfileEditor({
 
         <div className="mb-4">
           <ThemeSwitcher />
+        </div>
+
+        <div className="mb-4">
+          <SoundPreferenceCard />
         </div>
 
         <ProfileNameForm

@@ -12,8 +12,14 @@ import { ExpenseEmptyState } from "@/components/expenses/list/ExpenseEmptyState"
 import { ExpenseListItem } from "@/components/expenses/list/ExpenseListItem";
 import { ExpensePageHeader } from "@/components/expenses/list/ExpensePageHeader";
 import { ExpenseToolbar } from "@/components/expenses/list/ExpenseToolbar";
+import { DeleteExpenseDialog } from "@/components/expenses/DeleteExpenseDialog";
 import { filterExpenses } from "@/components/expenses/list/expense-list-utils";
 import { createPersonalExpense, deletePersonalExpense, getPersonalExpenses } from "@/services/expenses";
+import {
+  buildPersonalSuccess,
+  ExpenseSuccessScreen,
+  type ExpenseSuccessState,
+} from "@/components/expenses/ExpenseSuccessScreen";
 import type { PersonalExpense } from "@/types";
 
 export default function ExpensesPage() {
@@ -23,6 +29,9 @@ export default function ExpensesPage() {
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
   const [showAddExpense, setShowAddExpense] = useState(false);
   const [selectedExpense, setSelectedExpense] = useState<PersonalExpense | null>(null);
+  const [pendingDeleteExpense, setPendingDeleteExpense] = useState<PersonalExpense | null>(null);
+  const [deleteError, setDeleteError] = useState("");
+  const [success, setSuccess] = useState<ExpenseSuccessState | null>(null);
   const splitEnabled = searchParams.get("split") === "1" || searchParams.get("split") === "true";
 
   const initialExpenseValues = useMemo<ExpenseFormValues>(() => {
@@ -92,9 +101,22 @@ export default function ExpensesPage() {
 
   const total = filteredExpenses.reduce((sum, expense) => sum + Number(expense.amount), 0);
 
-  const handleDelete = (expense: PersonalExpense) => {
-    if (!window.confirm(`Delete "${expense.title}"?`)) return;
-    deleteMutation.mutate(expense.id);
+  const handleRequestDelete = (expense: PersonalExpense) => {
+    setSelectedExpense(null);
+    setPendingDeleteExpense(expense);
+    setDeleteError("");
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!pendingDeleteExpense) return;
+
+    setDeleteError("");
+    try {
+      await deleteMutation.mutateAsync(pendingDeleteExpense.id);
+      setPendingDeleteExpense(null);
+    } catch {
+      setDeleteError(`Could not delete "${pendingDeleteExpense.title}".`);
+    }
   };
 
   return (
@@ -133,7 +155,7 @@ export default function ExpensesPage() {
                 expense={expense}
                 deletePending={deleteMutation.isPending}
                 onSelect={setSelectedExpense}
-                onDelete={handleDelete}
+                onDelete={handleRequestDelete}
               />
             ))}
           </div>
@@ -146,8 +168,7 @@ export default function ExpensesPage() {
           open={Boolean(selectedExpense)}
           onClose={() => setSelectedExpense(null)}
           onDelete={(expense) => {
-            handleDelete(expense);
-            setSelectedExpense(null);
+            handleRequestDelete(expense);
           }}
         />
       ) : null}
@@ -158,16 +179,38 @@ export default function ExpensesPage() {
           initialSplitEnabled={splitEnabled}
           onClose={closeAddExpenseModal}
           onSubmit={async (expense) => {
+            let created: PersonalExpense | PersonalExpense[];
             if (Array.isArray(expense)) {
-              await Promise.all(expense.map((item) => createPersonalExpense(item)));
+              created = await Promise.all(expense.map((item) => createPersonalExpense(item)));
             } else {
-              await createPersonalExpense(expense);
+              created = await createPersonalExpense(expense);
             }
             await queryClient.invalidateQueries({ queryKey: ["expenses"] });
             closeAddExpenseModal();
+            setSuccess(buildPersonalSuccess(created));
           }}
         />
       ) : null}
+
+      {success ? (
+        <ExpenseSuccessScreen open {...success} onDone={() => setSuccess(null)} />
+      ) : null}
+
+      <DeleteExpenseDialog
+        expense={pendingDeleteExpense}
+        open={Boolean(pendingDeleteExpense)}
+        deleting={deleteMutation.isPending}
+        error={deleteError}
+        onOpenChange={(open) => {
+          if (!open) {
+            setPendingDeleteExpense(null);
+            setDeleteError("");
+          }
+        }}
+        onConfirm={() => {
+          void handleConfirmDelete();
+        }}
+      />
     </div>
   );
 }

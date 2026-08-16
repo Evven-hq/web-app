@@ -116,7 +116,7 @@ function ThemeSwatchButton({
       className={cn(
         "flex cursor-pointer flex-col items-center gap-[9px] p-0",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--evven-accent-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--evven-card-background)]",
-        disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer",
+        disabled ? "cursor-not-allowed" : "cursor-pointer",
       )}
     >
       <span
@@ -187,7 +187,18 @@ export function ThemeSwitcher() {
 
       <div className="my-4 h-px opacity-60" style={{ background: "var(--evven-border)" }} />
 
-      <div className="grid grid-cols-3 gap-x-1 gap-y-5">
+      {isTransitioning && (
+        <p aria-live="polite" className="mb-3 text-xs" style={{ color: "var(--evven-text-muted)" }}>
+          Applying theme...
+        </p>
+      )}
+
+      <div
+        className={cn(
+          "grid grid-cols-3 gap-x-1 gap-y-5 transition-opacity duration-300 ease-out",
+          isTransitioning && "opacity-50",
+        )}
+      >
         {THEME_ORDER.map((key) => {
           const swatch = THEME_SWATCHES[key];
           const active = key === "default" ? theme === null : theme === key;
@@ -203,12 +214,6 @@ export function ThemeSwitcher() {
           );
         })}
       </div>
-
-      {isTransitioning && (
-        <p className="mt-3 text-xs" style={{ color: "var(--evven-text-muted)" }}>
-          Applying theme...
-        </p>
-      )}
     </div>
   );
 }

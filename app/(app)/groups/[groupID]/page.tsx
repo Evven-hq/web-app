@@ -19,6 +19,7 @@ import {
   SettleModal,
 } from "@/components/groups/GroupDetailModals";
 import { useGroupDetail } from "@/components/groups/useGroupDetail";
+import { ExpenseSuccessScreen } from "@/components/expenses/ExpenseSuccessScreen";
 
 export default function GroupDetailPage() {
   const {
@@ -93,6 +94,8 @@ export default function GroupDetailPage() {
     selectSplitType,
     fillSplitsEqually,
     refreshBreakdown,
+    success,
+    setSuccess,
   } = useGroupDetail();
 
   if (loading) {
@@ -264,6 +267,10 @@ export default function GroupDetailPage() {
         savingSettle={savingSettle}
         settleError={settleError}
       />
+
+      {success ? (
+        <ExpenseSuccessScreen open {...success} onDone={() => setSuccess(null)} />
+      ) : null}
     </div>
   );
 }

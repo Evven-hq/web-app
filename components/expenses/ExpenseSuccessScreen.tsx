@@ -212,7 +212,7 @@ export function ExpenseSuccessScreen({
         >
           <motion.div
             aria-hidden
-            className="premium-modal-backdrop absolute inset-0 cursor-pointer"
+            className="modal-backdrop absolute inset-0 cursor-pointer"
             onClick={handleBackdropClick}
             initial={{
               opacity: 0,
@@ -232,7 +232,7 @@ export function ExpenseSuccessScreen({
           />
 
           <motion.div
-            className="premium-modal-panel card relative z-10 w-full max-w-[340px] overflow-visible rounded-[28px] px-6 pb-6 pt-9 text-center shadow-[0_24px_64px_-16px_rgba(0,0,0,0.35)]"
+            className="modal-panel card relative z-10 w-full max-w-[340px] overflow-visible rounded-[28px] px-6 pb-6 pt-9 text-center shadow-[0_24px_64px_-16px_rgba(0,0,0,0.35)]"
             style={{ background: "var(--evven-card-background)" }}
             initial={{ opacity: 0, y: 24, scale: 0.94 }}
             animate={{

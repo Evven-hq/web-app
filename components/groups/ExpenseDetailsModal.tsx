@@ -35,9 +35,9 @@ export function ExpenseDetailsModal({
 
   return createPortal(
     <div className="fixed inset-0 z-50 flex items-end justify-center p-4 sm:items-center">
-      <div className="premium-modal-backdrop absolute inset-0" onClick={onClose} />
+      <div className="modal-backdrop absolute inset-0" onClick={onClose} />
       <div
-        className="premium-modal-panel card relative max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-3xl p-6 shadow-xl sm:p-7"
+        className="modal-panel card relative max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-3xl p-6 shadow-xl sm:p-7"
       >
         <button
           onClick={onClose}

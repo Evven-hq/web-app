@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { Loader2 } from "lucide-react";
+import { AnimatePresence } from "framer-motion";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { ExpenseDetailModal } from "@/components/expenses/ExpenseDetailModal";
 import { type ExpenseFormValues } from "@/components/expenses/ExpenseForm";
@@ -10,6 +10,7 @@ import { AddExpenseModal } from "@/components/expenses/list/AddExpenseModal";
 import { CategoryFilterBar } from "@/components/expenses/list/CategoryFilterBar";
 import { ExpenseEmptyState } from "@/components/expenses/list/ExpenseEmptyState";
 import { ExpenseListItem } from "@/components/expenses/list/ExpenseListItem";
+import { ExpenseListSkeleton } from "@/components/expenses/list/ExpenseListSkeleton";
 import { ExpensePageHeader } from "@/components/expenses/list/ExpensePageHeader";
 import { ExpenseToolbar } from "@/components/expenses/list/ExpenseToolbar";
 import { DeleteExpenseDialog } from "@/components/expenses/DeleteExpenseDialog";
@@ -139,9 +140,7 @@ export default function ExpensesPage() {
         )}
 
         {isLoading ? (
-          <div className="flex h-48 items-center justify-center">
-            <Loader2 size={20} className="animate-spin text-primary" />
-          </div>
+          <ExpenseListSkeleton />
         ) : filteredExpenses.length === 0 ? (
           <ExpenseEmptyState
             hasAnyExpenses={expenses.length > 0}
@@ -149,15 +148,18 @@ export default function ExpensesPage() {
           />
         ) : (
           <div className="space-y-2">
-            {filteredExpenses.map((expense) => (
-              <ExpenseListItem
-                key={expense.id}
-                expense={expense}
-                deletePending={deleteMutation.isPending}
-                onSelect={setSelectedExpense}
-                onDelete={handleRequestDelete}
-              />
-            ))}
+            <AnimatePresence initial={false}>
+              {filteredExpenses.map((expense, i) => (
+                <ExpenseListItem
+                  key={expense.id}
+                  expense={expense}
+                  index={i}
+                  deletePending={deleteMutation.isPending}
+                  onSelect={setSelectedExpense}
+                  onDelete={handleRequestDelete}
+                />
+              ))}
+            </AnimatePresence>
           </div>
         )}
       </div>

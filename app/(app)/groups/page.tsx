@@ -155,11 +155,11 @@ export default function GroupsPage() {
       {showCreate && typeof document !== "undefined" && createPortal(
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div
-            className="premium-modal-backdrop absolute inset-0"
+            className="modal-backdrop absolute inset-0"
             onClick={() => setShowCreate(false)}
           />
           <div
-            className="premium-modal-panel card relative w-full max-w-sm rounded-[var(--evven-radius-hero)] p-6 shadow-xl"
+            className="modal-panel card relative w-full max-w-sm rounded-[var(--evven-radius-hero)] p-6 shadow-xl"
           >
             <button
               onClick={() => setShowCreate(false)}

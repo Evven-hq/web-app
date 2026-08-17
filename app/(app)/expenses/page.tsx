@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { toast } from "sonner";
 import { AnimatePresence } from "framer-motion";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { ExpenseDetailModal } from "@/components/expenses/ExpenseDetailModal";
@@ -92,6 +93,7 @@ export default function ExpensesPage() {
       queryClient.setQueryData<PersonalExpense[]>(["expenses"], (prev) =>
         prev ? prev.filter((e) => e.id !== id) : []
       );
+      toast.success("Expense deleted");
     },
   });
 

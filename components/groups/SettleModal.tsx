@@ -88,7 +88,7 @@ export function SettleModal({
         <button
           onClick={onSubmit}
           disabled={!settleAmount || savingSettle}
-          className="w-full py-2.5 rounded-xl text-sm font-medium text-white flex items-center justify-center gap-2 disabled:opacity-50"
+          className="w-full py-2.5 rounded-xl text-sm font-medium text-[var(--evven-text-inverse)] flex items-center justify-center gap-2 disabled:opacity-50"
           style={{ background: "var(--evven-accent-primary)" }}
         >
           {savingSettle ? <Loader2 size={15} className="animate-spin" /> : <CheckCircle size={15} />}

@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState, createElement } from "react";
 import { useParams } from "next/navigation";
+import { toast } from "sonner";
 import { Check } from "lucide-react";
 import {
   getGroup,
@@ -305,7 +306,7 @@ export function useGroupDetail() {
           avatars: selectedParticipants.map((userId) => {
             const name = userName(userId);
             const color = colorForId(userId);
-            return { initials: getInitials(name), bg: color.bg, text: color.text };
+            return { src: userAvatar(userId), initials: getInitials(name), bg: color.bg, text: color.text };
           }),
         });
       }
@@ -377,6 +378,7 @@ export function useGroupDetail() {
       await deleteGroupExpense(groupID, expId);
       setExpenses((prev) => prev.filter((e) => e.id !== expId));
       await Promise.all([refreshBalances(), refreshBreakdown()]);
+      toast.success("Expense deleted");
     } catch {
       // silently fail
     }
@@ -457,8 +459,9 @@ export function useGroupDetail() {
           bold: receiverName,
           suffix: ` · ${paymentMethod.toUpperCase()}`,
         },
-        avatars: [{ initials: getInitials(receiverName), bg: color.bg, text: color.text }],
+        avatars: [{ src: userAvatar(receiverId), initials: getInitials(receiverName), bg: color.bg, text: color.text }],
       });
+      toast.success("Settlement recorded");
     } catch {
       setSettleError("Could not record settlement.");
     } finally {

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
@@ -25,6 +25,40 @@ export default function VerifyOtpPage() {
   const [notice, setNotice] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isResending, setIsResending] = useState(false);
+  const [cooldown, setCooldown] = useState(() => {
+    const stored = sessionStorage.getItem("evven_otp_resend_at");
+    if (!stored) return 0;
+    return Math.max(0, 60 - Math.floor((Date.now() - Number(stored)) / 1000));
+  });
+  const cooldownRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const clearCooldown = useCallback(() => {
+    if (cooldownRef.current) {
+      clearInterval(cooldownRef.current);
+      cooldownRef.current = null;
+    }
+  }, []);
+
+  useEffect(() => {
+    return () => clearCooldown();
+  }, [clearCooldown]);
+
+  useEffect(() => {
+    if (cooldown <= 0) return;
+
+    clearCooldown();
+    cooldownRef.current = setInterval(() => {
+      setCooldown((prev) => {
+        const next = prev - 1;
+        if (next <= 0) {
+          clearCooldown();
+          sessionStorage.removeItem("evven_otp_resend_at");
+          return 0;
+        }
+        return next;
+      });
+    }, 1000);
+  }, [cooldown, clearCooldown]);
 
   useEffect(() => {
     const nextEmail = searchParams.get("email");
@@ -69,6 +103,23 @@ export default function VerifyOtpPage() {
     try {
       await resendOtp(email.trim());
       setNotice("A fresh verification code was sent.");
+
+      const now = Date.now();
+      sessionStorage.setItem("evven_otp_resend_at", String(now));
+      setCooldown(60);
+
+      clearCooldown();
+      cooldownRef.current = setInterval(() => {
+        setCooldown((prev) => {
+          const next = prev - 1;
+          if (next <= 0) {
+            clearCooldown();
+            sessionStorage.removeItem("evven_otp_resend_at");
+            return 0;
+          }
+          return next;
+        });
+      }, 1000);
     } catch (err: unknown) {
       setError(getApiErrorMessage(err, "We couldn't resend the code right now."));
     } finally {
@@ -136,10 +187,14 @@ export default function VerifyOtpPage() {
         <button
           type="button"
           onClick={handleResend}
-          disabled={isResending || !email.trim()}
+          disabled={isResending || cooldown > 0 || !email.trim()}
           className="font-semibold text-primary transition-colors hover:text-primary/80 disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {isResending ? "Resending…" : "Resend code"}
+          {isResending
+            ? "Resending…"
+            : cooldown > 0
+              ? `Resend in 0:${String(cooldown).padStart(2, "0")}`
+              : "Resend code"}
         </button>
 
         <div className="text-muted-foreground">

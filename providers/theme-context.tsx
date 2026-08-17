@@ -17,16 +17,16 @@ import { updateCurrentUser } from "@/services/users";
 import { useAuthStore } from "@/store/auth-store";
 
 export const THEME_OPTIONS = [
-  "L3",
-  "L4",
-  "Sunset-market",
-  "Botanical",
-  "D1",
-  "D3",
-  "D4",
-  "D5",
-  "O2",
-  "OLED-forest-green",
+  "sea-glass",
+  "blush",
+  "ember",
+  "grove",
+  "ember-night",
+  "sea-glass-night",
+  "pulse",
+  "blush-night",
+  "pulse-night",
+  "grove-night",
 ] as const;
 
 export type ThemeName = (typeof THEME_OPTIONS)[number];
@@ -38,8 +38,30 @@ const THEME_SYNC_TIMEOUT_MS = 30000;
 const THEME_CLASS_NAMES = THEME_OPTIONS.map((theme) => `theme-${theme}`);
 const THEME_SET = new Set<string>(THEME_OPTIONS);
 
+const THEME_MIGRATION: Record<string, ThemeName> = {
+  L3: "sea-glass",
+  L4: "blush",
+  "Sunset-market": "ember",
+  Botanical: "grove",
+  D1: "ember-night",
+  D3: "sea-glass-night",
+  D4: "pulse",
+  D5: "blush-night",
+  O2: "pulse-night",
+  "OLED-forest-green": "grove-night",
+};
+
 export function isThemeName(value: string | null | undefined): value is ThemeName {
-  return typeof value === "string" && THEME_SET.has(value);
+  if (typeof value !== "string") return false;
+  if (THEME_SET.has(value)) return true;
+  return value in THEME_MIGRATION;
+}
+
+function migrateTheme(value: string | null | undefined): ThemeName | null {
+  if (typeof value !== "string") return null;
+  if (THEME_SET.has(value)) return value as ThemeName;
+  if (value in THEME_MIGRATION) return THEME_MIGRATION[value];
+  return null;
 }
 
 interface ThemeContextType {
@@ -51,7 +73,12 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 function removeThemeClasses(html: HTMLElement) {
-  THEME_CLASS_NAMES.forEach((className) => html.classList.remove(className));
+  const classes = Array.from(html.classList);
+  for (const cls of classes) {
+    if (cls.startsWith("theme-")) {
+      html.classList.remove(cls);
+    }
+  }
 }
 
 function applyThemeClass(theme: ThemeName | null) {
@@ -65,11 +92,15 @@ function applyThemeClass(theme: ThemeName | null) {
   }
 }
 
-function readStoredTheme() {
+function readStoredTheme(): ThemeName | null {
   if (typeof window === "undefined") return null;
 
   const stored = window.localStorage.getItem(THEME_STORAGE_KEY);
-  return isThemeName(stored) ? stored : null;
+  const migrated = migrateTheme(stored);
+  if (migrated && stored !== migrated) {
+    window.localStorage.setItem(THEME_STORAGE_KEY, migrated);
+  }
+  return migrated;
 }
 
 export function ThemeProvider({
@@ -198,7 +229,7 @@ export function ThemeProvider({
       return;
     }
 
-    const backendTheme = isThemeName(user?.preferred_theme) ? user.preferred_theme : null;
+    const backendTheme = migrateTheme(user?.preferred_theme);
     setThemeState(backendTheme);
     applyThemeClass(backendTheme);
     persistTheme(backendTheme);

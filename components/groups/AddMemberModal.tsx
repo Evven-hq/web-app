@@ -52,7 +52,7 @@ export function AddMemberModal({
         <button
           onClick={onSubmit}
           disabled={!memberCode.trim() || savingMember}
-          className="w-full py-2.5 rounded-xl text-sm font-medium text-white flex items-center justify-center gap-2 disabled:opacity-50"
+          className="w-full py-2.5 rounded-xl text-sm font-medium text-[var(--evven-text-inverse)] flex items-center justify-center gap-2 disabled:opacity-50"
           style={{ background: "var(--evven-accent-primary)" }}
         >
           {savingMember ? <Loader2 size={15} className="animate-spin" /> : <UserPlus size={15} />}

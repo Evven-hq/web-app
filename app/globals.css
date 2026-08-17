@@ -94,7 +94,7 @@
 }
 /* ===== THEME VARIANTS ===== */
 
-.theme-L3 {
+.theme-sea-glass {
   --evven-background: #f5f8fa;
   --evven-surface: #eef3f6;
   --evven-border: #c3d2da;
@@ -107,7 +107,7 @@
   --evven-error: #c0392b;
 }
 
-.theme-L4 {
+.theme-blush {
   --evven-background: #faf5f7;
   --evven-surface: #f5ebef;
   --evven-border: #ddc2ce;
@@ -120,7 +120,7 @@
   --evven-error: #c0392b;
 }
 
-.theme-Sunset-market {
+.theme-ember {
   --evven-background: #fdf6ee;
   --evven-surface: #f7ece0;
   --evven-border: #e8dcc9;
@@ -133,7 +133,7 @@
   --evven-error: #c0392b;
 }
 
-.theme-Botanical {
+.theme-grove {
   --evven-background: #f6f7f0;
   --evven-surface: #eef0e6;
   --evven-border: #dbe0ce;
@@ -146,7 +146,7 @@
   --evven-error: #c0392b;
 }
 
-.theme-D1 {
+.theme-ember-night {
   --evven-background: #2c2924;
   --evven-surface: #262424;
   --evven-border: #332c2c;
@@ -207,7 +207,7 @@
   --evven-payment-cash-text: #7bff47;
 }
 
-.theme-D3 {
+.theme-sea-glass-night {
   --evven-background: #101c1f;
   --evven-surface: #14252a;
   --evven-border: #253d43;
@@ -268,7 +268,7 @@
   --evven-payment-cash-text: #6bff6b;
 }
 
-.theme-D4 {
+.theme-pulse {
   --evven-background: #14171c;
   --evven-surface: #1a1e25;
   --evven-border: #2a2f38;
@@ -329,7 +329,7 @@
   --evven-payment-cash-text: #6cff6c;
 }
 
-.theme-D5 {
+.theme-blush-night {
   --evven-background: #1c1420;
   --evven-surface: #241a29;
   --evven-border: #382a3f;
@@ -390,7 +390,7 @@
   --evven-payment-cash-text: #6be86b;
 }
 
-.theme-O2 {
+.theme-pulse-night {
   --evven-background: #000000;
   --evven-surface: #0c0c0c;
   --evven-border: #1e1e1e;
@@ -451,7 +451,7 @@
   --evven-payment-cash-text: #5cff5c;
 }
 
-.theme-OLED-forest-green {
+.theme-grove-night {
   --evven-background: #000000;
   --evven-surface: #0c0c0c;
   --evven-border: #1e1e1e;

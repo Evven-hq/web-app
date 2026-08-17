@@ -1,14 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { isDesktop } from "@/lib/desktop";
+import { Capacitor } from "@capacitor/core";
 
 export default function DesktopVersionBadge() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     const frame = window.requestAnimationFrame(() => {
-      setVisible(isDesktop());
+      setVisible(Capacitor.isNativePlatform());
     });
 
     return () => window.cancelAnimationFrame(frame);

@@ -90,7 +90,7 @@ export function GroupHeader({
           </button>
           <button
             onClick={onAddExpense}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium text-white transition-all hover:opacity-90"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium text-[var(--evven-text-inverse)] transition-all hover:opacity-90"
             style={{ background: "var(--evven-accent-primary)" }}
           >
             <Plus size={14} />

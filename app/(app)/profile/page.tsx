@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 import { useAuthStore } from "@/store/auth-store";
 import { updateCurrentUser } from "@/services/users";
@@ -83,6 +84,7 @@ function ProfileEditor({
 
   const copyCode = async () => {
     await navigator.clipboard.writeText(user.user_code);
+    toast.success("Invite code copied");
     setCopied(true);
     window.setTimeout(() => setCopied(false), 1500);
   };
@@ -129,6 +131,12 @@ function ProfileEditor({
         />
 
         <ProfileDangerZone onLogout={handleLogout} />
+
+        <div className="mt-6 text-center text-xs" style={{ color: "var(--evven-text-muted)" }}>
+          <a href={`${process.env.NEXT_PUBLIC_LANDING_URL}/privacy`} target="_blank" rel="noopener noreferrer" className="hover:underline">Privacy</a>
+          <span className="mx-2">·</span>
+          <a href={`${process.env.NEXT_PUBLIC_LANDING_URL}/terms`} target="_blank" rel="noopener noreferrer" className="hover:underline">Terms</a>
+        </div>
       </div>
 
       <ChangeAvatarDialog

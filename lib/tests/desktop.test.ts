@@ -1,4 +1,4 @@
-// @vitest-environment jsdom
+// @vitest-environment happy-dom
 import { describe, expect, it, beforeEach, afterEach } from "vitest";
 import { isDesktop } from "../desktop";
 

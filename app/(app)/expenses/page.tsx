@@ -60,7 +60,7 @@ export default function ExpensesPage() {
             ]
           : [],
     };
-  }, [searchParams]);
+  }, [searchParams, splitEnabled]);
 
   useEffect(() => {
     if (
@@ -70,6 +70,7 @@ export default function ExpensesPage() {
       searchParams.get("friend_id") ||
       searchParams.get("ghost_id")
     ) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setShowAddExpense(true);
     }
   }, [searchParams]);

@@ -68,12 +68,14 @@ export function FriendsWorkspace() {
   useEffect(() => {
     const nextParam = searchParams.get("friend_id") ?? searchParams.get("ghost_id");
     if (nextParam) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setSelectedFriendId(nextParam);
     }
   }, [searchParams]);
 
   useEffect(() => {
     if (!selectedFriendId && friends.length > 0) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setSelectedFriendId(friends[0].id);
     }
   }, [friends, selectedFriendId]);

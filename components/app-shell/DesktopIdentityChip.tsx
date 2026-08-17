@@ -44,6 +44,7 @@ export function DesktopIdentityChip({
         }}
       >
         {user?.profile_picture ? (
+          // eslint-disable-next-line @next/next/no-img-element
           <img
             src={user.profile_picture}
             alt={user.name ?? "Profile"}

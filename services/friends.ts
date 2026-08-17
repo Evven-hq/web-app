@@ -3,7 +3,6 @@ import type {
   ApiResponse,
   Friend,
   FriendActivity,
-  FriendBalance,
   FriendCreateRequestPayload,
   FriendDetail,
   FriendListItem,

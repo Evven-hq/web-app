@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import { useNavigation, type NavDirection } from "./NavigationProvider";
 
 const EASE_OUT: [number, number, number, number] = [0.22, 1, 0.36, 1];
-const EASE_IN_OUT: [number, number, number, number] = [0.4, 0, 0.2, 1];
 
 function getVariants(direction: NavDirection) {
   if (direction === "back") {

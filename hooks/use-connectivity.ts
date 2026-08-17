@@ -53,6 +53,7 @@ export function useConnectivity() {
 
   useEffect(() => {
     if (!browserOnline) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setBackendReachable(false);
       return;
     }

@@ -63,6 +63,7 @@ export default function VerifyOtpPage() {
   useEffect(() => {
     const nextEmail = searchParams.get("email");
     if (nextEmail) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setEmail(nextEmail);
     }
   }, [searchParams]);
@@ -70,6 +71,7 @@ export default function VerifyOtpPage() {
   useEffect(() => {
     const reason = searchParams.get("reason");
     if (reason === "signup") {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setNotice("We sent a verification code to your inbox.");
     } else if (reason === "unverified") {
       setNotice("This account still needs to be verified. Enter the code we sent.");

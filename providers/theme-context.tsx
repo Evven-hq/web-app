@@ -35,7 +35,6 @@ const THEME_STORAGE_KEY = "evven-theme";
 const TRANSITION_CLASS = "evven-theme-transitioning";
 const ANIMATION_DURATION = 1300;
 const THEME_SYNC_TIMEOUT_MS = 30000;
-const THEME_CLASS_NAMES = THEME_OPTIONS.map((theme) => `theme-${theme}`);
 const THEME_SET = new Set<string>(THEME_OPTIONS);
 
 const THEME_MIGRATION: Record<string, ThemeName> = {
@@ -219,6 +218,7 @@ export function ThemeProvider({
 
   useLayoutEffect(() => {
     const storedTheme = readStoredTheme();
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setThemeState(storedTheme);
     applyThemeClass(storedTheme);
     persistTheme(storedTheme);
@@ -230,6 +230,7 @@ export function ThemeProvider({
     }
 
     const backendTheme = migrateTheme(user?.preferred_theme);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setThemeState(backendTheme);
     applyThemeClass(backendTheme);
     persistTheme(backendTheme);

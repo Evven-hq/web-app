@@ -302,7 +302,7 @@ export function ExpenseEditorModal({
         <button
           onClick={onSave}
           disabled={!expTitle.trim() || !expAmount || savingExp}
-          className="w-full mt-4 py-2.5 rounded-xl text-sm font-medium text-white flex items-center justify-center gap-2 disabled:opacity-50"
+          className="w-full mt-4 py-2.5 rounded-xl text-sm font-medium text-[var(--evven-text-inverse)] flex items-center justify-center gap-2 disabled:opacity-50"
           style={{ background: "var(--evven-accent-primary)" }}
         >
           {savingExp ? <Loader2 size={15} className="animate-spin" /> : <Plus size={15} />}

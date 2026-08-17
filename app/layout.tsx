@@ -10,6 +10,8 @@ import AuthProvider from "@/components/shared/auth-provider";
 import NativeShellStyles from "@/components/shared/native-shell-styles";
 import NativeSafeArea from "@/components/shared/native-safe-area";
 import { ConsoleNote } from "@/components/shared/ConsoleNote";
+import { GlobalErrorCatcher } from "@/components/shared/GlobalErrorCatcher";
+import { Toaster } from "sonner";
 
 const jetBrains = JetBrains_Mono({
   subsets: ['latin'],
@@ -62,6 +64,22 @@ export const metadata: Metadata = {
   title: "Evven",
   description: "Keep shared costs fair, clear, and totally handled. Evven makes group expense tracking simple and automated.",
   robots: { index: false, follow: false },
+  manifest: "/manifest.webmanifest",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "Evven",
+  },
+  openGraph: {
+    title: "Evven",
+    description: "Keep shared costs fair, clear, and totally handled. Evven makes group expense tracking simple and automated.",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Evven",
+    description: "Keep shared costs fair, clear, and totally handled. Evven makes group expense tracking simple and automated.",
+  },
 
   icons: {
     icon: "/EvenUp-white.svg",
@@ -73,6 +91,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   interactiveWidget: "resizes-content",
   viewportFit: "cover",
+  themeColor: "#2c2924",
 };
 
 export default function RootLayout({
@@ -99,6 +118,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-full flex flex-col">
         <ConsoleNote />
+        <GlobalErrorCatcher />
         <NativeShellStyles />
         <NativeSafeArea />
         <QueryProvider>
@@ -109,6 +129,15 @@ export default function RootLayout({
             </AuthProvider>
           </ThemeProvider>
         </QueryProvider>
+        <Toaster
+          toastOptions={{
+            style: {
+              background: "var(--evven-card-background)",
+              color: "var(--evven-text-primary)",
+              border: "1px solid var(--evven-border)",
+            },
+          }}
+        />
       </body>
     </html>
   );

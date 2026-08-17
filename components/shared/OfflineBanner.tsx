@@ -10,6 +10,7 @@ export function OfflineBanner({ isOnline }: { isOnline: boolean }) {
 
   useEffect(() => {
     if (!isOnline) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setMounted(true);
       requestAnimationFrame(() => {
         setEntered(true);

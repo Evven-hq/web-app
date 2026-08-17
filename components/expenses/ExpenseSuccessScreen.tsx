@@ -18,6 +18,7 @@ import {
 export type ExpenseSuccessVariant = "personal" | "friend" | "group" | "settlement";
 
 export interface ExpenseSuccessAvatar {
+  src?: string | null;
   initials: string;
   bg: string;
   text: string;
@@ -79,6 +80,7 @@ export function buildPersonalSuccess(
     .map((entry) => ({
       name: entry.friend?.name ?? entry.ghost?.name ?? "Friend",
       avatar: {
+        src: entry.friend?.profile_picture ?? entry.ghost?.profile_picture ?? null,
         initials: getInitials(entry.friend?.name ?? entry.ghost?.name ?? "Friend"),
         bg: FRIEND_AVATAR_BG,
         text: FRIEND_AVATAR_TEXT,
@@ -408,14 +410,26 @@ export function ExpenseSuccessScreen({
                 {primaryAvatars.map((avatar, index) => (
                   <span
                     key={index}
-                    className="flex size-[34px] items-center justify-center rounded-full border text-[11px] font-semibold"
+                    className={[
+                      "flex size-[34px] items-center justify-center rounded-full border text-[11px] font-semibold",
+                      avatar.src ? "overflow-hidden" : "",
+                    ].join(" ")}
                     style={{
                       background: avatar.bg,
                       color: avatar.text,
                       borderColor: "var(--evven-border)",
                     }}
                   >
-                    {avatar.initials}
+                    {avatar.src ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={avatar.src}
+                        alt={avatar.initials}
+                        className="size-full rounded-full object-cover"
+                      />
+                    ) : (
+                      avatar.initials
+                    )}
                   </span>
                 ))}
                 {overflowCount > 0 ? (
@@ -436,7 +450,7 @@ export function ExpenseSuccessScreen({
             <motion.button
               type="button"
               onClick={() => setVisible(false)}
-              className="w-full cursor-pointer appearance-none rounded-[14px] border-0 px-4 py-[13px] text-sm font-semibold text-white"
+              className="w-full cursor-pointer appearance-none rounded-[14px] border-0 px-4 py-[13px] text-sm font-semibold text-[var(--evven-text-inverse)]"
               style={{ background: "var(--evven-accent-primary)" }}
               initial={{ opacity: 0, y: reduce ? 0 : 6 }}
               animate={{

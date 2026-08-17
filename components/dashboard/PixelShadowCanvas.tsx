@@ -172,6 +172,7 @@ export default function PixelShadowCanvas({
       host.addEventListener("touchend", handleTouchEnd, { passive: true });
 
       if (requiresPermission) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setNeedsMotionPermission(true);
         // The permission prompt itself is triggered from the button
         // below (must happen in a user-gesture handler on iOS). Once
@@ -256,7 +257,7 @@ export default function PixelShadowCanvas({
     const io = new IntersectionObserver(
       ([entry]) => {
         isVisible = entry.isIntersecting;
-        isVisible ? tryStart() : tryStop();
+        if (isVisible) { tryStart(); } else { tryStop(); }
       },
       { threshold: 0 }
     );
@@ -264,7 +265,7 @@ export default function PixelShadowCanvas({
 
     const onVisibility = () => {
       isPageVisible = !document.hidden;
-      isPageVisible ? tryStart() : tryStop();
+      if (isPageVisible) { tryStart(); } else { tryStop(); }
     };
     document.addEventListener("visibilitychange", onVisibility);
 

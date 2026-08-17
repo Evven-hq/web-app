@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Volume2 } from "lucide-react";
 
 import { isSoundEnabled, setSoundEnabled } from "@/lib/expense-success-sound";
@@ -9,11 +9,7 @@ import { Label } from "@/components/ui/label";
 import { surfaceCard } from "./profile-utils";
 
 export function SoundPreferenceCard() {
-  const [enabled, setEnabled] = useState(true);
-
-  useEffect(() => {
-    setEnabled(isSoundEnabled());
-  }, []);
+  const [enabled, setEnabled] = useState(() => isSoundEnabled());
 
   const handleCheckedChange = (checked: boolean) => {
     const next = checked === true;

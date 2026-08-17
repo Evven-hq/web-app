@@ -19,61 +19,61 @@ const THEME_SWATCHES: Record<ThemeSwatchKey, ThemeSwatch> = {
     primary: "#2d5a4f",
     secondary: "#e8dcc8",
   },
-  L3: {
+  "sea-glass": {
     label: "Sea Glass",
     ariaLabel: "Sea Glass theme",
     primary: "#2e6f8e",
     secondary: "#d9e8ee",
   },
-  L4: {
+  blush: {
     label: "Blush",
     ariaLabel: "Blush theme",
     primary: "#6b3a5e",
     secondary: "#f2d9e0",
   },
-  "Sunset-market": {
+  ember: {
     label: "Ember",
     ariaLabel: "Ember theme",
     primary: "#e0592f",
     secondary: "#fbe0d5",
   },
-  Botanical: {
+  grove: {
     label: "Grove",
     ariaLabel: "Grove theme",
     primary: "#3f6b45",
     secondary: "#dbe8dc",
   },
-  D1: {
+  "ember-night": {
     label: "Ember Night",
     ariaLabel: "Ember Night theme",
     primary: "#7a9e8e",
     secondary: "#3a3530",
   },
-  D3: {
+  "sea-glass-night": {
     label: "Sea Glass Night",
     ariaLabel: "Sea Glass Night theme",
     primary: "#3fa3a3",
     secondary: "#1c363b",
   },
-  D4: {
+  pulse: {
     label: "Pulse",
     ariaLabel: "Pulse theme",
     primary: "#5b8def",
     secondary: "#232a35",
   },
-  D5: {
+  "blush-night": {
     label: "Blush Night",
     ariaLabel: "Blush Night theme",
     primary: "#a56bc2",
     secondary: "#3a2a41",
   },
-  O2: {
+  "pulse-night": {
     label: "Pulse Night",
     ariaLabel: "Pulse Night theme",
     primary: "#b6ff3c",
     secondary: "#1f2b0a",
   },
-  "OLED-forest-green": {
+  "grove-night": {
     label: "Grove Night",
     ariaLabel: "Grove Night theme",
     primary: "#2d5a4f",
@@ -83,16 +83,16 @@ const THEME_SWATCHES: Record<ThemeSwatchKey, ThemeSwatch> = {
 
 const THEME_ORDER: ThemeSwatchKey[] = [
   "default",
-  "L3",
-  "L4",
-  "Sunset-market",
-  "Botanical",
-  "D1",
-  "D3",
-  "D4",
-  "D5",
-  "O2",
-  "OLED-forest-green",
+  "sea-glass",
+  "blush",
+  "ember",
+  "grove",
+  "ember-night",
+  "sea-glass-night",
+  "pulse",
+  "blush-night",
+  "pulse-night",
+  "grove-night",
 ];
 
 function ThemeSwatchButton({
@@ -140,7 +140,7 @@ function ThemeSwatchButton({
         </span>
         <span
           className={cn(
-            "absolute -bottom-0.5 -right-0.5 flex size-[15px] items-center justify-center rounded-full border-[1.5px] border-[var(--evven-card-background)] bg-[var(--evven-accent-primary)] text-white",
+            "absolute -bottom-0.5 -right-0.5 flex size-[15px] items-center justify-center rounded-full border-[1.5px] border-[var(--evven-card-background)] bg-[var(--evven-accent-primary)] text-[var(--evven-text-inverse)]",
             "transition-all duration-[200ms] ease-[cubic-bezier(0.34,1.56,0.64,1)]",
             active ? "scale-100 opacity-100" : "scale-0 opacity-0",
           )}

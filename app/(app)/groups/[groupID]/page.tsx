@@ -1,6 +1,5 @@
 "use client";
 
-import { Loader2 } from "lucide-react";
 import {
   BalanceSummary,
   BalancesTab,
@@ -19,6 +18,7 @@ import {
   SettleModal,
 } from "@/components/groups/GroupDetailModals";
 import { useGroupDetail } from "@/components/groups/useGroupDetail";
+import { GroupDetailSkeleton } from "@/components/groups/GroupDetailSkeleton";
 import { ExpenseSuccessScreen } from "@/components/expenses/ExpenseSuccessScreen";
 
 export default function GroupDetailPage() {
@@ -99,11 +99,7 @@ export default function GroupDetailPage() {
   } = useGroupDetail();
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <Loader2 size={20} className="animate-spin" style={{ color: "var(--evven-accent-primary)" }} />
-      </div>
-    );
+    return <GroupDetailSkeleton />;
   }
 
   if (error || !group) {

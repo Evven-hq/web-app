@@ -59,7 +59,7 @@ export function BalanceSummary({
                 {youOwe ? (
                   <button
                     onClick={() => onSettle(uid, displayAmount)}
-                    className="text-[11px] px-2 py-1 rounded-lg font-medium text-white"
+                    className="text-[11px] px-2 py-1 rounded-lg font-medium text-[var(--evven-text-inverse)]"
                     style={{ background: "var(--evven-accent-primary)" }}
                   >
                     Settle

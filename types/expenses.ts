@@ -106,7 +106,7 @@ export interface FriendDetail extends Friend {
   settlements?: FriendActivity[];
 }
 
-export interface Ghost extends Friend {}
+export type Ghost = Friend;
 
 export interface GhostBalance extends FriendBalance {
   ghost_id?: string;

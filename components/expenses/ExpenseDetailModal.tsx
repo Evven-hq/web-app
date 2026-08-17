@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Loader2, PencilLine, Trash2, X } from "lucide-react";
+import { PencilLine, Trash2, X } from "lucide-react";
 import { createPortal } from "react-dom";
 import { getCategoryMeta } from "@/lib/expense-categories";
 import { getPaymentModeMeta } from "@/lib/payment-modes";

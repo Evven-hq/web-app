@@ -83,7 +83,7 @@ export function BalancesTab({
                 {!isMe && youOwe ? (
                   <button
                     onClick={() => onSettle(uid, displayAmount)}
-                    className="text-xs px-3 py-1.5 rounded-lg font-medium text-white shrink-0"
+                    className="text-xs px-3 py-1.5 rounded-lg font-medium text-[var(--evven-text-inverse)] shrink-0"
                     style={{ background: "var(--evven-accent-primary)" }}
                   >
                     Settle

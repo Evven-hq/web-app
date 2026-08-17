@@ -126,7 +126,7 @@ export function ExpenseDetailsModal({
         {canEdit && (
           <button
             onClick={onEditExpense}
-            className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium text-white"
+            className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium text-[var(--evven-text-inverse)]"
             style={{ background: "var(--evven-accent-primary)" }}
           >
             <CheckCircle size={15} />

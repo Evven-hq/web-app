@@ -27,11 +27,21 @@ export function ExpensesTab({
   if (expenses.length === 0) {
     return (
       <div className="card rounded-2xl p-8 text-center">
-        <Receipt size={20} className="mx-auto mb-3" style={{ color: "var(--evven-text-muted)" }} />
-        <p className="text-sm font-medium mb-1" style={{ color: "var(--evven-text-primary)" }}>
+        <Receipt
+          size={20}
+          className="mx-auto mb-3"
+          style={{ color: "var(--evven-text-muted)" }}
+        />
+        <p
+          className="text-sm font-medium mb-1"
+          style={{ color: "var(--evven-text-primary)" }}
+        >
           No expenses yet
         </p>
-        <p className="text-xs mb-4" style={{ color: "var(--evven-text-muted)" }}>
+        <p
+          className="text-xs mb-4"
+          style={{ color: "var(--evven-text-muted)" }}
+        >
           Log the first expense for this group.
         </p>
       </div>
@@ -68,15 +78,25 @@ export function ExpensesTab({
                 return <Icon size={18} />;
               })()
             ) : (
-              <Receipt size={15} style={{ color: "var(--evven-accent-primary)" }} />
+              <Receipt
+                size={15}
+                style={{ color: "var(--evven-accent-primary)" }}
+              />
             )}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium truncate" style={{ color: "var(--evven-text-primary)" }}>
+            <p
+              className="text-sm font-medium truncate"
+              style={{ color: "var(--evven-text-primary)" }}
+            >
               {exp.title}
             </p>
-            <p className="text-xs mt-0.5" style={{ color: "var(--evven-text-muted)" }}>
-              Paid by {userName(exp.paid_by)} · {formatDate(exp.created_at)} · {exp.split_type}
+            <p
+              className="text-xs mt-0.5"
+              style={{ color: "var(--evven-text-muted)" }}
+            >
+              Paid by {userName(exp.paid_by)} · {formatDate(exp.created_at)} ·{" "}
+              {exp.split_type}
               {exp.category ? ` · ${getCategoryMeta(exp.category).label}` : ""}
               {(() => {
                 const pm = getPaymentModeMeta(exp.payment_method);
@@ -85,7 +105,10 @@ export function ExpensesTab({
             </p>
           </div>
           <div className="flex items-center gap-3 shrink-0">
-            <span className="text-sm font-semibold" style={{ color: "var(--evven-text-primary)" }}>
+            <span
+              className="text-sm font-semibold"
+              style={{ color: "var(--evven-text-primary)" }}
+            >
               {formatAmount(exp.amount)}
             </span>
             {exp.paid_by === currentUserId && (

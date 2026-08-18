@@ -1,5 +1,11 @@
 import type { ComponentType } from "react";
-import { CircleUserRound, HandCoins, House, ReceiptText, Users } from "lucide-react";
+import {
+  CircleUserRound,
+  HandCoins,
+  House,
+  ReceiptText,
+  Users,
+} from "lucide-react";
 
 export type DockItem = {
   href: string;

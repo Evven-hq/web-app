@@ -9,7 +9,11 @@ interface AvatarGridProps {
   onSelect: (seed: string) => void;
 }
 
-export function AvatarGrid({ options, selectedSeed, onSelect }: AvatarGridProps) {
+export function AvatarGrid({
+  options,
+  selectedSeed,
+  onSelect,
+}: AvatarGridProps) {
   return (
     <div className="grid grid-cols-3 gap-3">
       {options.map((option) => (

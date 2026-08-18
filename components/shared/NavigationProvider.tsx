@@ -39,14 +39,21 @@ function getPathDepth(path: string): number {
   const idx = PATH_HIERARCHY.indexOf(clean);
   if (idx !== -1) return idx;
   for (let i = PATH_HIERARCHY.length - 1; i >= 0; i--) {
-    if (clean.startsWith(PATH_HIERARCHY[i] + "/") || clean.startsWith(PATH_HIERARCHY[i])) {
+    if (
+      clean.startsWith(PATH_HIERARCHY[i] + "/") ||
+      clean.startsWith(PATH_HIERARCHY[i])
+    ) {
       return i;
     }
   }
   return 0;
 }
 
-export function NavigationProvider({ children }: { children: React.ReactNode }) {
+export function NavigationProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const router = useRouter();
   const pathname = usePathname();
   const [isPending, startTransition] = useTransition();
@@ -79,12 +86,12 @@ export function NavigationProvider({ children }: { children: React.ReactNode }) 
         router.push(href);
       });
     },
-    [router]
+    [router],
   );
 
   const value = useMemo<NavigationContextValue>(
     () => ({ isNavigating: isPending, navigate, direction }),
-    [isPending, navigate, direction]
+    [isPending, navigate, direction],
   );
 
   return (

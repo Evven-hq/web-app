@@ -19,7 +19,10 @@ export function ProfileIdentityCard({
   return (
     <div
       className="mb-4 overflow-hidden rounded-[30px] p-5 sm:p-7"
-      style={{ background: "var(--evven-accent-primary)", color: "var(--evven-text-inverse)" }}
+      style={{
+        background: "var(--evven-accent-primary)",
+        color: "var(--evven-text-inverse)",
+      }}
     >
       <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-4">
@@ -41,7 +44,11 @@ export function ProfileIdentityCard({
                 className="flex size-16 items-center justify-center rounded-full text-xl font-medium ring-2 ring-white/25 transition-opacity group-hover:opacity-80 sm:size-20"
                 style={{ background: "rgba(255,255,255,0.15)" }}
               >
-                {displayName ? getInitials(displayName) : <UserRound size={26} />}
+                {displayName ? (
+                  getInitials(displayName)
+                ) : (
+                  <UserRound size={26} />
+                )}
               </div>
             )}
             <span
@@ -52,7 +59,9 @@ export function ProfileIdentityCard({
             </span>
           </button>
           <div className="min-w-0">
-            <p className="truncate text-xl font-medium sm:text-2xl">{displayName}</p>
+            <p className="truncate text-xl font-medium sm:text-2xl">
+              {displayName}
+            </p>
             <p className="mt-0.5 truncate text-sm opacity-80">{email}</p>
             <span
               className="mt-2 inline-flex items-center rounded-full px-3 py-1 text-xs font-medium capitalize"

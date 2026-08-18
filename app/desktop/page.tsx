@@ -15,17 +15,11 @@ export default function DesktopPage() {
   const reason = searchParams.get("reason");
   const { isOnline } = useConnectivity();
 
-  const isAuthenticated = useAuthStore(
-    (state) => state.isAuthenticated
-  );
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
-  const user = useAuthStore(
-    (state) => state.user
-  );
+  const user = useAuthStore((state) => state.user);
 
-  const loading = useAuthStore(
-    (state) => state.isLoading
-  );
+  const loading = useAuthStore((state) => state.isLoading);
 
   useEffect(() => {
     if (loading || !isOnline) return;
@@ -36,16 +30,9 @@ export default function DesktopPage() {
     }
 
     router.replace(
-      reason ? `/login?reason=${encodeURIComponent(reason)}` : "/login"
+      reason ? `/login?reason=${encodeURIComponent(reason)}` : "/login",
     );
-  }, [
-    loading,
-    isAuthenticated,
-    user,
-    reason,
-    router,
-    isOnline,
-  ]);
+  }, [loading, isAuthenticated, user, reason, router, isOnline]);
 
   const expiredSession = reason === "session-expired";
 
@@ -60,7 +47,8 @@ export default function DesktopPage() {
           <h1 className="mb-2 text-2xl font-semibold">You’re offline</h1>
 
           <p className="mb-6 text-sm text-muted-foreground">
-            Evven needs an internet connection to open your workspace on desktop. Reconnect to continue.
+            Evven needs an internet connection to open your workspace on
+            desktop. Reconnect to continue.
           </p>
 
           <Button
@@ -78,7 +66,11 @@ export default function DesktopPage() {
     <div className="flex min-h-screen items-center justify-center bg-background px-6">
       <div className="card w-full max-w-md rounded-3xl bg-card/80 p-8 text-center shadow-2xl backdrop-blur-xl">
         <div className="mx-auto mb-4 flex size-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-          {expiredSession ? <ShieldAlert className="size-6" /> : <AlertCircle className="size-6" />}
+          {expiredSession ? (
+            <ShieldAlert className="size-6" />
+          ) : (
+            <AlertCircle className="size-6" />
+          )}
         </div>
 
         <h1 className="mb-2 text-2xl font-semibold">

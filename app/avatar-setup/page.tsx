@@ -34,7 +34,9 @@ export default function AvatarSetupPage() {
     setError("");
     setSaving(true);
     try {
-      const updatedUser = await updateCurrentUser({ profile_picture: avatarUrl });
+      const updatedUser = await updateCurrentUser({
+        profile_picture: avatarUrl,
+      });
       setUser(updatedUser);
       router.replace("/dashboard");
     } catch {
@@ -48,7 +50,10 @@ export default function AvatarSetupPage() {
       <div className="flex min-h-[100svh] items-center justify-center bg-background">
         <div
           className="size-5 animate-spin rounded-full border-2 border-r-transparent"
-          style={{ borderColor: "var(--evven-accent-primary)", borderRightColor: "transparent" }}
+          style={{
+            borderColor: "var(--evven-accent-primary)",
+            borderRightColor: "transparent",
+          }}
         />
       </div>
     );
@@ -63,7 +68,8 @@ export default function AvatarSetupPage() {
               Pick your avatar
             </h1>
             <p className="text-sm text-muted-foreground">
-              Choose one to finish setting up your profile. Shuffle for more options.
+              Choose one to finish setting up your profile. Shuffle for more
+              options.
             </p>
           </div>
 

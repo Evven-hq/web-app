@@ -1,4 +1,8 @@
-import type { DebtBreakdownEntry, GroupBalances, GroupDebtBreakdown } from "@/types";
+import type {
+  DebtBreakdownEntry,
+  GroupBalances,
+  GroupDebtBreakdown,
+} from "@/types";
 import type { UserNameFn } from "./group-detail-shared";
 
 export type SettlementsSubTab = "past" | "final" | "receivables" | "breakdown";
@@ -26,7 +30,11 @@ export type BreakdownRow = {
   total: number;
 };
 
-export function getDisplayName(userId: string, currentUserId: string | undefined, userName: UserNameFn) {
+export function getDisplayName(
+  userId: string,
+  currentUserId: string | undefined,
+  userName: UserNameFn,
+) {
   return userId === currentUserId ? "You" : userName(userId);
 }
 
@@ -34,25 +42,39 @@ export function formatSettlementLine(
   giverId: string,
   receiverId: string,
   currentUserId: string | undefined,
-  userName: UserNameFn
+  userName: UserNameFn,
 ) {
   if (giverId === currentUserId) return `you paid ${userName(receiverId)}`;
   if (receiverId === currentUserId) return `${userName(giverId)} paid you`;
   return `${userName(giverId)} paid ${userName(receiverId)}`;
 }
 
-export function getNettedBalanceEntries(balances: GroupBalances, currentUserId: string | undefined) {
+export function getNettedBalanceEntries(
+  balances: GroupBalances,
+  currentUserId: string | undefined,
+) {
   return Object.entries(balances)
     .map(([userId, amount]) => [userId, Number(amount)] as const)
-    .filter(([userId, amount]) => userId !== currentUserId && Number.isFinite(amount) && Math.abs(amount) > 0.01);
+    .filter(
+      ([userId, amount]) =>
+        userId !== currentUserId &&
+        Number.isFinite(amount) &&
+        Math.abs(amount) > 0.01,
+    );
 }
 
-export function buildFinalSettlements(balances: GroupBalances, currentUserId: string | undefined) {
+export function buildFinalSettlements(
+  balances: GroupBalances,
+  currentUserId: string | undefined,
+) {
   if (!currentUserId) return [];
 
   const rows = new Map<string, SettlementRow>();
 
-  for (const [userId, amount] of getNettedBalanceEntries(balances, currentUserId)) {
+  for (const [userId, amount] of getNettedBalanceEntries(
+    balances,
+    currentUserId,
+  )) {
     const sourceId = amount < 0 ? currentUserId : userId;
     const targetId = amount < 0 ? userId : currentUserId;
     const displayAmount = Math.abs(amount);
@@ -71,7 +93,10 @@ export function buildFinalSettlements(balances: GroupBalances, currentUserId: st
     .sort((left, right) => right.total - left.total);
 }
 
-export function buildReceivableView(balances: GroupBalances, currentUserId: string | undefined) {
+export function buildReceivableView(
+  balances: GroupBalances,
+  currentUserId: string | undefined,
+) {
   if (!currentUserId) return [];
 
   const entries = getNettedBalanceEntries(balances, currentUserId)
@@ -90,7 +115,9 @@ export function buildReceivableView(balances: GroupBalances, currentUserId: stri
   ];
 }
 
-export function buildDetailedBreakdown(debtBreakdown: GroupDebtBreakdown | null): BreakdownRow[] {
+export function buildDetailedBreakdown(
+  debtBreakdown: GroupDebtBreakdown | null,
+): BreakdownRow[] {
   if (!debtBreakdown?.breakdown) return [];
 
   return Object.entries(debtBreakdown.breakdown)
@@ -98,16 +125,22 @@ export function buildDetailedBreakdown(debtBreakdown: GroupDebtBreakdown | null)
       const creditorEntries = Object.entries(creditors)
         .map(([creditorId, items]) => {
           const sortedItems = [...items].sort(
-            (left, right) => Number(right.amount) - Number(left.amount)
+            (left, right) => Number(right.amount) - Number(left.amount),
           );
-          const total = sortedItems.reduce((sum, item) => sum + Number(item.amount), 0);
+          const total = sortedItems.reduce(
+            (sum, item) => sum + Number(item.amount),
+            0,
+          );
 
           return { creditorId, items: sortedItems, total };
         })
         .filter(({ items }) => items.length > 0)
         .sort((left, right) => right.total - left.total);
 
-      const total = creditorEntries.reduce((sum, entry) => sum + entry.total, 0);
+      const total = creditorEntries.reduce(
+        (sum, entry) => sum + entry.total,
+        0,
+      );
       return { debtorId, creditors: creditorEntries, total };
     })
     .filter(({ creditors }) => creditors.length > 0)

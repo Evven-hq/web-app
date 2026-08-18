@@ -104,7 +104,7 @@ api.interceptors.response.use(
     originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
 
     return api(originalRequest);
-  }
+  },
 );
 
 export default api;

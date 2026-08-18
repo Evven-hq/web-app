@@ -8,7 +8,7 @@ export interface Settlement {
   amount: string;
   payment_method?: PaymentMethod | null;
 }
- 
+
 export interface SettlementCreate {
   receiver_id: string;
   amount: number;

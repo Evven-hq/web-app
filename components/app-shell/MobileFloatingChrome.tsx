@@ -14,9 +14,12 @@ export function MobileFloatingChrome({
 }) {
   return (
     <div
-        className="pointer-events-none fixed inset-x-0 top-0 z-40 flex items-start justify-between px-4 md:hidden"
-        style={{ paddingTop: "calc(var(--safe-area-inset-top, env(safe-area-inset-top, 0px)) + 0.625rem)" }}
-      >
+      className="pointer-events-none fixed inset-x-0 top-0 z-40 flex items-start justify-between px-4 md:hidden"
+      style={{
+        paddingTop:
+          "calc(var(--safe-area-inset-top, env(safe-area-inset-top, 0px)) + 0.625rem)",
+      }}
+    >
       <Link
         href="/profile"
         className="pointer-events-auto flex size-11 items-center justify-center overflow-hidden rounded-full text-xs font-semibold shadow-lg"

@@ -3,9 +3,17 @@
 import Link from "next/link";
 import { Plus } from "lucide-react";
 import { getCategoryMeta } from "@/lib/expense-categories";
-import { formatAmount, formatRelativeTime, formatShortDate } from "@/lib/format";
+import {
+  formatAmount,
+  formatRelativeTime,
+  formatShortDate,
+} from "@/lib/format";
 import PixelShadowCanvas from "@/components/dashboard/PixelShadowCanvas";
-import type { CategoryEntry, DashboardAnalytics, DashboardExpense } from "./dashboard-types";
+import type {
+  CategoryEntry,
+  DashboardAnalytics,
+  DashboardExpense,
+} from "./dashboard-types";
 
 export function DashboardHero({
   analytics,
@@ -27,23 +35,33 @@ export function DashboardHero({
   return (
     <div
       className="relative isolate mb-4 overflow-hidden rounded-[30px] p-5 sm:p-6"
-      style={{ background: "var(--evven-accent-primary)", color: "var(--evven-text-inverse)" }}
+      style={{
+        background: "var(--evven-accent-primary)",
+        color: "var(--evven-text-inverse)",
+      }}
     >
       <PixelShadowCanvas />
 
       <div className="relative z-10 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
         <div className="max-w-2xl">
           <p className="text-xl font-medium leading-snug sm:text-2xl">
-            You&apos;ve spent {analytics ? formatAmount(analytics.total_spent) : "—"} across {groupsCount} {groupsCount === 1 ? "group" : "groups"} this month.
+            You&apos;ve spent{" "}
+            {analytics ? formatAmount(analytics.total_spent) : "—"} across{" "}
+            {groupsCount} {groupsCount === 1 ? "group" : "groups"} this month.
           </p>
           <p className="mt-3 max-w-xl text-sm leading-6 opacity-85">
             {isLoading ? (
               "Loading your activity…"
             ) : topCategory ? (
               <>
-                <span style={{ fontWeight: 500 }}>{getCategoryMeta(topCategory[0]).label}</span> leads this
-                month at {topCategoryShare}% of total spend
-                {lastExpense ? ` · last logged ${formatRelativeTime(lastExpense.created_at, formatShortDate)}` : ""}.
+                <span style={{ fontWeight: 500 }}>
+                  {getCategoryMeta(topCategory[0]).label}
+                </span>{" "}
+                leads this month at {topCategoryShare}% of total spend
+                {lastExpense
+                  ? ` · last logged ${formatRelativeTime(lastExpense.created_at, formatShortDate)}`
+                  : ""}
+                .
               </>
             ) : (
               "Log a few expenses to see where your money's going this month."
@@ -55,20 +73,29 @@ export function DashboardHero({
           {topCategory && (
             <div
               className="flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm"
-              style={{ borderColor: "color-mix(in srgb, white 24%, transparent)", background: "color-mix(in srgb, white 10%, transparent)" }}
+              style={{
+                borderColor: "color-mix(in srgb, white 24%, transparent)",
+                background: "color-mix(in srgb, white 10%, transparent)",
+              }}
             >
               <span
                 className="size-1.5 shrink-0 rounded-full"
                 style={{ background: getCategoryMeta(topCategory[0]).text }}
               />
-              {getCategoryMeta(topCategory[0]).label} · {formatAmount(topCategory[1])}
+              {getCategoryMeta(topCategory[0]).label} ·{" "}
+              {formatAmount(topCategory[1])}
             </div>
           )}
           <div
             className="rounded-full border px-3 py-1.5 text-sm"
-            style={{ borderColor: "color-mix(in srgb, white 24%, transparent)", background: "color-mix(in srgb, white 10%, transparent)" }}
+            style={{
+              borderColor: "color-mix(in srgb, white 24%, transparent)",
+              background: "color-mix(in srgb, white 10%, transparent)",
+            }}
           >
-            {avgExpense ? `${formatAmount(avgExpense)} avg / expense` : `${analytics?.expense_count ?? 0} expenses`}
+            {avgExpense
+              ? `${formatAmount(avgExpense)} avg / expense`
+              : `${analytics?.expense_count ?? 0} expenses`}
           </div>
         </div>
       </div>

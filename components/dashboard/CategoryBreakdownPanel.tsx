@@ -66,9 +66,7 @@ export function CategoryBreakdownPanel({
                     style={{ width: `${pct}%`, background: barColor }}
                   />
                 </div>
-                <span
-                  className="text-xs font-medium min-w-12 text-right shrink-0"
-                >
+                <span className="text-xs font-medium min-w-12 text-right shrink-0">
                   {formatAmount(amt)}
                 </span>
               </div>

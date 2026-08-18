@@ -36,9 +36,7 @@ export function ExpenseDetailsModal({
   return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="modal-backdrop absolute inset-0" onClick={onClose} />
-      <div
-        className="modal-panel card relative max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-3xl p-6 shadow-xl sm:p-7"
-      >
+      <div className="modal-panel card relative max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-3xl p-6 shadow-xl sm:p-7">
         <button
           onClick={onClose}
           className="absolute right-4 top-4 rounded-lg p-1.5"
@@ -49,34 +47,71 @@ export function ExpenseDetailsModal({
         </button>
 
         <div className="pr-8">
-          <p className="mb-1 text-xs font-semibold uppercase tracking-widest" style={{ color: "var(--evven-text-muted)" }}>
+          <p
+            className="mb-1 text-xs font-semibold uppercase tracking-widest"
+            style={{ color: "var(--evven-text-muted)" }}
+          >
             Expense details
           </p>
-          <h2 className="text-lg font-semibold" style={{ color: "var(--evven-text-primary)" }}>
+          <h2
+            className="text-lg font-semibold"
+            style={{ color: "var(--evven-text-primary)" }}
+          >
             {detailExpense.title}
           </h2>
-          <p className="mt-1 text-sm" style={{ color: "var(--evven-text-muted)" }}>
-            Paid by {userName(detailExpense.paid_by)} · {new Date(detailExpense.created_at).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}
+          <p
+            className="mt-1 text-sm"
+            style={{ color: "var(--evven-text-muted)" }}
+          >
+            Paid by {userName(detailExpense.paid_by)} ·{" "}
+            {new Date(detailExpense.created_at).toLocaleDateString("en-IN", {
+              day: "numeric",
+              month: "short",
+            })}
           </p>
         </div>
 
         <div className="mt-5 grid gap-3 sm:grid-cols-2">
           <div className="card rounded-2xl p-4">
-            <p className="mb-1 text-xs" style={{ color: "var(--evven-text-muted)" }}>Total</p>
-            <p className="text-base font-semibold" style={{ color: "var(--evven-text-primary)" }}>
+            <p
+              className="mb-1 text-xs"
+              style={{ color: "var(--evven-text-muted)" }}
+            >
+              Total
+            </p>
+            <p
+              className="text-base font-semibold"
+              style={{ color: "var(--evven-text-primary)" }}
+            >
               {formatAmount(detailExpense.amount)}
             </p>
           </div>
           <div className="card rounded-2xl p-4">
-            <p className="mb-1 text-xs" style={{ color: "var(--evven-text-muted)" }}>Split</p>
-            <p className="text-base font-semibold capitalize" style={{ color: "var(--evven-text-primary)" }}>
+            <p
+              className="mb-1 text-xs"
+              style={{ color: "var(--evven-text-muted)" }}
+            >
+              Split
+            </p>
+            <p
+              className="text-base font-semibold capitalize"
+              style={{ color: "var(--evven-text-primary)" }}
+            >
               {detailExpense.split_type}
             </p>
           </div>
           {detailExpense.category && (
             <div className="card rounded-2xl p-4">
-              <p className="mb-1 text-xs" style={{ color: "var(--evven-text-muted)" }}>Category</p>
-              <p className="text-base font-semibold flex items-center gap-2" style={{ color: "var(--evven-text-primary)" }}>
+              <p
+                className="mb-1 text-xs"
+                style={{ color: "var(--evven-text-muted)" }}
+              >
+                Category
+              </p>
+              <p
+                className="text-base font-semibold flex items-center gap-2"
+                style={{ color: "var(--evven-text-primary)" }}
+              >
                 {(() => {
                   const Icon = getCategoryMeta(detailExpense.category).icon;
                   return <Icon size={16} />;
@@ -87,8 +122,16 @@ export function ExpenseDetailsModal({
           )}
           {paymentModeMeta && (
             <div className="card rounded-2xl p-4">
-              <p className="mb-1 text-xs" style={{ color: "var(--evven-text-muted)" }}>Payment mode</p>
-              <p className="text-base font-semibold flex items-center gap-2" style={{ color: "var(--evven-text-primary)" }}>
+              <p
+                className="mb-1 text-xs"
+                style={{ color: "var(--evven-text-muted)" }}
+              >
+                Payment mode
+              </p>
+              <p
+                className="text-base font-semibold flex items-center gap-2"
+                style={{ color: "var(--evven-text-primary)" }}
+              >
                 <paymentModeMeta.icon size={16} />
                 {paymentModeMeta.label}
               </p>
@@ -97,24 +140,42 @@ export function ExpenseDetailsModal({
         </div>
 
         <div className="mt-5">
-          <p className="mb-3 text-xs font-semibold uppercase tracking-widest" style={{ color: "var(--evven-text-muted)" }}>
+          <p
+            className="mb-3 text-xs font-semibold uppercase tracking-widest"
+            style={{ color: "var(--evven-text-muted)" }}
+          >
             Breakdown
           </p>
           {loadingDetails ? (
             <div className="flex h-20 items-center justify-center">
-              <Loader2 size={18} className="animate-spin" style={{ color: "var(--evven-accent-primary)" }} />
+              <Loader2
+                size={18}
+                className="animate-spin"
+                style={{ color: "var(--evven-accent-primary)" }}
+              />
             </div>
           ) : detailError ? (
-            <p className="text-sm" style={{ color: "var(--evven-error)" }}>{detailError}</p>
+            <p className="text-sm" style={{ color: "var(--evven-error)" }}>
+              {detailError}
+            </p>
           ) : (
             <div className="space-y-2">
               {detailSplits.map((split) => (
-                <div key={split.id} className="card flex items-center justify-between rounded-2xl px-4 py-3">
-                  <span className="text-sm font-medium" style={{ color: "var(--evven-text-primary)" }}>
+                <div
+                  key={split.id}
+                  className="card flex items-center justify-between rounded-2xl px-4 py-3"
+                >
+                  <span
+                    className="text-sm font-medium"
+                    style={{ color: "var(--evven-text-primary)" }}
+                  >
                     {userName(split.user_id)}
                     {split.user_id === currentUserId ? " (you)" : ""}
                   </span>
-                  <span className="text-sm font-semibold" style={{ color: "var(--evven-text-primary)" }}>
+                  <span
+                    className="text-sm font-semibold"
+                    style={{ color: "var(--evven-text-primary)" }}
+                  >
                     {formatAmount(split.amount)}
                   </span>
                 </div>
@@ -135,6 +196,6 @@ export function ExpenseDetailsModal({
         )}
       </div>
     </div>,
-    document.body
+    document.body,
   );
 }

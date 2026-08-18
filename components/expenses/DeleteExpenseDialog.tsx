@@ -42,8 +42,10 @@ export function DeleteExpenseDialog({
           <div
             className="mb-1 flex size-11 items-center justify-center rounded-2xl border"
             style={{
-              background: "color-mix(in srgb, var(--evven-error) 8%, var(--evven-background))",
-              borderColor: "color-mix(in srgb, var(--evven-error) 20%, var(--evven-border))",
+              background:
+                "color-mix(in srgb, var(--evven-error) 8%, var(--evven-background))",
+              borderColor:
+                "color-mix(in srgb, var(--evven-error) 20%, var(--evven-border))",
               color: "var(--evven-error)",
             }}
           >
@@ -51,7 +53,9 @@ export function DeleteExpenseDialog({
           </div>
           <DialogTitle>Delete expense?</DialogTitle>
           <DialogDescription>
-            {expense ? `This will permanently remove "${expense.title}".` : "This will permanently remove the expense."}
+            {expense
+              ? `This will permanently remove "${expense.title}".`
+              : "This will permanently remove the expense."}
           </DialogDescription>
         </DialogHeader>
 
@@ -60,8 +64,10 @@ export function DeleteExpenseDialog({
             className="rounded-2xl border px-4 py-3 text-sm"
             style={{
               color: "var(--evven-error)",
-              borderColor: "color-mix(in srgb, var(--evven-error) 24%, var(--evven-border))",
-              background: "color-mix(in srgb, var(--evven-error) 6%, var(--evven-background))",
+              borderColor:
+                "color-mix(in srgb, var(--evven-error) 24%, var(--evven-border))",
+              background:
+                "color-mix(in srgb, var(--evven-error) 6%, var(--evven-background))",
             }}
           >
             {error}
@@ -87,8 +93,10 @@ export function DeleteExpenseDialog({
             disabled={deleting}
             className="w-full sm:w-auto"
             style={{
-              borderColor: "color-mix(in srgb, var(--evven-accent-primary) 18%, var(--evven-border))",
-              background: "color-mix(in srgb, var(--evven-accent-secondary) 14%, var(--evven-background))",
+              borderColor:
+                "color-mix(in srgb, var(--evven-accent-primary) 18%, var(--evven-border))",
+              background:
+                "color-mix(in srgb, var(--evven-accent-secondary) 14%, var(--evven-background))",
               color: "var(--evven-accent-primary)",
             }}
           >
@@ -101,8 +109,10 @@ export function DeleteExpenseDialog({
             disabled={deleting}
             className="w-full gap-2 sm:w-auto"
             style={{
-              background: "color-mix(in srgb, var(--evven-error) 12%, var(--evven-background))",
-              borderColor: "color-mix(in srgb, var(--evven-error) 28%, var(--evven-border))",
+              background:
+                "color-mix(in srgb, var(--evven-error) 12%, var(--evven-background))",
+              borderColor:
+                "color-mix(in srgb, var(--evven-error) 28%, var(--evven-border))",
               color: "var(--evven-error)",
             }}
           >

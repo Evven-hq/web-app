@@ -70,13 +70,18 @@ export function ExpenseEditorModal({
   return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="modal-backdrop absolute inset-0" onClick={onClose} />
-      <div
-        className="modal-panel card relative max-h-[90vh] w-full max-w-md overflow-y-auto rounded-3xl p-6 shadow-xl"
-      >
-        <button onClick={onClose} className="absolute right-4 top-4 rounded-lg p-1.5" style={{ background: "var(--evven-surface)" }}>
+      <div className="modal-panel card relative max-h-[90vh] w-full max-w-md overflow-y-auto rounded-3xl p-6 shadow-xl">
+        <button
+          onClick={onClose}
+          className="absolute right-4 top-4 rounded-lg p-1.5"
+          style={{ background: "var(--evven-surface)" }}
+        >
           <X size={15} />
         </button>
-        <h2 className="text-base font-semibold mb-4" style={{ color: "var(--evven-text-primary)" }}>
+        <h2
+          className="text-base font-semibold mb-4"
+          style={{ color: "var(--evven-text-primary)" }}
+        >
           {editingExpense ? "Edit expense" : "Add expense"}
         </h2>
 
@@ -88,21 +93,37 @@ export function ExpenseEditorModal({
             value={expTitle}
             onChange={(e) => setExpTitle(e.target.value)}
             className="w-full px-4 py-2.5 rounded-xl text-sm border outline-none focus:ring-2"
-            style={{ borderColor: "var(--evven-border)", background: "var(--evven-surface)", color: "var(--evven-text-primary)" }}
+            style={{
+              borderColor: "var(--evven-border)",
+              background: "var(--evven-surface)",
+              color: "var(--evven-text-primary)",
+            }}
           />
           <div className="relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm" style={{ color: "var(--evven-text-muted)" }}>₹</span>
+            <span
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-sm"
+              style={{ color: "var(--evven-text-muted)" }}
+            >
+              ₹
+            </span>
             <input
               type="number"
               placeholder="0.00"
               value={expAmount}
               onChange={(e) => setExpAmount(e.target.value)}
               className="w-full pl-7 pr-4 py-2.5 rounded-xl text-sm border outline-none focus:ring-2"
-              style={{ borderColor: "var(--evven-border)", background: "var(--evven-surface)", color: "var(--evven-text-primary)" }}
+              style={{
+                borderColor: "var(--evven-border)",
+                background: "var(--evven-surface)",
+                color: "var(--evven-text-primary)",
+              }}
             />
           </div>
           <div>
-            <p className="mb-2 text-xs font-semibold uppercase tracking-widest" style={{ color: "var(--evven-text-muted)" }}>
+            <p
+              className="mb-2 text-xs font-semibold uppercase tracking-widest"
+              style={{ color: "var(--evven-text-muted)" }}
+            >
               Category (optional)
             </p>
             <div className="flex flex-wrap gap-2">
@@ -110,11 +131,21 @@ export function ExpenseEditorModal({
                 <button
                   key={cat.value}
                   type="button"
-                  onClick={() => setExpCategory((current) => (current === cat.value ? "" : cat.value))}
+                  onClick={() =>
+                    setExpCategory((current) =>
+                      current === cat.value ? "" : cat.value,
+                    )
+                  }
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all"
                   style={{
-                    background: expCategory === cat.value ? cat.bg : "var(--evven-surface)",
-                    color: expCategory === cat.value ? cat.text : "var(--evven-text-muted)",
+                    background:
+                      expCategory === cat.value
+                        ? cat.bg
+                        : "var(--evven-surface)",
+                    color:
+                      expCategory === cat.value
+                        ? cat.text
+                        : "var(--evven-text-muted)",
                   }}
                 >
                   {(() => {
@@ -128,13 +159,16 @@ export function ExpenseEditorModal({
           </div>
 
           <div>
-            <p className="mb-2 text-xs font-semibold uppercase tracking-widest" style={{ color: "var(--evven-text-muted)" }}>
+            <p
+              className="mb-2 text-xs font-semibold uppercase tracking-widest"
+              style={{ color: "var(--evven-text-muted)" }}
+            >
               Payment mode
             </p>
             <div className="flex flex-wrap gap-2">
-{PAYMENT_MODES.map((mode) => {
-      const Icon = mode.icon;
-      const active = expPaymentMethod?.toLowerCase() === mode.value;
+              {PAYMENT_MODES.map((mode) => {
+                const Icon = mode.icon;
+                const active = expPaymentMethod?.toLowerCase() === mode.value;
 
                 return (
                   <button
@@ -162,8 +196,12 @@ export function ExpenseEditorModal({
                 onClick={() => onSelectSplitType(t)}
                 className="flex-1 py-1.5 rounded-lg text-xs font-medium capitalize transition-all"
                 style={{
-                  background: expSplitType === t ? "var(--evven-accent-primary)" : "var(--evven-surface)",
-                  color: expSplitType === t ? "white" : "var(--evven-text-muted)",
+                  background:
+                    expSplitType === t
+                      ? "var(--evven-accent-primary)"
+                      : "var(--evven-surface)",
+                  color:
+                    expSplitType === t ? "white" : "var(--evven-text-muted)",
                 }}
               >
                 {t}
@@ -172,7 +210,10 @@ export function ExpenseEditorModal({
           </div>
 
           <div className="space-y-3">
-            <label className="text-sm font-medium" style={{ color: "var(--evven-text-primary)" }}>
+            <label
+              className="text-sm font-medium"
+              style={{ color: "var(--evven-text-primary)" }}
+            >
               Participants
             </label>
             <div className="grid grid-cols-2 gap-2">
@@ -186,18 +227,27 @@ export function ExpenseEditorModal({
                     type="button"
                     onClick={() => {
                       setSelectedParticipants((prev) =>
-                        selected ? prev.filter((id) => id !== userId) : [...prev, userId]
+                        selected
+                          ? prev.filter((id) => id !== userId)
+                          : [...prev, userId],
                       );
                     }}
                     className="card flex items-center justify-between rounded-xl px-3 py-2 text-sm"
                     style={{
-                      background: selected ? "var(--evven-selected-bg)" : "var(--evven-card-background)",
-                      borderColor: selected ? "var(--evven-selected-text)" : "var(--evven-border)",
+                      background: selected
+                        ? "var(--evven-selected-bg)"
+                        : "var(--evven-card-background)",
+                      borderColor: selected
+                        ? "var(--evven-selected-text)"
+                        : "var(--evven-border)",
                     }}
                   >
                     <span className="flex min-w-0 items-center gap-2">
                       <Avatar size="sm" aria-label={userName(userId)}>
-                        <AvatarImage src={userAvatar(userId) ?? undefined} alt={userName(userId)} />
+                        <AvatarImage
+                          src={userAvatar(userId) ?? undefined}
+                          alt={userName(userId)}
+                        />
                         <AvatarFallback
                           className="font-semibold"
                           style={{ background: color.bg, color: color.text }}
@@ -207,7 +257,12 @@ export function ExpenseEditorModal({
                       </Avatar>
                       <span className="truncate">{userName(userId)}</span>
                     </span>
-                    {selected && <CheckCircle size={14} color="var(--evven-selected-text)" />}
+                    {selected && (
+                      <CheckCircle
+                        size={14}
+                        color="var(--evven-selected-text)"
+                      />
+                    )}
                   </button>
                 );
               })}
@@ -220,14 +275,22 @@ export function ExpenseEditorModal({
           {expSplitType !== "equal" && (
             <div className="card rounded-2xl p-3">
               <div className="mb-3 flex items-center justify-between">
-                <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: "var(--evven-text-muted)" }}>
+                <p
+                  className="text-xs font-semibold uppercase tracking-widest"
+                  style={{ color: "var(--evven-text-muted)" }}
+                >
                   {expSplitType === "exact" ? "Exact amounts" : "Percentages"}
                 </p>
                 <div className="flex items-center gap-2">
-                  <p className="text-xs font-medium" style={{ color: "var(--evven-text-muted)" }}>
+                  <p
+                    className="text-xs font-medium"
+                    style={{ color: "var(--evven-text-muted)" }}
+                  >
                     {expSplitType === "exact"
                       ? `${formatAmount(Object.values(splitInputs).reduce((sum, value) => sum + Number(value || 0), 0))} / ${formatAmount(Number(expAmount || 0))}`
-                      : `${Object.values(splitInputs).reduce((sum, value) => sum + Number(value || 0), 0).toFixed(2)}% / 100%`}
+                      : `${Object.values(splitInputs)
+                          .reduce((sum, value) => sum + Number(value || 0), 0)
+                          .toFixed(2)}% / 100%`}
                   </p>
                   <button
                     type="button"
@@ -244,11 +307,17 @@ export function ExpenseEditorModal({
                 </div>
               </div>
               {splitParticipantIds.length === 0 ? (
-                <p className="card rounded-xl px-3 py-2 text-xs" style={{ color: "var(--evven-error)" }}>
+                <p
+                  className="card rounded-xl px-3 py-2 text-xs"
+                  style={{ color: "var(--evven-error)" }}
+                >
                   Group members are still loading. Try again in a moment.
                 </p>
               ) : selectedParticipants.length === 0 ? (
-                <p className="card rounded-xl px-3 py-2 text-xs" style={{ color: "var(--evven-text-muted)" }}>
+                <p
+                  className="card rounded-xl px-3 py-2 text-xs"
+                  style={{ color: "var(--evven-text-muted)" }}
+                >
                   Select at least one participant to enter split amounts.
                 </p>
               ) : (
@@ -256,20 +325,31 @@ export function ExpenseEditorModal({
                   {selectedParticipants.map((userId) => (
                     <div key={userId} className="flex items-center gap-3">
                       <Avatar size="sm" aria-label={userName(userId)}>
-                        <AvatarImage src={userAvatar(userId) ?? undefined} alt={userName(userId)} />
+                        <AvatarImage
+                          src={userAvatar(userId) ?? undefined}
+                          alt={userName(userId)}
+                        />
                         <AvatarFallback className="text-[10px] font-semibold">
                           {getInitials(userName(userId))}
                         </AvatarFallback>
                       </Avatar>
                       <div className="min-w-0 flex-1">
-                        <p className="truncate text-sm font-medium" style={{ color: "var(--evven-text-primary)" }}>
+                        <p
+                          className="truncate text-sm font-medium"
+                          style={{ color: "var(--evven-text-primary)" }}
+                        >
                           {userName(userId)}
                           {userId === currentUserId ? " (you)" : ""}
                         </p>
                       </div>
                       <div className="relative w-28">
                         {expSplitType === "exact" && (
-                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs" style={{ color: "var(--evven-text-muted)" }}>₹</span>
+                          <span
+                            className="absolute left-3 top-1/2 -translate-y-1/2 text-xs"
+                            style={{ color: "var(--evven-text-muted)" }}
+                          >
+                            ₹
+                          </span>
                         )}
                         <input
                           type="number"
@@ -283,10 +363,19 @@ export function ExpenseEditorModal({
                             }))
                           }
                           className={`w-full rounded-xl border py-2 text-right text-sm outline-none focus:ring-2 ${expSplitType === "exact" ? "pl-6 pr-3" : "px-3"}`}
-                          style={{ borderColor: "var(--evven-border)", background: "var(--evven-surface)", color: "var(--evven-text-primary)" }}
+                          style={{
+                            borderColor: "var(--evven-border)",
+                            background: "var(--evven-surface)",
+                            color: "var(--evven-text-primary)",
+                          }}
                         />
                         {expSplitType === "percentage" && (
-                          <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs" style={{ color: "var(--evven-text-muted)" }}>%</span>
+                          <span
+                            className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs"
+                            style={{ color: "var(--evven-text-muted)" }}
+                          >
+                            %
+                          </span>
                         )}
                       </div>
                     </div>
@@ -297,7 +386,11 @@ export function ExpenseEditorModal({
           )}
         </div>
 
-        {expError && <p className="text-xs mt-2" style={{ color: "var(--evven-error)" }}>{expError}</p>}
+        {expError && (
+          <p className="text-xs mt-2" style={{ color: "var(--evven-error)" }}>
+            {expError}
+          </p>
+        )}
 
         <button
           onClick={onSave}
@@ -305,11 +398,19 @@ export function ExpenseEditorModal({
           className="w-full mt-4 py-2.5 rounded-xl text-sm font-medium text-[var(--evven-text-inverse)] flex items-center justify-center gap-2 disabled:opacity-50"
           style={{ background: "var(--evven-accent-primary)" }}
         >
-          {savingExp ? <Loader2 size={15} className="animate-spin" /> : <Plus size={15} />}
-          {savingExp ? "Saving…" : editingExpense ? "Save changes" : "Add expense"}
+          {savingExp ? (
+            <Loader2 size={15} className="animate-spin" />
+          ) : (
+            <Plus size={15} />
+          )}
+          {savingExp
+            ? "Saving…"
+            : editingExpense
+              ? "Save changes"
+              : "Add expense"}
         </button>
       </div>
     </div>,
-    document.body
+    document.body,
   );
 }

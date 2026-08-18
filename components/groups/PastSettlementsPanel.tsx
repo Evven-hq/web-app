@@ -21,18 +21,31 @@ export function PastSettlementsPanel({
               key={settlement.id}
               className="card flex items-center gap-3 rounded-2xl px-4 py-3"
             >
-              <CheckCircle size={15} style={{ color: "var(--evven-success-text)" }} className="shrink-0" />
-              <p className="text-sm flex-1 font-medium" style={{ color: "var(--evven-text-primary)" }}>
+              <CheckCircle
+                size={15}
+                style={{ color: "var(--evven-success-text)" }}
+                className="shrink-0"
+              />
+              <p
+                className="text-sm flex-1 font-medium"
+                style={{ color: "var(--evven-text-primary)" }}
+              >
                 {line(settlement.payer_id, settlement.receiver_id)}
               </p>
-              <span className="text-sm font-semibold" style={{ color: "var(--evven-success-text)" }}>
+              <span
+                className="text-sm font-semibold"
+                style={{ color: "var(--evven-success-text)" }}
+              >
                 {formatAmount(settlement.amount)}
               </span>
             </div>
           ))}
         </div>
       ) : (
-        <SettlementEmptyState title="No settled payments" description="Payments you mark as settled will show up here." />
+        <SettlementEmptyState
+          title="No settled payments"
+          description="Payments you mark as settled will show up here."
+        />
       )}
     </div>
   );

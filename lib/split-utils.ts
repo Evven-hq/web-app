@@ -5,7 +5,10 @@ export function splitEvenly(total: number, count: number) {
   const baseCents = Math.floor(totalCents / count);
   const remainder = totalCents % count;
 
-  return Array.from({ length: count }, (_, index) => (baseCents + (index < remainder ? 1 : 0)) / 100);
+  return Array.from(
+    { length: count },
+    (_, index) => (baseCents + (index < remainder ? 1 : 0)) / 100,
+  );
 }
 
 export function splitByPercentage(total: number, percentages: number[]) {
@@ -25,10 +28,9 @@ export function splitByPercentage(total: number, percentages: number[]) {
   });
 }
 
-export function splitByPercentageWithParticipants<T extends { split_percentage?: string | number | null }>(
-  total: number,
-  participants: T[]
-) {
+export function splitByPercentageWithParticipants<
+  T extends { split_percentage?: string | number | null },
+>(total: number, participants: T[]) {
   if (participants.length === 0) return [];
 
   return participants.map((participant) => {

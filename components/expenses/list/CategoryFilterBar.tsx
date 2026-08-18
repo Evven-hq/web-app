@@ -21,7 +21,11 @@ export function CategoryFilterBar({
         layoutId="expense-category-pill"
         className="absolute inset-0 rounded-full"
         style={{ background: PILL_BG, border: PILL_BORDER }}
-        transition={reduce ? { duration: 0 } : { type: "spring", stiffness: 420, damping: 35 }}
+        transition={
+          reduce
+            ? { duration: 0 }
+            : { type: "spring", stiffness: 420, damping: 35 }
+        }
       />
     ) : null;
 
@@ -34,7 +38,10 @@ export function CategoryFilterBar({
         onClick={() => onChange("all")}
         className="relative rounded-full px-3 py-1.5 text-xs font-medium transition-colors"
         style={{
-          color: value === "all" ? "var(--evven-text-primary)" : "var(--evven-text-muted)",
+          color:
+            value === "all"
+              ? "var(--evven-text-primary)"
+              : "var(--evven-text-muted)",
         }}
       >
         {renderPill(value === "all")}

@@ -125,14 +125,18 @@ function ThemeSwatchButton({
           "transition-[transform,box-shadow] duration-[180ms] ease-[cubic-bezier(0.4,0,0.2,1)] active:scale-[0.92]",
         )}
         style={{
-          border: "1px solid color-mix(in srgb, var(--evven-text-primary) 18%, transparent)",
+          border:
+            "1px solid color-mix(in srgb, var(--evven-text-primary) 18%, transparent)",
           boxShadow: active
             ? "0 0 0 2px var(--evven-card-background), 0 0 0 3.5px var(--evven-accent-primary)"
             : undefined,
         }}
       >
         <span className="absolute inset-0 overflow-hidden rounded-full">
-          <span className="absolute inset-0" style={{ background: swatch.secondary }} />
+          <span
+            className="absolute inset-0"
+            style={{ background: swatch.secondary }}
+          />
           <span
             className="absolute left-0 top-0 size-11 translate-x-[30%] translate-y-[30%] rounded-full"
             style={{ background: swatch.primary }}
@@ -153,7 +157,11 @@ function ThemeSwatchButton({
           "max-w-[72px] text-center text-[11.5px] font-medium leading-[1.25] transition-colors duration-[180ms] ease-out",
           active ? "font-semibold" : "",
         )}
-        style={{ color: active ? "var(--evven-text-primary)" : "var(--evven-text-muted)" }}
+        style={{
+          color: active
+            ? "var(--evven-text-primary)"
+            : "var(--evven-text-muted)",
+        }}
       >
         {swatch.label}
       </span>
@@ -185,10 +193,17 @@ export function ThemeSwitcher() {
         Theme
       </h2>
 
-      <div className="my-4 h-px opacity-60" style={{ background: "var(--evven-border)" }} />
+      <div
+        className="my-4 h-px opacity-60"
+        style={{ background: "var(--evven-border)" }}
+      />
 
       {isTransitioning && (
-        <p aria-live="polite" className="mb-3 text-xs" style={{ color: "var(--evven-text-muted)" }}>
+        <p
+          aria-live="polite"
+          className="mb-3 text-xs"
+          style={{ color: "var(--evven-text-muted)" }}
+        >
           Applying theme...
         </p>
       )}

@@ -18,7 +18,10 @@ export function FriendActivityList({ friend }: { friend: FriendDetail }) {
 
   if (history.length === 0) {
     return (
-      <div className="rounded-3xl border border-dashed px-4 py-8 text-center text-sm text-muted-foreground" style={{ borderColor: "var(--evven-border)" }}>
+      <div
+        className="rounded-3xl border border-dashed px-4 py-8 text-center text-sm text-muted-foreground"
+        style={{ borderColor: "var(--evven-border)" }}
+      >
         <Clock3 className="mx-auto mb-3" size={18} />
         Nothing here yet. Add an expense or settlement to start the trail.
       </div>
@@ -44,7 +47,9 @@ export function FriendActivityList({ friend }: { friend: FriendDetail }) {
             <div className="min-w-0 flex-1">
               <div className="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between sm:gap-3">
                 <div className="min-w-0">
-                  <p className="truncate text-sm font-medium">{getActivityTitle(entry)}</p>
+                  <p className="truncate text-sm font-medium">
+                    {getActivityTitle(entry)}
+                  </p>
                   <p className="mt-0.5 text-xs text-muted-foreground">
                     {meta.label} · {formatDate(getActivityTime(entry))}
                   </p>
@@ -53,7 +58,10 @@ export function FriendActivityList({ friend }: { friend: FriendDetail }) {
                   <p
                     className="text-sm font-semibold"
                     style={{
-                      color: meta.tone === "positive" ? "var(--evven-accent-primary)" : "var(--evven-error)",
+                      color:
+                        meta.tone === "positive"
+                          ? "var(--evven-accent-primary)"
+                          : "var(--evven-error)",
                       fontFamily: "var(--font-mono)",
                     }}
                   >
@@ -66,7 +74,9 @@ export function FriendActivityList({ friend }: { friend: FriendDetail }) {
               </div>
 
               {entry.notes ? (
-                <p className="mt-2 text-xs text-muted-foreground">{entry.notes}</p>
+                <p className="mt-2 text-xs text-muted-foreground">
+                  {entry.notes}
+                </p>
               ) : null}
             </div>
           </div>

@@ -28,8 +28,13 @@ export async function createGroup(name: string): Promise<Group> {
   return response.data.data;
 }
 
-export async function updateGroup(groupId: string, name: string): Promise<Group> {
-  const response = await api.put<ApiResponse<Group>>(`/groups/${groupId}`, { name });
+export async function updateGroup(
+  groupId: string,
+  name: string,
+): Promise<Group> {
+  const response = await api.put<ApiResponse<Group>>(`/groups/${groupId}`, {
+    name,
+  });
   return response.data.data;
 }
 
@@ -37,47 +42,47 @@ export async function deleteGroup(groupId: string): Promise<void> {
   await api.delete(`/groups/${groupId}`);
 }
 
-
 export async function getGroupMembers(groupId: string): Promise<GroupMember[]> {
   const response = await api.get<ApiResponse<GroupMember[]>>(
-    `/groups/${groupId}/members`
+    `/groups/${groupId}/members`,
   );
   return response.data.data;
 }
 
 export async function addGroupMember(
   groupId: string,
-  userCode: string
+  userCode: string,
 ): Promise<GroupMember> {
   const response = await api.post<ApiResponse<GroupMember>>(
     `/groups/${groupId}/members`,
-    { user_code: userCode }
+    { user_code: userCode },
   );
   return response.data.data;
 }
 
 export async function removeGroupMember(
   groupId: string,
-  userId: string
+  userId: string,
 ): Promise<void> {
   await api.delete(`/groups/${groupId}/members/${userId}`);
 }
 
-
-export async function getGroupExpenses(groupId: string): Promise<GroupExpense[]> {
+export async function getGroupExpenses(
+  groupId: string,
+): Promise<GroupExpense[]> {
   const response = await api.get<ApiResponse<GroupExpense[]>>(
-    `/groups/${groupId}/expenses`
+    `/groups/${groupId}/expenses`,
   );
   return response.data.data;
 }
 
 export async function createGroupExpense(
   groupId: string,
-  expenseData: GroupExpenseCreate
+  expenseData: GroupExpenseCreate,
 ): Promise<GroupExpense> {
   const response = await api.post<ApiResponse<GroupExpense>>(
     `/groups/${groupId}/expenses`,
-    expenseData
+    expenseData,
   );
   return response.data.data;
 }
@@ -85,62 +90,63 @@ export async function createGroupExpense(
 export async function updateGroupExpense(
   groupId: string,
   expenseId: string,
-  data: GroupExpenseUpdate
+  data: GroupExpenseUpdate,
 ): Promise<GroupExpense> {
   const response = await api.put<ApiResponse<GroupExpense>>(
     `/groups/${groupId}/expenses/${expenseId}`,
-    data
+    data,
   );
   return response.data.data;
 }
 
 export async function deleteGroupExpense(
   groupId: string,
-  expenseId: string
+  expenseId: string,
 ): Promise<void> {
   await api.delete(`/groups/${groupId}/expenses/${expenseId}`);
 }
 
 export async function getGroupExpenseWithSplits(
   groupId: string,
-  expenseId: string
+  expenseId: string,
 ): Promise<{ expense: GroupExpense; splits: ExpenseSplit[] }> {
-  const response = await api.get<ApiResponse<{ expense: GroupExpense; splits: ExpenseSplit[] }>>(
-    `/groups/${groupId}/expenses/${expenseId}`
-  );
+  const response = await api.get<
+    ApiResponse<{ expense: GroupExpense; splits: ExpenseSplit[] }>
+  >(`/groups/${groupId}/expenses/${expenseId}`);
   return response.data.data;
 }
 
-
-export async function getGroupBalances(groupId: string): Promise<GroupBalances> {
+export async function getGroupBalances(
+  groupId: string,
+): Promise<GroupBalances> {
   const response = await api.get<ApiResponse<GroupBalances>>(
-    `/groups/${groupId}/balances`
+    `/groups/${groupId}/balances`,
   );
   return response.data.data;
 }
 
 export async function getUserBalanceInGroup(
   groupId: string,
-  userId: string
+  userId: string,
 ): Promise<GroupBalances> {
   const response = await api.get<ApiResponse<GroupBalances>>(
-    `/groups/${groupId}/balances/${userId}`
+    `/groups/${groupId}/balances/${userId}`,
   );
   return response.data.data;
 }
-
 
 export async function getGroupDebtBreakdown(
-  groupId: string
+  groupId: string,
 ): Promise<GroupDebtBreakdown> {
   const response = await api.get<ApiResponse<GroupDebtBreakdown>>(
-    `/groups/${groupId}/debt-breakdown`
+    `/groups/${groupId}/debt-breakdown`,
   );
   return response.data.data;
 }
 
-
-export async function getGroupSettlements(groupId: string): Promise<Settlement[]> {
+export async function getGroupSettlements(
+  groupId: string,
+): Promise<Settlement[]> {
   const response = await api.get(`/groups/${groupId}/settlements`);
   const payload = response.data.data ?? response.data;
   return payload?.settlements ?? [];
@@ -148,12 +154,18 @@ export async function getGroupSettlements(groupId: string): Promise<Settlement[]
 
 export async function createSettlement(
   groupId: string,
-  data: SettlementCreate
+  data: SettlementCreate,
 ): Promise<Settlement> {
   const response = await api.post<ApiResponse<Settlement>>(
     `/groups/${groupId}/settlements`,
     null,
-    { params: { receiver_id: data.receiver_id, amount: data.amount, payment_method: data.payment_method } }
+    {
+      params: {
+        receiver_id: data.receiver_id,
+        amount: data.amount,
+        payment_method: data.payment_method,
+      },
+    },
   );
   return response.data.data;
 }

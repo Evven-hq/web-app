@@ -2,7 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { animate, AnimatePresence, motion, useReducedMotion } from "motion/react";
+import {
+  animate,
+  AnimatePresence,
+  motion,
+  useReducedMotion,
+} from "motion/react";
 import { Check } from "lucide-react";
 import type { ReactNode } from "react";
 import type { PersonalExpense } from "@/types";
@@ -15,7 +20,8 @@ import {
   playExpenseSuccessChime,
 } from "@/lib/expense-success-sound";
 
-export type ExpenseSuccessVariant = "personal" | "friend" | "group" | "settlement";
+export type ExpenseSuccessVariant =
+  "personal" | "friend" | "group" | "settlement";
 
 export interface ExpenseSuccessAvatar {
   src?: string | null;
@@ -32,7 +38,10 @@ export type ExpenseSuccessMetaLabel =
       suffix?: string;
     };
 
-export type ExpenseSuccessState = Omit<ExpenseSuccessScreenProps, "open" | "onDone">;
+export type ExpenseSuccessState = Omit<
+  ExpenseSuccessScreenProps,
+  "open" | "onDone"
+>;
 
 export interface ExpenseSuccessScreenProps {
   open: boolean;
@@ -68,7 +77,7 @@ const PARTICLE_PATHS = [
 ];
 
 export function buildPersonalSuccess(
-  created: PersonalExpense | PersonalExpense[]
+  created: PersonalExpense | PersonalExpense[],
 ): ExpenseSuccessState {
   const list = Array.isArray(created) ? created : [created];
   const last = list[list.length - 1];
@@ -76,12 +85,18 @@ export function buildPersonalSuccess(
   const paymentLabel = getPaymentModeMeta(last.payment_method)?.label ?? "UPI";
 
   const friendEntries = list
-    .filter((entry) => entry.friend ?? entry.ghost ?? entry.friend_id ?? entry.ghost_id)
+    .filter(
+      (entry) =>
+        entry.friend ?? entry.ghost ?? entry.friend_id ?? entry.ghost_id,
+    )
     .map((entry) => ({
       name: entry.friend?.name ?? entry.ghost?.name ?? "Friend",
       avatar: {
-        src: entry.friend?.profile_picture ?? entry.ghost?.profile_picture ?? null,
-        initials: getInitials(entry.friend?.name ?? entry.ghost?.name ?? "Friend"),
+        src:
+          entry.friend?.profile_picture ?? entry.ghost?.profile_picture ?? null,
+        initials: getInitials(
+          entry.friend?.name ?? entry.ghost?.name ?? "Friend",
+        ),
         bg: FRIEND_AVATAR_BG,
         text: FRIEND_AVATAR_TEXT,
       } satisfies ExpenseSuccessAvatar,
@@ -180,7 +195,9 @@ export function ExpenseSuccessScreen({
     };
   }, [open, isSettlement, reduce, soundOn]);
 
-  const label = amountLabelOverride ?? (isSettlement ? "Settlement recorded" : "Expense logged");
+  const label =
+    amountLabelOverride ??
+    (isSettlement ? "Settlement recorded" : "Expense logged");
   const iconBg = isSettlement ? "var(--evven-success-bg)" : categoryBg;
   const iconText = isSettlement ? "var(--evven-success-text)" : categoryText;
 
@@ -204,12 +221,16 @@ export function ExpenseSuccessScreen({
           animate={{
             opacity: 1,
             scale: 1,
-            transition: reduce ? { duration: 0.2 } : { duration: 0.2, ease: EASE },
+            transition: reduce
+              ? { duration: 0.2 }
+              : { duration: 0.2, ease: EASE },
           }}
           exit={{
             opacity: 0,
             scale: 0.98,
-            transition: reduce ? { duration: 0.15 } : { duration: 0.2, ease: EASE },
+            transition: reduce
+              ? { duration: 0.15 }
+              : { duration: 0.2, ease: EASE },
           }}
         >
           <motion.div
@@ -218,18 +239,24 @@ export function ExpenseSuccessScreen({
             onClick={handleBackdropClick}
             initial={{
               opacity: 0,
-              backdropFilter: "blur(0px) saturate(100%) contrast(100%) brightness(100%)",
+              backdropFilter:
+                "blur(0px) saturate(100%) contrast(100%) brightness(100%)",
             }}
             animate={{
               opacity: 1,
               backdropFilter:
                 "blur(var(--evven-modal-backdrop-blur)) saturate(180%) contrast(88%) brightness(98%)",
-              transition: reduce ? { duration: 0.2 } : { duration: 0.25, ease: EASE },
+              transition: reduce
+                ? { duration: 0.2 }
+                : { duration: 0.25, ease: EASE },
             }}
             exit={{
               opacity: 0,
-              backdropFilter: "blur(0px) saturate(100%) contrast(100%) brightness(100%)",
-              transition: reduce ? { duration: 0.15 } : { duration: 0.2, ease: EASE },
+              backdropFilter:
+                "blur(0px) saturate(100%) contrast(100%) brightness(100%)",
+              transition: reduce
+                ? { duration: 0.15 }
+                : { duration: 0.2, ease: EASE },
             }}
           />
 
@@ -293,10 +320,17 @@ export function ExpenseSuccessScreen({
                   : { delay: 0.42, duration: 0.36, ease: EASE_BACK },
               }}
             >
-              {isSettlement ? <Check size={38} strokeWidth={2.5} /> : categoryIcon}
+              {isSettlement ? (
+                <Check size={38} strokeWidth={2.5} />
+              ) : (
+                categoryIcon
+              )}
 
               {!isSettlement && !reduce ? (
-                <div aria-hidden className="pointer-events-none absolute inset-0">
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute inset-0"
+                >
                   {PARTICLE_PATHS.map((path, index) => (
                     <motion.span
                       key={index}
@@ -315,7 +349,11 @@ export function ExpenseSuccessScreen({
                         y: path.dy,
                         scale: 0.3,
                         rotate: path.rot,
-                        transition: { delay: 1, duration: 0.52, ease: EASE_OUT },
+                        transition: {
+                          delay: 1,
+                          duration: 0.52,
+                          ease: EASE_OUT,
+                        },
                       }}
                     />
                   ))}
@@ -362,7 +400,9 @@ export function ExpenseSuccessScreen({
               initial={{ opacity: 0 }}
               animate={{
                 opacity: 1,
-                transition: reduce ? { duration: 0.2, delay: 0.5 } : { duration: 0, delay: 0.5 },
+                transition: reduce
+                  ? { duration: 0.2, delay: 0.5 }
+                  : { duration: 0, delay: 0.5 },
               }}
             >
               <CountUp amount={amount} />
@@ -467,7 +507,7 @@ export function ExpenseSuccessScreen({
         </motion.div>
       ) : null}
     </AnimatePresence>,
-    document.body
+    document.body,
   );
 }
 

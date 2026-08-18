@@ -28,7 +28,12 @@ interface AuthState {
   token: string | null;
 
   login: (email: string, password: string) => Promise<void>;
-  signup: (name: string, email: string, password: string, signupToken?: string | null) => Promise<User>;
+  signup: (
+    name: string,
+    email: string,
+    password: string,
+    signupToken?: string | null,
+  ) => Promise<User>;
   verifyOtp: (email: string, otp: string) => Promise<User>;
   resendOtp: (email: string) => Promise<void>;
   loginWithGoogle: (credential: string) => Promise<void>;
@@ -47,14 +52,22 @@ export const useAuthStore = create<AuthState>((set) => ({
   login: async (email, password) => {
     const data = await loginUser(email, password);
     storeAuthTokens(data.tokens);
-    set({ user: data.user, isAuthenticated: true, token: data.tokens.access_token });
+    set({
+      user: data.user,
+      isAuthenticated: true,
+      token: data.tokens.access_token,
+    });
   },
 
   signup: async (name, email, password, signupToken) => {
     const data = await registerUser(name, email, password, signupToken);
     if (data.tokens) {
       storeAuthTokens(data.tokens);
-      set({ user: data.user, isAuthenticated: true, token: data.tokens.access_token });
+      set({
+        user: data.user,
+        isAuthenticated: true,
+        token: data.tokens.access_token,
+      });
     } else {
       set({ user: data.user, isAuthenticated: false, token: null });
     }
@@ -67,7 +80,11 @@ export const useAuthStore = create<AuthState>((set) => ({
       throw new Error("Could not verify email right now.");
     }
     storeAuthTokens(data.tokens);
-    set({ user: data.user, isAuthenticated: true, token: data.tokens.access_token });
+    set({
+      user: data.user,
+      isAuthenticated: true,
+      token: data.tokens.access_token,
+    });
     return data.user;
   },
 
@@ -86,7 +103,11 @@ export const useAuthStore = create<AuthState>((set) => ({
     }
 
     storeAuthTokens(data.tokens);
-    set({ user: data.user, isAuthenticated: true, token: data.tokens.access_token });
+    set({
+      user: data.user,
+      isAuthenticated: true,
+      token: data.tokens.access_token,
+    });
   },
 
   logout: async () => {

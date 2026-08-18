@@ -27,7 +27,10 @@ export function SplitParticipantRows({
   userShareAmount: number;
   onChange: (updates: Partial<FriendSplitValues>) => void;
 }) {
-  const updateParticipant = (index: number, updates: Partial<SplitParticipant>) => {
+  const updateParticipant = (
+    index: number,
+    updates: Partial<SplitParticipant>,
+  ) => {
     const nextParticipants = [...participants];
     nextParticipants[index] = {
       ...nextParticipants[index],
@@ -38,7 +41,9 @@ export function SplitParticipantRows({
 
   const removeParticipant = (index: number) => {
     onChange({
-      split_participants: participants.filter((_, currentIndex) => currentIndex !== index),
+      split_participants: participants.filter(
+        (_, currentIndex) => currentIndex !== index,
+      ),
     });
   };
 
@@ -92,7 +97,9 @@ export function SplitParticipantRows({
         </div>
 
         {participants.map((participant, index) => {
-          const friend = friends.find((item) => item.id === participant.friend_id);
+          const friend = friends.find(
+            (item) => item.id === participant.friend_id,
+          );
           const share = breakdown[index + 1] ?? 0;
 
           return (
@@ -117,7 +124,9 @@ export function SplitParticipantRows({
                 </span>
 
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-xs font-medium">{friend?.name ?? "Friend"}</p>
+                  <p className="truncate text-xs font-medium">
+                    {friend?.name ?? "Friend"}
+                  </p>
                   <p className="text-[11px] text-muted-foreground">
                     {mode === "percentage"
                       ? `${formatNumber(Number(participant.split_percentage ?? 0))}% · ₹${formatNumber(share)}`

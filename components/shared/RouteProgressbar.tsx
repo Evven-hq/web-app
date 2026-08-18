@@ -20,7 +20,8 @@ export function RouteProgressBar() {
             style={{
               background:
                 "linear-gradient(90deg, var(--evven-accent-primary), color-mix(in srgb, var(--evven-accent-primary) 70%, white))",
-              boxShadow: "0 0 12px color-mix(in srgb, var(--evven-accent-primary) 50%, transparent), 0 0 4px color-mix(in srgb, var(--evven-accent-primary) 30%, transparent)",
+              boxShadow:
+                "0 0 12px color-mix(in srgb, var(--evven-accent-primary) 50%, transparent), 0 0 4px color-mix(in srgb, var(--evven-accent-primary) 30%, transparent)",
             }}
             initial={{ scaleX: 0, opacity: 1 }}
             animate={{

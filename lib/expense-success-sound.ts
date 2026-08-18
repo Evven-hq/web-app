@@ -7,8 +7,9 @@ function ensureAudioContext() {
   if (audioContext) return audioContext;
 
   if (typeof window === "undefined") return null;
-  const webkitCtor = (window as unknown as { webkitAudioContext?: typeof AudioContext })
-    .webkitAudioContext;
+  const webkitCtor = (
+    window as unknown as { webkitAudioContext?: typeof AudioContext }
+  ).webkitAudioContext;
   const Ctor = window.AudioContext ?? webkitCtor;
   if (!Ctor) return null;
 
@@ -66,8 +67,14 @@ export function playExpenseSuccessChime() {
     osc.type = "sine";
     osc.frequency.setValueAtTime(frequency, ctx.currentTime + delay);
     gain.gain.setValueAtTime(0.0001, ctx.currentTime + delay);
-    gain.gain.exponentialRampToValueAtTime(0.18, ctx.currentTime + delay + 0.02);
-    gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + delay + 0.44);
+    gain.gain.exponentialRampToValueAtTime(
+      0.18,
+      ctx.currentTime + delay + 0.02,
+    );
+    gain.gain.exponentialRampToValueAtTime(
+      0.0001,
+      ctx.currentTime + delay + 0.44,
+    );
     osc.connect(gain).connect(ctx.destination);
     osc.start(ctx.currentTime + delay);
     osc.stop(ctx.currentTime + delay + 0.45);

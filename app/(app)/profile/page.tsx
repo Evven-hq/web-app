@@ -72,7 +72,9 @@ function ProfileEditor({
     setAvatarError("");
     setAvatarSaving(true);
     try {
-      const updatedUser = await updateCurrentUser({ profile_picture: avatarUrl });
+      const updatedUser = await updateCurrentUser({
+        profile_picture: avatarUrl,
+      });
       setUser(updatedUser);
       setAvatarDialogOpen(false);
     } catch {
@@ -108,7 +110,11 @@ function ProfileEditor({
         />
 
         <div className="mb-4 grid gap-4 lg:grid-cols-2">
-          <ProfileShareCard userCode={user.user_code} copied={copied} onCopy={() => void copyCode()} />
+          <ProfileShareCard
+            userCode={user.user_code}
+            copied={copied}
+            onCopy={() => void copyCode()}
+          />
           <ProfileQuickLinks />
         </div>
 
@@ -132,10 +138,27 @@ function ProfileEditor({
 
         <ProfileDangerZone onLogout={handleLogout} />
 
-        <div className="mt-6 text-center text-xs" style={{ color: "var(--evven-text-muted)" }}>
-          <a href={`${process.env.NEXT_PUBLIC_LANDING_URL}/privacy`} target="_blank" rel="noopener noreferrer" className="hover:underline">Privacy</a>
+        <div
+          className="mt-6 text-center text-xs"
+          style={{ color: "var(--evven-text-muted)" }}
+        >
+          <a
+            href={`${process.env.NEXT_PUBLIC_LANDING_URL}/privacy`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:underline"
+          >
+            Privacy
+          </a>
           <span className="mx-2">·</span>
-          <a href={`${process.env.NEXT_PUBLIC_LANDING_URL}/terms`} target="_blank" rel="noopener noreferrer" className="hover:underline">Terms</a>
+          <a
+            href={`${process.env.NEXT_PUBLIC_LANDING_URL}/terms`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:underline"
+          >
+            Terms
+          </a>
         </div>
       </div>
 

@@ -18,11 +18,7 @@ export function isDesktop() {
 
   const ua = navigator.userAgent.toLowerCase();
 
-  return (
-    ua.includes("tauri") ||
-    ua.includes("pake") ||
-    ua.includes("evven")
-  );
+  return ua.includes("tauri") || ua.includes("pake") || ua.includes("evven");
 }
 
 export function getAccessToken() {

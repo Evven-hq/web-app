@@ -2,7 +2,14 @@ import type { Metadata } from "next";
 import type { Viewport } from "next";
 import "./globals.css";
 
-import { JetBrains_Mono, Xanh_Mono, Homemade_Apple, Baskervville, Crimson_Text, Instrument_Serif } from "next/font/google";
+import {
+  JetBrains_Mono,
+  Xanh_Mono,
+  Homemade_Apple,
+  Baskervville,
+  Crimson_Text,
+  Instrument_Serif,
+} from "next/font/google";
 import { QueryProvider } from "@/providers/query-provider";
 import { ThemeProvider } from "@/providers/theme-context";
 import DesktopVersionBadge from "@/components/shared/desktop-version-badge";
@@ -14,9 +21,9 @@ import { GlobalErrorCatcher } from "@/components/shared/GlobalErrorCatcher";
 import { Toaster } from "sonner";
 
 const jetBrains = JetBrains_Mono({
-  subsets: ['latin'],
-  weight: ['100','200','300','400','500','600','700','800'],
-  display: 'swap',
+  subsets: ["latin"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800"],
+  display: "swap",
   preload: false,
 });
 
@@ -29,9 +36,9 @@ export const homemadeApple = Homemade_Apple({
 });
 
 const xanh = Xanh_Mono({
-  subsets: ['latin'],
-  weight: ['400'],
-  display: 'swap',
+  subsets: ["latin"],
+  weight: ["400"],
+  display: "swap",
   preload: false,
 });
 
@@ -62,7 +69,8 @@ const instrumentSerif = Instrument_Serif({
 
 export const metadata: Metadata = {
   title: "Evven",
-  description: "Keep shared costs fair, clear, and totally handled. Evven makes group expense tracking simple and automated.",
+  description:
+    "Keep shared costs fair, clear, and totally handled. Evven makes group expense tracking simple and automated.",
   robots: { index: false, follow: false },
   manifest: "/manifest.webmanifest",
   appleWebApp: {
@@ -72,13 +80,15 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "Evven",
-    description: "Keep shared costs fair, clear, and totally handled. Evven makes group expense tracking simple and automated.",
+    description:
+      "Keep shared costs fair, clear, and totally handled. Evven makes group expense tracking simple and automated.",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
     title: "Evven",
-    description: "Keep shared costs fair, clear, and totally handled. Evven makes group expense tracking simple and automated.",
+    description:
+      "Keep shared costs fair, clear, and totally handled. Evven makes group expense tracking simple and automated.",
   },
 
   icons: {
@@ -106,13 +116,19 @@ export default function RootLayout({
       className={`${jetBrains.className} ${xanh.className} ${homemadeApple.variable} ${baskervville.className} ${crimsonText.variable} ${instrumentSerif.variable} h-full antialiased`}
     >
       <head>
-        <link rel="preload" href="/evven-logo-premium-transition.svg" as="image" type="image/svg+xml" fetchPriority="high" />
-        <link 
-          href="https://api.fontshare.com/v2/css?f[]=satoshi@300,301,400,401,500,501,700,701,900,901,1&display=swap" 
-          rel="stylesheet" 
+        <link
+          rel="preload"
+          href="/evven-logo-premium-transition.svg"
+          as="image"
+          type="image/svg+xml"
+          fetchPriority="high"
         />
-        <link 
-          href="https://api.fontshare.com/v2/css?f[]=dancing-script@400,700&display=swap" 
+        <link
+          href="https://api.fontshare.com/v2/css?f[]=satoshi@300,301,400,401,500,501,700,701,900,901,1&display=swap"
+          rel="stylesheet"
+        />
+        <link
+          href="https://api.fontshare.com/v2/css?f[]=dancing-script@400,700&display=swap"
           rel="stylesheet"
         />
       </head>

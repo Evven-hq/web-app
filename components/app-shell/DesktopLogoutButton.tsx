@@ -10,13 +10,14 @@ export function DesktopLogoutButton({ onLogout }: { onLogout: () => void }) {
         aria-label="Log out"
         title="Log out"
         className="group pointer-events-auto inline-flex h-12 items-center overflow-hidden rounded-(--evven-radius-hero) px-3 py-0  transition-all duration-200 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--evven-error)] focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-        
       >
         <span
           className="flex size-8 items-center justify-center rounded-full transition-all duration-200"
           style={{
-            background: "color-mix(in srgb, var(--evven-error) 12%, var(--evven-surface))",
-            border: "0.5px solid color-mix(in srgb, var(--evven-error) 24%, var(--evven-border))",
+            background:
+              "color-mix(in srgb, var(--evven-error) 12%, var(--evven-surface))",
+            border:
+              "0.5px solid color-mix(in srgb, var(--evven-error) 24%, var(--evven-border))",
             color: "var(--evven-error)",
           }}
         >

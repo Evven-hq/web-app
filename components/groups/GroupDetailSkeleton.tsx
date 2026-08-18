@@ -9,7 +9,15 @@ const COLORS = [
   { bg: "var(--evven-avatar-4-bg)", text: "var(--evven-avatar-4-text)" },
 ];
 
-function Pulse({ className, style, delay = 0 }: { className?: string; style?: React.CSSProperties; delay?: number }) {
+function Pulse({
+  className,
+  style,
+  delay = 0,
+}: {
+  className?: string;
+  style?: React.CSSProperties;
+  delay?: number;
+}) {
   const reduce = useReducedMotion();
   return (
     <motion.div
@@ -27,7 +35,10 @@ function Pulse({ className, style, delay = 0 }: { className?: string; style?: Re
 
 export function GroupDetailSkeleton({ rows = 4 }: { rows?: number }) {
   return (
-    <div className="h-full overflow-hidden" style={{ background: "var(--evven-background)" }}>
+    <div
+      className="h-full overflow-hidden"
+      style={{ background: "var(--evven-background)" }}
+    >
       <div className="mx-auto flex h-full max-w-2xl flex-col px-4 py-6">
         {/* GroupHeader skeleton */}
         <div className="mb-6 shrink-0">
@@ -67,7 +78,14 @@ export function GroupDetailSkeleton({ rows = 4 }: { rows?: number }) {
             {/* Action buttons */}
             <div className="flex gap-2 shrink-0">
               <Pulse className="h-9 w-16 rounded-xl" delay={0.1} />
-              <Pulse className="h-9 w-24 rounded-xl" style={{ background: "var(--evven-accent-primary)", opacity: 0.4 }} delay={0.15} />
+              <Pulse
+                className="h-9 w-24 rounded-xl"
+                style={{
+                  background: "var(--evven-accent-primary)",
+                  opacity: 0.4,
+                }}
+                delay={0.15}
+              />
             </div>
           </div>
         </div>
@@ -75,10 +93,16 @@ export function GroupDetailSkeleton({ rows = 4 }: { rows?: number }) {
         {/* BalanceSummary skeleton */}
         <div
           className="mb-5 rounded-2xl px-3.5 py-3"
-          style={{ background: "var(--evven-surface)", border: "1px solid var(--evven-border)" }}
+          style={{
+            background: "var(--evven-surface)",
+            border: "1px solid var(--evven-border)",
+          }}
         >
           <div className="flex items-center gap-2 mb-2.5">
-            <div className="size-1.5 rounded-full" style={{ background: "var(--evven-accent-primary)" }} />
+            <div
+              className="size-1.5 rounded-full"
+              style={{ background: "var(--evven-accent-primary)" }}
+            />
             <Pulse className="h-2 w-20 rounded-full" delay={0.05} />
           </div>
           <div className="space-y-2">
@@ -119,9 +143,15 @@ export function GroupDetailSkeleton({ rows = 4 }: { rows?: number }) {
               <Pulse className="size-9 shrink-0 rounded-xl" delay={0.05 * i} />
               <div className="min-w-0 flex-1 space-y-2">
                 <Pulse className="h-3.5 w-1/2 rounded-full" delay={0.05 * i} />
-                <Pulse className="h-2.5 w-1/3 rounded-full" delay={0.05 * i + 0.05} />
+                <Pulse
+                  className="h-2.5 w-1/3 rounded-full"
+                  delay={0.05 * i + 0.05}
+                />
               </div>
-              <Pulse className="h-3.5 w-14 rounded-full" delay={0.05 * i + 0.1} />
+              <Pulse
+                className="h-3.5 w-14 rounded-full"
+                delay={0.05 * i + 0.1}
+              />
             </div>
           ))}
         </div>

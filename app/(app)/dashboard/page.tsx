@@ -32,11 +32,13 @@ export default function DashboardPage() {
             ? analyticsRes.value.data
             : null,
         groups:
-          groupsRes.status === "fulfilled" && Array.isArray(groupsRes.value?.data)
+          groupsRes.status === "fulfilled" &&
+          Array.isArray(groupsRes.value?.data)
             ? groupsRes.value.data
             : [],
         personalExpenses:
-          expensesRes.status === "fulfilled" && Array.isArray(expensesRes.value?.data)
+          expensesRes.status === "fulfilled" &&
+          Array.isArray(expensesRes.value?.data)
             ? expensesRes.value.data.slice(0, 5)
             : [],
       };
@@ -65,7 +67,8 @@ export default function DashboardPage() {
         .slice(0, 5)
     : [];
 
-  const maxCategory = categoryEntries.length > 0 ? Number(categoryEntries[0][1]) : 1;
+  const maxCategory =
+    categoryEntries.length > 0 ? Number(categoryEntries[0][1]) : 1;
   const topCategory = categoryEntries[0];
   const topCategoryShare =
     topCategory && analytics?.total_spent
@@ -82,7 +85,6 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <div className="mx-auto max-w-5xl px-4 py-6 sm:px-6 sm:py-10">
-
         <DashboardHeader greeting={greeting()} firstName={firstName} />
 
         <DashboardHero

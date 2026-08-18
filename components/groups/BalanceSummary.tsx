@@ -17,14 +17,22 @@ export function BalanceSummary({
 }) {
   const myBalances = Object.entries(balances)
     .map(([uid, bal]) => [uid, Number(bal)] as const)
-    .filter(([uid, amount]) => uid !== currentUserId && Number.isFinite(amount) && Math.abs(amount) > 0.01);
+    .filter(
+      ([uid, amount]) =>
+        uid !== currentUserId &&
+        Number.isFinite(amount) &&
+        Math.abs(amount) > 0.01,
+    );
 
   if (myBalances.length === 0) return null;
 
   return (
     <div
       className="mb-5 rounded-2xl px-3.5 py-3"
-      style={{ background: "var(--evven-surface)", border: "1px solid var(--evven-border)" }}
+      style={{
+        background: "var(--evven-surface)",
+        border: "1px solid var(--evven-border)",
+      }}
     >
       <div className="flex items-center gap-2 mb-2">
         <span
@@ -46,15 +54,24 @@ export function BalanceSummary({
 
           return (
             <div key={uid} className="flex items-center justify-between gap-2">
-              <span className="text-xs truncate" style={{ color: "var(--evven-text-primary)" }}>
+              <span
+                className="text-xs truncate"
+                style={{ color: "var(--evven-text-primary)" }}
+              >
                 {userName(uid)}
               </span>
               <div className="flex items-center gap-2 shrink-0">
                 <span
                   className="text-xs font-medium whitespace-nowrap"
-                  style={{ color: youOwe ? "var(--evven-destructive-text)" : "var(--evven-success-text)" }}
+                  style={{
+                    color: youOwe
+                      ? "var(--evven-destructive-text)"
+                      : "var(--evven-success-text)",
+                  }}
                 >
-                  {youOwe ? `you owe ${formatAmount(displayAmount)}` : `owes you ${formatAmount(displayAmount)}`}
+                  {youOwe
+                    ? `you owe ${formatAmount(displayAmount)}`
+                    : `owes you ${formatAmount(displayAmount)}`}
                 </span>
                 {youOwe ? (
                   <button

@@ -44,13 +44,16 @@ export function FriendSplitSection({
   });
 
   const selectedFriendIds = useMemo(
-    () => new Set(values.split_participants.map((participant) => participant.friend_id)),
-    [values.split_participants]
+    () =>
+      new Set(
+        values.split_participants.map((participant) => participant.friend_id),
+      ),
+    [values.split_participants],
   );
 
   const availableFriends = useMemo(
     () => friends.filter((friend) => !selectedFriendIds.has(friend.id)),
-    [friends, selectedFriendIds]
+    [friends, selectedFriendIds],
   );
 
   useEffect(() => {
@@ -71,29 +74,35 @@ export function FriendSplitSection({
     }
 
     if (values.split_mode === "percentage") {
-      return splitByPercentageWithParticipants(total, values.split_participants);
+      return splitByPercentageWithParticipants(
+        total,
+        values.split_participants,
+      );
     }
 
-    return values.split_participants.map(
-      (participant) => Number(participant.split_amount ?? 0)
+    return values.split_participants.map((participant) =>
+      Number(participant.split_amount ?? 0),
     );
   }, [amount, values.split_mode, values.split_participants]);
 
   const totalAmount = Number(amount || 0);
   const totalPercentage = values.split_participants.reduce(
     (sum, participant) => sum + Number(participant.split_percentage ?? 0),
-    0
+    0,
   );
   const userPercentage = Math.max(0, 100 - totalPercentage);
   const friendTotal = values.split_participants.reduce(
     (sum, participant) => sum + Number(participant.split_amount ?? 0),
-    0
+    0,
   );
   const userShareAmount =
     values.split_mode === "equal"
-      ? breakdown[0] ?? 0
+      ? (breakdown[0] ?? 0)
       : values.split_mode === "percentage"
-        ? remainderAmount(totalAmount, breakdown.reduce((sum, value) => sum + value, 0))
+        ? remainderAmount(
+            totalAmount,
+            breakdown.reduce((sum, value) => sum + value, 0),
+          )
         : remainderAmount(totalAmount, friendTotal);
 
   return (
@@ -111,7 +120,8 @@ export function FriendSplitSection({
             borderColor: "var(--evven-border)",
           }}
         >
-          Turn this on to pick multiple friends and split the amount automatically.
+          Turn this on to pick multiple friends and split the amount
+          automatically.
         </div>
       ) : (
         <div className="space-y-4">

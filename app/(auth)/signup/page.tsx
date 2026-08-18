@@ -37,7 +37,10 @@ export default function Register() {
   const [signupToken, setSignupToken] = useState("");
 
   const normalizedEmail = email.trim().toLowerCase();
-  const passwordStrength = useMemo(() => getPasswordStrength(password), [password]);
+  const passwordStrength = useMemo(
+    () => getPasswordStrength(password),
+    [password],
+  );
 
   const setMessage = (next: { error?: string; notice?: string }) => {
     setError(next.error ?? "");
@@ -62,7 +65,9 @@ export default function Register() {
       setStep("otp");
       setMessage({ notice: `We sent a 6-digit code to ${normalizedEmail}.` });
     } catch (err: unknown) {
-      setMessage({ error: getApiErrorMessage(err, "We couldn’t send the code right now.") });
+      setMessage({
+        error: getApiErrorMessage(err, "We couldn’t send the code right now."),
+      });
     } finally {
       setIsSendingOtp(false);
     }
@@ -86,18 +91,26 @@ export default function Register() {
     setIsVerifyingOtp(true);
 
     try {
-      const response = await verifySignupOtp(normalizedEmail, otp.trim(), challengeToken);
+      const response = await verifySignupOtp(
+        normalizedEmail,
+        otp.trim(),
+        challengeToken,
+      );
       setSignupToken(response.signup_token ?? "");
       setStep("profile");
       setMessage({ notice: "Email verified. Finish creating your account." });
     } catch (err: unknown) {
-      setMessage({ error: getApiErrorMessage(err, "We couldn’t verify that code.") });
+      setMessage({
+        error: getApiErrorMessage(err, "We couldn’t verify that code."),
+      });
     } finally {
       setIsVerifyingOtp(false);
     }
   };
 
-  const handleCompleteSignup = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleCompleteSignup = async (
+    event: React.FormEvent<HTMLFormElement>,
+  ) => {
     event.preventDefault();
     setMessage({});
 
@@ -123,10 +136,22 @@ export default function Register() {
     setIsCreatingAccount(true);
 
     try {
-      const createdUser = await signup(nextName, normalizedEmail, nextPassword, signupToken);
-      router.replace(createdUser.profile_picture ? "/dashboard" : "/avatar-setup");
+      const createdUser = await signup(
+        nextName,
+        normalizedEmail,
+        nextPassword,
+        signupToken,
+      );
+      router.replace(
+        createdUser.profile_picture ? "/dashboard" : "/avatar-setup",
+      );
     } catch (err: unknown) {
-      setMessage({ error: getApiErrorMessage(err, "We couldn’t finish creating your account.") });
+      setMessage({
+        error: getApiErrorMessage(
+          err,
+          "We couldn’t finish creating your account.",
+        ),
+      });
     } finally {
       setIsCreatingAccount(false);
     }
@@ -143,7 +168,12 @@ export default function Register() {
       setChallengeToken(response.challenge_token ?? "");
       setMessage({ notice: `A fresh code was sent to ${normalizedEmail}.` });
     } catch (err: unknown) {
-      setMessage({ error: getApiErrorMessage(err, "We couldn’t resend the code right now.") });
+      setMessage({
+        error: getApiErrorMessage(
+          err,
+          "We couldn’t resend the code right now.",
+        ),
+      });
     } finally {
       setIsSendingOtp(false);
     }
@@ -233,7 +263,10 @@ export default function Register() {
 
       <div className="mt-7 text-center text-sm text-muted-foreground sm:mt-8">
         Already have an account?{" "}
-        <Link href="/login" className="font-semibold text-primary transition-colors hover:text-primary/80">
+        <Link
+          href="/login"
+          className="font-semibold text-primary transition-colors hover:text-primary/80"
+        >
           Log in
         </Link>
       </div>

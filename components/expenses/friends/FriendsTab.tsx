@@ -26,10 +26,15 @@ export function FriendsTab({
     <section className="space-y-5">
       <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.3em]" style={{ color: "var(--evven-text-muted)" }}>
+          <p
+            className="text-xs font-semibold uppercase tracking-[0.3em]"
+            style={{ color: "var(--evven-text-muted)" }}
+          >
             Friends
           </p>
-          <h2 className="mt-2 text-lg font-medium sm:text-xl">Active relationships</h2>
+          <h2 className="mt-2 text-lg font-medium sm:text-xl">
+            Active relationships
+          </h2>
         </div>
         <div className="text-sm text-muted-foreground">
           {isLoading ? "Loading..." : `${friends.length} shown`}
@@ -61,8 +66,12 @@ export function FriendsTab({
           Could not load friends.
         </div>
       ) : friends.length === 0 ? (
-        <div className="rounded-3xl border border-dashed px-4 py-6 text-sm text-muted-foreground" style={{ borderColor: "var(--evven-border)" }}>
-          No friends yet. Add one by user code and your active list will appear here.
+        <div
+          className="rounded-3xl border border-dashed px-4 py-6 text-sm text-muted-foreground"
+          style={{ borderColor: "var(--evven-border)" }}
+        >
+          No friends yet. Add one by user code and your active list will appear
+          here.
         </div>
       ) : (
         <div className="grid gap-3 md:grid-cols-2 2xl:grid-cols-3">

@@ -6,7 +6,11 @@ import type {
   SplitParticipant,
 } from "@/types";
 import { formatNumber } from "@/lib/format";
-import { remainderAmount, splitByPercentage, splitEvenly } from "@/lib/split-utils";
+import {
+  remainderAmount,
+  splitByPercentage,
+  splitEvenly,
+} from "@/lib/split-utils";
 
 export interface ExpenseFormValues {
   title: string;
@@ -44,14 +48,18 @@ export const fieldInputStyle = {
   borderColor: "var(--evven-border)",
 };
 
-export function buildSingleExpense(values: ExpenseFormValues): PersonalExpenseCreate {
+export function buildSingleExpense(
+  values: ExpenseFormValues,
+): PersonalExpenseCreate {
   const amount = Number(values.settlement_amount || values.amount);
 
   const payload: PersonalExpenseCreate = {
     title: values.title.trim(),
     amount,
     category: values.category.trim() || undefined,
-    date: values.date ? new Date(`${values.date}T00:00:00`).toISOString() : undefined,
+    date: values.date
+      ? new Date(`${values.date}T00:00:00`).toISOString()
+      : undefined,
     notes: values.notes.trim() || undefined,
     payment_method: values.payment_method,
   };
@@ -73,7 +81,10 @@ export function buildSplitExpenses(values: ExpenseFormValues): {
   const participants = values.split_participants;
 
   if (participants.length < 1) {
-    return { payloads: [], error: "Add at least one friend to split this expense." };
+    return {
+      payloads: [],
+      error: "Add at least one friend to split this expense.",
+    };
   }
 
   if (!Number.isFinite(amount) || amount <= 0) {
@@ -83,7 +94,9 @@ export function buildSplitExpenses(values: ExpenseFormValues): {
   const common = {
     title: values.title.trim(),
     category: values.category.trim() || undefined,
-    date: values.date ? new Date(`${values.date}T00:00:00`).toISOString() : undefined,
+    date: values.date
+      ? new Date(`${values.date}T00:00:00`).toISOString()
+      : undefined,
     notes: values.notes.trim() || undefined,
     payment_method: values.payment_method,
   };
@@ -115,7 +128,7 @@ export function buildSplitExpenses(values: ExpenseFormValues): {
   if (values.split_mode === "percentage") {
     const totalPercentage = participants.reduce(
       (sum, participant) => sum + Number(participant.split_percentage ?? 0),
-      0
+      0,
     );
     if (totalPercentage > 100) {
       return {
@@ -124,9 +137,14 @@ export function buildSplitExpenses(values: ExpenseFormValues): {
       };
     }
 
-    const friendPercentages = participants.map((participant) => Number(participant.split_percentage ?? 0));
+    const friendPercentages = participants.map((participant) =>
+      Number(participant.split_percentage ?? 0),
+    );
     const friendShares = splitByPercentage(amount, friendPercentages);
-    const userShare = remainderAmount(amount, friendShares.reduce((sum, value) => sum + value, 0));
+    const userShare = remainderAmount(
+      amount,
+      friendShares.reduce((sum, value) => sum + value, 0),
+    );
 
     return {
       payloads: [
@@ -151,7 +169,7 @@ export function buildSplitExpenses(values: ExpenseFormValues): {
 
   const totalCustom = participants.reduce(
     (sum, participant) => sum + Number(participant.split_amount ?? 0),
-    0
+    0,
   );
 
   if (totalCustom > amount) {

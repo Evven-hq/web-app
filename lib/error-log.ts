@@ -63,7 +63,7 @@ const errorClient = axios.create({
 
 export function reportError(
   error: unknown,
-  context?: { route?: string; method?: string }
+  context?: { route?: string; method?: string },
 ): void {
   const err = error instanceof Error ? error : new Error(String(error));
   const stack = err.stack ?? "";
@@ -90,8 +90,7 @@ export function reportError(
     client_timestamp: new Date().toISOString(),
   };
 
-  const send = () =>
-    errorClient.post("/errors", payload).catch(() => {});
+  const send = () => errorClient.post("/errors", payload).catch(() => {});
 
   send().catch(() => {
     setTimeout(send, 800);

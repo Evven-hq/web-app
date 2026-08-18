@@ -25,7 +25,7 @@ export function AvatarCard({ url, seed, selected, onSelect }: AvatarCardProps) {
         "hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--evven-accent-primary) focus-visible:ring-offset-2 focus-visible:ring-offset-background",
         selected
           ? "ring-2 ring-(--evven-accent-primary)"
-          : "ring-1 ring-(--evven-border) hover:ring-(--evven-accent-primary)/50"
+          : "ring-1 ring-(--evven-border) hover:ring-(--evven-accent-primary)/50",
       )}
       style={{
         background: selected

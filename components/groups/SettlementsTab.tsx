@@ -38,7 +38,8 @@ export function SettlementsTab({
 }) {
   const [subTab, setSubTab] = useState<SettlementsSubTab>("past");
 
-  const displayName = (userId: string) => getDisplayName(userId, currentUserId, userName);
+  const displayName = (userId: string) =>
+    getDisplayName(userId, currentUserId, userName);
   const line = (giverId: string, receiverId: string) =>
     formatSettlementLine(giverId, receiverId, currentUserId, userName);
   const finalSettlements = buildFinalSettlements(balances, currentUserId);
@@ -55,11 +56,19 @@ export function SettlementsTab({
         )}
 
         {subTab === "final" && (
-          <ToSettlePanel rows={finalSettlements} displayName={displayName} line={line} />
+          <ToSettlePanel
+            rows={finalSettlements}
+            displayName={displayName}
+            line={line}
+          />
         )}
 
         {subTab === "receivables" && (
-          <ToCollectPanel rows={receivableView} displayName={displayName} line={line} />
+          <ToCollectPanel
+            rows={receivableView}
+            displayName={displayName}
+            line={line}
+          />
         )}
 
         {subTab === "breakdown" && (

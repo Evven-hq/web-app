@@ -2,7 +2,11 @@
 
 import { ChevronRight } from "lucide-react";
 import type { Friend } from "@/types";
-import { formatMoney, getFriendBalanceLabel, getFriendBalanceState } from "./friend-utils";
+import {
+  formatMoney,
+  getFriendBalanceLabel,
+  getFriendBalanceState,
+} from "./friend-utils";
 import { FriendAvatar } from "./FriendAvatar";
 
 export function FriendListItem({
@@ -23,7 +27,9 @@ export function FriendListItem({
       onClick={onSelect}
       className={[
         "flex h-full w-full items-center gap-3 rounded-3xl border px-4 py-4 text-left transition-all hover:-translate-y-0.5",
-        active ? "ring-2 ring-[var(--evven-accent-primary)] ring-offset-2 ring-offset-background" : "",
+        active
+          ? "ring-2 ring-[var(--evven-accent-primary)] ring-offset-2 ring-offset-background"
+          : "",
       ]
         .filter(Boolean)
         .join(" ")}
@@ -38,7 +44,9 @@ export function FriendListItem({
       <div className="min-w-0 flex-1">
         <p className="truncate text-sm font-medium">{friend.name}</p>
         <p className="mt-0.5 truncate text-xs text-muted-foreground">
-          {friend.user_code ? `Code ${friend.user_code}` : getFriendBalanceLabel(friend)}
+          {friend.user_code
+            ? `Code ${friend.user_code}`
+            : getFriendBalanceLabel(friend)}
         </p>
       </div>
       <div className="text-right">

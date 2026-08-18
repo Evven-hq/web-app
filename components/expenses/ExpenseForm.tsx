@@ -3,7 +3,10 @@
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import type { PersonalExpenseCreate } from "@/types";
-import { FriendExpenseFields, FriendSplitSection } from "@/components/expenses/friends";
+import {
+  FriendExpenseFields,
+  FriendSplitSection,
+} from "@/components/expenses/friends";
 import { CategoryPicker } from "@/components/expenses/form/CategoryPicker";
 import { NotesField } from "@/components/expenses/form/NotesField";
 import { PaymentModePicker } from "@/components/expenses/form/PaymentModePicker";
@@ -20,7 +23,9 @@ export type { ExpenseFormValues } from "@/components/expenses/form/form-utils";
 interface ExpenseFormProps {
   initialValues?: ExpenseFormValues;
   submitLabel: string;
-  onSubmit: (expense: PersonalExpenseCreate | PersonalExpenseCreate[]) => Promise<void>;
+  onSubmit: (
+    expense: PersonalExpenseCreate | PersonalExpenseCreate[],
+  ) => Promise<void>;
   allowSplit?: boolean;
   initialSplitEnabled?: boolean;
 }
@@ -34,7 +39,7 @@ export function ExpenseForm({
 }: ExpenseFormProps) {
   const [values, setValues] = useState(initialValues);
   const [useSplit, setUseSplit] = useState(
-    initialSplitEnabled ?? initialValues.split_participants.length > 0
+    initialSplitEnabled ?? initialValues.split_participants.length > 0,
   );
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -47,7 +52,8 @@ export function ExpenseForm({
         field === "amount" &&
         !useSplit &&
         current.friend_id &&
-        (!current.settlement_amount || current.settlement_amount === current.amount)
+        (!current.settlement_amount ||
+          current.settlement_amount === current.amount)
       ) {
         next.settlement_amount = value;
       }
@@ -56,7 +62,11 @@ export function ExpenseForm({
     });
   };
 
-  const handleSplitChange = (updates: Partial<Pick<ExpenseFormValues, "split_mode" | "split_participants">>) => {
+  const handleSplitChange = (
+    updates: Partial<
+      Pick<ExpenseFormValues, "split_mode" | "split_participants">
+    >,
+  ) => {
     setValues((current) => ({ ...current, ...updates }));
   };
 
@@ -159,7 +169,10 @@ export function ExpenseForm({
         }
       />
 
-      <NotesField value={values.notes} onChange={(value) => updateValue("notes", value)} />
+      <NotesField
+        value={values.notes}
+        onChange={(value) => updateValue("notes", value)}
+      />
 
       {allowSplit ? (
         <FriendSplitSection

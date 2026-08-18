@@ -1,6 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState, createElement } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  createElement,
+} from "react";
 import { useParams } from "next/navigation";
 import { toast } from "sonner";
 import { Check } from "lucide-react";
@@ -20,7 +26,12 @@ import {
   getGroupExpenseWithSplits,
 } from "@/services/groups";
 import { useAuthStore } from "@/store/auth-store";
-import { formatAmount, splitEvenly, colorForId, getInitials } from "./group-detail-utils";
+import {
+  formatAmount,
+  splitEvenly,
+  colorForId,
+  getInitials,
+} from "./group-detail-utils";
 import { getCategoryMeta } from "@/lib/expense-categories";
 import { getApiErrorMessage } from "@/lib/api-error";
 import type { ExpenseSuccessState } from "@/components/expenses/ExpenseSuccessScreen";
@@ -49,7 +60,9 @@ export function useGroupDetail() {
   const [members, setMembers] = useState<GroupMember[]>([]);
   const [expenses, setExpenses] = useState<GroupExpense[]>([]);
   const [balances, setBalances] = useState<GroupBalances>({});
-  const [debtBreakdown, setDebtBreakdown] = useState<GroupDebtBreakdown | null>(null);
+  const [debtBreakdown, setDebtBreakdown] = useState<GroupDebtBreakdown | null>(
+    null,
+  );
   const [settlements, setSettlements] = useState<Settlement[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -58,14 +71,19 @@ export function useGroupDetail() {
 
   // Expense modal
   const [showExpenseModal, setShowExpenseModal] = useState(false);
-  const [editingExpense, setEditingExpense] = useState<GroupExpense | null>(null);
+  const [editingExpense, setEditingExpense] = useState<GroupExpense | null>(
+    null,
+  );
   const [expTitle, setExpTitle] = useState("");
   const [expAmount, setExpAmount] = useState("");
   const [expSplitType, setExpSplitType] = useState<SplitType>("equal");
   const [expCategory, setExpCategory] = useState("");
-  const [expPaymentMethod, setExpPaymentMethod] = useState<PaymentMethod>("upi");
+  const [expPaymentMethod, setExpPaymentMethod] =
+    useState<PaymentMethod>("upi");
   const [splitInputs, setSplitInputs] = useState<Record<string, string>>({});
-  const [selectedParticipants, setSelectedParticipants] = useState<string[]>([]);
+  const [selectedParticipants, setSelectedParticipants] = useState<string[]>(
+    [],
+  );
   const [savingExp, setSavingExp] = useState(false);
   const [expError, setExpError] = useState("");
   const [detailExpense, setDetailExpense] = useState<GroupExpense | null>(null);
@@ -79,13 +97,16 @@ export function useGroupDetail() {
   const [savingMember, setSavingMember] = useState(false);
   const [memberError, setMemberError] = useState("");
   const [removingMemberId, setRemovingMemberId] = useState<string | null>(null);
-  const [memberToRemove, setMemberToRemove] = useState<GroupMember | null>(null);
+  const [memberToRemove, setMemberToRemove] = useState<GroupMember | null>(
+    null,
+  );
 
   // Settle modal
   const [showSettle, setShowSettle] = useState(false);
   const [settleReceiver, setSettleReceiver] = useState("");
   const [settleAmount, setSettleAmount] = useState("");
-  const [settlePaymentMethod, setSettlePaymentMethod] = useState<PaymentMethod>("upi");
+  const [settlePaymentMethod, setSettlePaymentMethod] =
+    useState<PaymentMethod>("upi");
   const [savingSettle, setSavingSettle] = useState(false);
   const [settleError, setSettleError] = useState("");
 
@@ -108,14 +129,15 @@ export function useGroupDetail() {
         balancesResult,
         settlementsResult,
         breakdownResult,
-      ] =
-        await Promise.allSettled([
-          getGroupMembers(groupID),
-          getGroupExpenses(groupID),
-          currentUserId ? getUserBalanceInGroup(groupID, currentUserId) : Promise.resolve({}),
-          getGroupSettlements(groupID),
-          getGroupDebtBreakdown(groupID),
-        ]);
+      ] = await Promise.allSettled([
+        getGroupMembers(groupID),
+        getGroupExpenses(groupID),
+        currentUserId
+          ? getUserBalanceInGroup(groupID, currentUserId)
+          : Promise.resolve({}),
+        getGroupSettlements(groupID),
+        getGroupDebtBreakdown(groupID),
+      ]);
 
       const nextExpenses =
         expensesResult.status === "fulfilled" ? expensesResult.value : [];
@@ -124,12 +146,14 @@ export function useGroupDetail() {
         setMembers(membersResult.value);
       }
       setExpenses(nextExpenses);
-      setBalances(balancesResult.status === "fulfilled" ? balancesResult.value : {});
+      setBalances(
+        balancesResult.status === "fulfilled" ? balancesResult.value : {},
+      );
       setSettlements(
-        settlementsResult.status === "fulfilled" ? settlementsResult.value : []
+        settlementsResult.status === "fulfilled" ? settlementsResult.value : [],
       );
       setDebtBreakdown(
-        breakdownResult.status === "fulfilled" ? breakdownResult.value : null
+        breakdownResult.status === "fulfilled" ? breakdownResult.value : null,
       );
 
       if (
@@ -140,18 +164,27 @@ export function useGroupDetail() {
       ) {
         const detailErrors = [
           membersResult.status === "rejected"
-            ? getApiErrorMessage(membersResult.reason, "Members could not be loaded.")
+            ? getApiErrorMessage(
+                membersResult.reason,
+                "Members could not be loaded.",
+              )
             : null,
           expensesResult.status === "rejected"
-            ? getApiErrorMessage(expensesResult.reason, "Expenses could not be loaded.")
+            ? getApiErrorMessage(
+                expensesResult.reason,
+                "Expenses could not be loaded.",
+              )
             : null,
           balancesResult.status === "rejected"
-            ? getApiErrorMessage(balancesResult.reason, "Balances could not be loaded.")
+            ? getApiErrorMessage(
+                balancesResult.reason,
+                "Balances could not be loaded.",
+              )
             : null,
           settlementsResult.status === "rejected"
             ? getApiErrorMessage(
                 settlementsResult.reason,
-                "Settlements could not be loaded."
+                "Settlements could not be loaded.",
               )
             : null,
         ].filter(Boolean);
@@ -163,8 +196,8 @@ export function useGroupDetail() {
         setBreakdownError(
           getApiErrorMessage(
             breakdownResult.reason,
-            "Expense breakdown could not be loaded."
-          )
+            "Expense breakdown could not be loaded.",
+          ),
         );
       }
     } catch (err) {
@@ -226,10 +259,17 @@ export function useGroupDetail() {
     }
 
     const splits = Object.fromEntries(
-      selectedParticipants.map((userId) => [userId, Number(splitInputs[userId] || 0)])
+      selectedParticipants.map((userId) => [
+        userId,
+        Number(splitInputs[userId] || 0),
+      ]),
     );
 
-    if (Object.values(splits).some((value) => !Number.isFinite(value) || value < 0)) {
+    if (
+      Object.values(splits).some(
+        (value) => !Number.isFinite(value) || value < 0,
+      )
+    ) {
       setExpError("Split values must be zero or greater.");
       return null;
     }
@@ -241,7 +281,7 @@ export function useGroupDetail() {
       setExpError(
         expSplitType === "exact"
           ? `Exact splits must add up to ${formatAmount(amount)}.`
-          : "Percentages must add up to 100%."
+          : "Percentages must add up to 100%.",
       );
       return null;
     }
@@ -280,9 +320,15 @@ export function useGroupDetail() {
     setExpError("");
     try {
       if (editingExpense) {
-        const updated = await updateGroupExpense(groupID, editingExpense.id, payload);
+        const updated = await updateGroupExpense(
+          groupID,
+          editingExpense.id,
+          payload,
+        );
         setExpenses((prev) =>
-          prev.map((expense) => (expense.id === updated.id ? updated : expense))
+          prev.map((expense) =>
+            expense.id === updated.id ? updated : expense,
+          ),
         );
         if (detailExpense?.id === updated.id) {
           await handleViewExpense(updated);
@@ -306,7 +352,12 @@ export function useGroupDetail() {
           avatars: selectedParticipants.map((userId) => {
             const name = userName(userId);
             const color = colorForId(userId);
-            return { src: userAvatar(userId), initials: getInitials(name), bg: color.bg, text: color.text };
+            return {
+              src: userAvatar(userId),
+              initials: getInitials(name),
+              bg: color.bg,
+              text: color.text,
+            };
           }),
         });
       }
@@ -354,7 +405,7 @@ export function useGroupDetail() {
       setSelectedParticipants(
         details.splits
           .map((split) => split.user_id)
-          .filter((userId) => splitParticipantIds.includes(userId))
+          .filter((userId) => splitParticipantIds.includes(userId)),
       );
       const amount = Number(details.expense.amount);
       const nextInputs = Object.fromEntries(
@@ -365,11 +416,13 @@ export function useGroupDetail() {
             expense.split_type === "percentage" && amount > 0
               ? ((Number(split.amount) / amount) * 100).toFixed(2)
               : String(split.amount),
-          ])
+          ]),
       );
       setSplitInputs(nextInputs);
     } catch {
-      setExpError("Could not load existing splits. You can still save a new split.");
+      setExpError(
+        "Could not load existing splits. You can still save a new split.",
+      );
     }
   };
 
@@ -415,7 +468,9 @@ export function useGroupDetail() {
       setMemberToRemove(null);
       await Promise.all([refreshBalances(), refreshBreakdown()]);
     } catch {
-      setSectionError("Could not remove that member — they may have an outstanding balance.");
+      setSectionError(
+        "Could not remove that member — they may have an outstanding balance.",
+      );
     } finally {
       setRemovingMemberId(null);
     }
@@ -459,7 +514,14 @@ export function useGroupDetail() {
           bold: receiverName,
           suffix: ` · ${paymentMethod.toUpperCase()}`,
         },
-        avatars: [{ src: userAvatar(receiverId), initials: getInitials(receiverName), bg: color.bg, text: color.text }],
+        avatars: [
+          {
+            src: userAvatar(receiverId),
+            initials: getInitials(receiverName),
+            bg: color.bg,
+            text: color.text,
+          },
+        ],
       });
       toast.success("Settlement recorded");
     } catch {
@@ -482,17 +544,20 @@ export function useGroupDetail() {
         members.map((member) => [
           member.user_id,
           member.name?.trim() || member.user_id.slice(0, 8),
-        ])
+        ]),
       ),
-    [members]
+    [members],
   );
 
   const memberAvatars = useMemo(
     () =>
       Object.fromEntries(
-        members.map((member) => [member.user_id, member.profile_picture ?? null])
+        members.map((member) => [
+          member.user_id,
+          member.profile_picture ?? null,
+        ]),
       ),
-    [members]
+    [members],
   );
 
   const splitParticipantIds = (() => {
@@ -522,8 +587,11 @@ export function useGroupDetail() {
       const values = splitEvenly(amount, selectedParticipants.length);
       setSplitInputs(
         Object.fromEntries(
-          selectedParticipants.map((userId, index) => [userId, values[index] ?? "0.00"])
-        )
+          selectedParticipants.map((userId, index) => [
+            userId,
+            values[index] ?? "0.00",
+          ]),
+        ),
       );
       return;
     }
@@ -531,8 +599,11 @@ export function useGroupDetail() {
     const values = splitEvenly(100, selectedParticipants.length);
     setSplitInputs(
       Object.fromEntries(
-        selectedParticipants.map((userId, index) => [userId, values[index] ?? "0.00"])
-      )
+        selectedParticipants.map((userId, index) => [
+          userId,
+          values[index] ?? "0.00",
+        ]),
+      ),
     );
   };
 

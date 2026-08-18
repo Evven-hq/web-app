@@ -26,11 +26,17 @@ export function LoadingScreen() {
         >
           Evven
         </p>
-        <h1 className="mt-2 text-lg font-semibold" style={{ color: "var(--evven-text-primary)" }}>
+        <h1
+          className="mt-2 text-lg font-semibold"
+          style={{ color: "var(--evven-text-primary)" }}
+        >
           Preparing your workspace
         </h1>
 
-        <div className="mt-6 flex h-1.5 w-44 overflow-hidden rounded-full" style={{ background: "var(--evven-surface)" }}>
+        <div
+          className="mt-6 flex h-1.5 w-44 overflow-hidden rounded-full"
+          style={{ background: "var(--evven-surface)" }}
+        >
           <div
             className="h-full w-1/2 animate-[evven-load_1.35s_ease-in-out_infinite] rounded-full"
             style={{ background: "var(--evven-accent-primary)" }}

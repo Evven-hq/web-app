@@ -21,15 +21,21 @@ export function RequestsTab({
     <section className="space-y-5">
       <div className="mb-4 flex items-start justify-between gap-3">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.3em]" style={{ color: "var(--evven-text-muted)" }}>
+          <p
+            className="text-xs font-semibold uppercase tracking-[0.3em]"
+            style={{ color: "var(--evven-text-muted)" }}
+          >
             Requests
           </p>
-          <h2 className="mt-2 text-lg font-medium sm:text-xl">Incoming and outgoing</h2>
+          <h2 className="mt-2 text-lg font-medium sm:text-xl">
+            Incoming and outgoing
+          </h2>
         </div>
         <div
           className="flex size-10 shrink-0 items-center justify-center rounded-2xl"
           style={{
-            background: "color-mix(in srgb, var(--evven-accent-secondary) 32%, var(--evven-background))",
+            background:
+              "color-mix(in srgb, var(--evven-accent-secondary) 32%, var(--evven-background))",
             color: "var(--evven-accent-primary)",
           }}
         >
@@ -40,18 +46,27 @@ export function RequestsTab({
       {isLoading ? (
         <div className="space-y-3">
           {[0, 1].map((item) => (
-            <div key={item} className="h-24 rounded-3xl border border-[var(--evven-border)] bg-[var(--evven-surface)] animate-pulse" />
+            <div
+              key={item}
+              className="h-24 rounded-3xl border border-[var(--evven-border)] bg-[var(--evven-surface)] animate-pulse"
+            />
           ))}
         </div>
       ) : requests.incoming.length === 0 && requests.outgoing.length === 0 ? (
-        <div className="rounded-3xl border border-dashed px-4 py-6 text-sm text-muted-foreground" style={{ borderColor: "var(--evven-border)" }}>
+        <div
+          className="rounded-3xl border border-dashed px-4 py-6 text-sm text-muted-foreground"
+          style={{ borderColor: "var(--evven-border)" }}
+        >
           No pending requests right now.
         </div>
       ) : (
         <div className="grid gap-3 xl:grid-cols-2">
           {requests.incoming.length > 0 ? (
             <div>
-              <p className="mb-3 text-xs font-semibold uppercase tracking-[0.3em]" style={{ color: "var(--evven-text-muted)" }}>
+              <p
+                className="mb-3 text-xs font-semibold uppercase tracking-[0.3em]"
+                style={{ color: "var(--evven-text-muted)" }}
+              >
                 Incoming
               </p>
               <div className="space-y-2">
@@ -71,7 +86,10 @@ export function RequestsTab({
 
           {requests.outgoing.length > 0 ? (
             <div>
-              <p className="mb-3 text-xs font-semibold uppercase tracking-[0.3em]" style={{ color: "var(--evven-text-muted)" }}>
+              <p
+                className="mb-3 text-xs font-semibold uppercase tracking-[0.3em]"
+                style={{ color: "var(--evven-text-muted)" }}
+              >
                 Outgoing
               </p>
               <div className="space-y-2">

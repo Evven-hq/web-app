@@ -6,12 +6,16 @@ export function getActivityTime(entry: FriendActivity) {
 }
 
 export function getActivityType(entry: FriendActivity) {
-  if (entry.type === "settlement" || entry.settlement_amount) return "settlement";
+  if (entry.type === "settlement" || entry.settlement_amount)
+    return "settlement";
   return "expense";
 }
 
 export function getActivityTitle(entry: FriendActivity) {
-  return entry.title || (getActivityType(entry) === "settlement" ? "Settlement" : "Expense");
+  return (
+    entry.title ||
+    (getActivityType(entry) === "settlement" ? "Settlement" : "Expense")
+  );
 }
 
 export function getActivityMeta(entry: FriendActivity, friendName: string) {

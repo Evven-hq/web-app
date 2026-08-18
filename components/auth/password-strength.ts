@@ -9,7 +9,8 @@ export function getPasswordStrength(password: string): PasswordStrength {
   if (!password) {
     return {
       label: "Start typing",
-      helper: "Use 8-16 characters with a mix of letters, numbers, and symbols.",
+      helper:
+        "Use 8-16 characters with a mix of letters, numbers, and symbols.",
       score: 0,
       color: "var(--evven-text-muted)",
     };
@@ -37,7 +38,9 @@ export function getPasswordStrength(password: string): PasswordStrength {
   const hasUpper = /[A-Z]/.test(password);
   const hasNumber = /\d/.test(password);
   const hasSymbol = /[^A-Za-z0-9]/.test(password);
-  const variety = [hasLower, hasUpper, hasNumber, hasSymbol].filter(Boolean).length;
+  const variety = [hasLower, hasUpper, hasNumber, hasSymbol].filter(
+    Boolean,
+  ).length;
 
   if (variety <= 1) {
     return {

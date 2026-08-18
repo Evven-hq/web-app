@@ -34,7 +34,9 @@ export function PageTransition({ children }: { children: React.ReactNode }) {
   const shouldReduceMotion = useReducedMotion();
   const { direction } = useNavigation();
 
-  const variants = shouldReduceMotion ? getReducedVariants() : getVariants(direction);
+  const variants = shouldReduceMotion
+    ? getReducedVariants()
+    : getVariants(direction);
 
   return (
     <AnimatePresence mode="wait" initial={false}>

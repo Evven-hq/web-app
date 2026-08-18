@@ -37,7 +37,9 @@ function LoginForm() {
       router.push("/dashboard");
     } catch (err: unknown) {
       if (isAxiosError(err) && err.response?.status === 403) {
-        router.push(`/verify-otp?email=${encodeURIComponent(email)}&reason=unverified`);
+        router.push(
+          `/verify-otp?email=${encodeURIComponent(email)}&reason=unverified`,
+        );
         return;
       }
 
@@ -63,14 +65,17 @@ function LoginForm() {
       >
         {isSessionExpired && (
           <div className="mb-4 rounded-2xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-left text-sm leading-6 text-amber-200">
-            Your desktop session expired or the token was unavailable. Log in again to keep Evven open.
+            Your desktop session expired or the token was unavailable. Log in
+            again to keep Evven open.
           </div>
         )}
       </AuthHeader>
 
       <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
         <div className="space-y-2">
-          <Label htmlFor="email" className="text-sm font-medium">Email</Label>
+          <Label htmlFor="email" className="text-sm font-medium">
+            Email
+          </Label>
           <Input
             id="email"
             type="email"
@@ -85,8 +90,13 @@ function LoginForm() {
 
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <Label htmlFor="password" className="text-sm font-medium">Password</Label>
-            <Link href="/forgot-password" className="text-xs font-medium text-primary hover:underline">
+            <Label htmlFor="password" className="text-sm font-medium">
+              Password
+            </Label>
+            <Link
+              href="/forgot-password"
+              className="text-xs font-medium text-primary hover:underline"
+            >
               Forgot password?
             </Link>
           </div>
@@ -139,7 +149,10 @@ function LoginForm() {
 
       <div className="mt-7 text-center text-sm text-muted-foreground sm:mt-8">
         Don&apos;t have an account?{" "}
-        <Link href="/signup" className="font-semibold text-primary transition-colors hover:text-primary/80">
+        <Link
+          href="/signup"
+          className="font-semibold text-primary transition-colors hover:text-primary/80"
+        >
           Sign up
         </Link>
       </div>
@@ -152,7 +165,13 @@ export default function Login() {
     <Suspense
       fallback={
         <div className="flex h-screen items-center justify-center bg-background">
-          <div className="size-5 animate-spin rounded-full border-2 border-r-transparent" style={{ borderColor: "var(--evven-accent-primary)", borderRightColor: "transparent" }} />
+          <div
+            className="size-5 animate-spin rounded-full border-2 border-r-transparent"
+            style={{
+              borderColor: "var(--evven-accent-primary)",
+              borderRightColor: "transparent",
+            }}
+          />
         </div>
       }
     >

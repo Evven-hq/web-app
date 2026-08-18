@@ -36,8 +36,12 @@ export function FriendTabsBar({
               onClick={() => onChange(tab.id)}
               className="inline-flex flex-1 basis-0 items-center justify-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-all"
               style={{
-                background: isActive ? "var(--evven-accent-primary)" : "transparent",
-                color: isActive ? "var(--evven-text-inverse)" : "var(--evven-text-muted)",
+                background: isActive
+                  ? "var(--evven-accent-primary)"
+                  : "transparent",
+                color: isActive
+                  ? "var(--evven-text-inverse)"
+                  : "var(--evven-text-muted)",
               }}
             >
               {tab.label}
@@ -48,7 +52,9 @@ export function FriendTabsBar({
                     background: isActive
                       ? "color-mix(in srgb, var(--evven-text-inverse) 16%, transparent)"
                       : "color-mix(in srgb, var(--evven-accent-secondary) 28%, var(--evven-background))",
-                    color: isActive ? "var(--evven-text-inverse)" : "var(--evven-accent-primary)",
+                    color: isActive
+                      ? "var(--evven-text-inverse)"
+                      : "var(--evven-accent-primary)",
                   }}
                 >
                   {tab.count}

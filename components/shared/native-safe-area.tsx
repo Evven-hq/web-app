@@ -17,11 +17,13 @@ export default function NativeSafeArea() {
   useEffect(() => {
     if (!Capacitor.isNativePlatform()) return;
 
-    import("@capacitor-community/safe-area").then(({ SafeArea, SystemBarsStyle }) => {
-      void SafeArea.setSystemBarsStyle({
-        style: SystemBarsStyle.Light,
-      });
-    });
+    import("@capacitor-community/safe-area").then(
+      ({ SafeArea, SystemBarsStyle }) => {
+        void SafeArea.setSystemBarsStyle({
+          style: SystemBarsStyle.Light,
+        });
+      },
+    );
   }, []);
 
   return null;

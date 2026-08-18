@@ -48,7 +48,7 @@ export function formatLongDate(value?: string | null, fallback = "") {
 
 export function formatRelativeTime(
   value?: string | null,
-  fallbackFormatter: (value: string) => string = formatDate
+  fallbackFormatter: (value: string) => string = formatDate,
 ) {
   if (!value) return "just now";
 

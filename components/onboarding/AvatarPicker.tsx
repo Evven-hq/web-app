@@ -24,14 +24,27 @@ export function AvatarPicker({
 
   return (
     <div className="w-full">
-      <AvatarGrid options={options} selectedSeed={selectedSeed} onSelect={selectSeed} />
+      <AvatarGrid
+        options={options}
+        selectedSeed={selectedSeed}
+        onSelect={selectSeed}
+      />
 
       <div className="mt-5 flex items-center justify-between gap-3">
-        <Button type="button" variant="outline" onClick={shuffle} disabled={isSaving}>
+        <Button
+          type="button"
+          variant="outline"
+          onClick={shuffle}
+          disabled={isSaving}
+        >
           <Shuffle size={15} />
           Shuffle
         </Button>
-        <Button type="button" onClick={() => onConfirm(selectedUrl)} disabled={isSaving}>
+        <Button
+          type="button"
+          onClick={() => onConfirm(selectedUrl)}
+          disabled={isSaving}
+        >
           {isSaving && <Loader2 size={15} className="animate-spin" />}
           {isSaving ? "Saving..." : confirmLabel}
         </Button>

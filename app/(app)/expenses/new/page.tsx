@@ -4,7 +4,10 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
-import { ExpenseForm, type ExpenseFormValues } from "@/components/expenses/ExpenseForm";
+import {
+  ExpenseForm,
+  type ExpenseFormValues,
+} from "@/components/expenses/ExpenseForm";
 import {
   buildPersonalSuccess,
   ExpenseSuccessScreen,
@@ -16,9 +19,11 @@ export default function NewExpensePage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [success, setSuccess] = useState<ExpenseSuccessState | null>(null);
-  const friendId = searchParams.get("friend_id") ?? searchParams.get("ghost_id") ?? "";
+  const friendId =
+    searchParams.get("friend_id") ?? searchParams.get("ghost_id") ?? "";
   const direction = searchParams.get("direction");
-  const splitEnabled = searchParams.get("split") === "1" || searchParams.get("split") === "true";
+  const splitEnabled =
+    searchParams.get("split") === "1" || searchParams.get("split") === "true";
 
   const initialValues: ExpenseFormValues = {
     title: "",
@@ -29,10 +34,13 @@ export default function NewExpensePage() {
     payment_method: "upi",
     friend_id: friendId,
     settlement_direction:
-      direction === "you_owe" || direction === "they_owe" ? direction : "they_owe",
+      direction === "you_owe" || direction === "they_owe"
+        ? direction
+        : "they_owe",
     settlement_amount: "",
     split_mode: "equal",
-    split_participants: splitEnabled && friendId ? [{ friend_id: friendId }] : [],
+    split_participants:
+      splitEnabled && friendId ? [{ friend_id: friendId }] : [],
   };
 
   return (
@@ -59,7 +67,7 @@ export default function NewExpensePage() {
             onSubmit={async (expense) => {
               if (Array.isArray(expense)) {
                 const created = await Promise.all(
-                  expense.map((item) => createPersonalExpense(item))
+                  expense.map((item) => createPersonalExpense(item)),
                 );
                 setSuccess(buildPersonalSuccess(created));
               } else {

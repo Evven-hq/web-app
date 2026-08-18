@@ -23,7 +23,8 @@ export function BalancesTab({
   onSettle: SettleFn;
 }) {
   const colorFor = (uid: string) => {
-    const colorIdx = members.findIndex((member) => member.user_id === uid) % COLORS.length;
+    const colorIdx =
+      members.findIndex((member) => member.user_id === uid) % COLORS.length;
     return COLORS[Math.max(0, colorIdx)];
   };
   const balanceEntries = Object.entries(balances)
@@ -34,8 +35,15 @@ export function BalancesTab({
     <div className="h-full overflow-y-auto pr-1">
       {balanceEntries.length === 0 ? (
         <div className="card rounded-2xl p-8 text-center">
-          <Scale size={20} className="mx-auto mb-3" style={{ color: "var(--evven-text-muted)" }} />
-          <p className="text-sm font-medium mb-1" style={{ color: "var(--evven-text-primary)" }}>
+          <Scale
+            size={20}
+            className="mx-auto mb-3"
+            style={{ color: "var(--evven-text-muted)" }}
+          />
+          <p
+            className="text-sm font-medium mb-1"
+            style={{ color: "var(--evven-text-primary)" }}
+          >
             All settled up
           </p>
           <p className="text-xs" style={{ color: "var(--evven-text-muted)" }}>
@@ -56,7 +64,10 @@ export function BalancesTab({
                 className="card flex items-center gap-3 px-4 py-3.5 rounded-2xl"
               >
                 <Avatar className="size-9" aria-label={userName(uid)}>
-                  <AvatarImage src={userAvatar(uid) ?? undefined} alt={userName(uid)} />
+                  <AvatarImage
+                    src={userAvatar(uid) ?? undefined}
+                    alt={userName(uid)}
+                  />
                   <AvatarFallback
                     className="text-xs font-semibold"
                     style={{ background: color.bg, color: color.text }}
@@ -65,14 +76,19 @@ export function BalancesTab({
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium" style={{ color: "var(--evven-text-primary)" }}>
+                  <p
+                    className="text-sm font-medium"
+                    style={{ color: "var(--evven-text-primary)" }}
+                  >
                     {userName(uid)}
                     {isMe ? " (you)" : ""}
                   </p>
                   <p
                     className="text-xs mt-0.5"
                     style={{
-                      color: youOwe ? "var(--evven-destructive-text)" : "var(--evven-success-text)",
+                      color: youOwe
+                        ? "var(--evven-destructive-text)"
+                        : "var(--evven-success-text)",
                     }}
                   >
                     {youOwe

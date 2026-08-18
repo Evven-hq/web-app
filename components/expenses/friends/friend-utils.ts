@@ -22,7 +22,7 @@ export function normalizeSearchText(value?: string | number | null) {
 
 export function friendMatchesSearch(
   friend: Pick<Friend, "name" | "user_code" | "balance" | "net_balance">,
-  query: string
+  query: string,
 ) {
   const normalizedQuery = normalizeSearchText(query);
   if (!normalizedQuery) return true;
@@ -32,11 +32,15 @@ export function friendMatchesSearch(
     .some((value) => normalizeSearchText(value).includes(normalizedQuery));
 }
 
-export function getFriendBalance(friend: Pick<Friend, "balance" | "net_balance" | "name">) {
+export function getFriendBalance(
+  friend: Pick<Friend, "balance" | "net_balance" | "name">,
+) {
   return Number(friend.balance ?? friend.net_balance ?? 0);
 }
 
-export function getFriendBalanceLabel(friend: Pick<Friend, "balance" | "net_balance" | "name">) {
+export function getFriendBalanceLabel(
+  friend: Pick<Friend, "balance" | "net_balance" | "name">,
+) {
   const balance = getFriendBalance(friend);
 
   if (!Number.isFinite(balance) || balance === 0) {
@@ -48,7 +52,9 @@ export function getFriendBalanceLabel(friend: Pick<Friend, "balance" | "net_bala
     : `You paid ${formatMoney(balance)} more`;
 }
 
-export function getFriendBalanceState(friend: Pick<Friend, "balance" | "net_balance" | "name">) {
+export function getFriendBalanceState(
+  friend: Pick<Friend, "balance" | "net_balance" | "name">,
+) {
   const balance = getFriendBalance(friend);
 
   if (!Number.isFinite(balance) || balance === 0) {
@@ -79,7 +85,7 @@ export function getFriendBalanceState(friend: Pick<Friend, "balance" | "net_bala
 
 export function getFriendExpenseDirectionLabel(
   direction: SettlementDirection,
-  friendName?: string | null
+  friendName?: string | null,
 ) {
   if (direction === "they_owe") {
     return "You paid";
@@ -126,7 +132,9 @@ export function getFriendHistoryDirection(expense: PersonalExpense) {
   return "Expense";
 }
 
-export function getDefaultSettlementDirection(balance: string | number | null | undefined): SettlementDirection {
+export function getDefaultSettlementDirection(
+  balance: string | number | null | undefined,
+): SettlementDirection {
   const numericBalance = Number(balance ?? 0);
   return numericBalance > 0 ? "they_owe" : "you_owe";
 }

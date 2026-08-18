@@ -15,7 +15,8 @@ export function SplitHeader({
       <div
         className="flex size-10 shrink-0 items-center justify-center rounded-2xl"
         style={{
-          background: "color-mix(in srgb, var(--evven-accent-secondary) 38%, var(--evven-background))",
+          background:
+            "color-mix(in srgb, var(--evven-accent-secondary) 38%, var(--evven-background))",
           color: "var(--evven-accent-primary)",
         }}
       >
@@ -32,7 +33,8 @@ export function SplitHeader({
           </div>
         </div>
         <p className="mt-1 text-xs text-muted-foreground">
-          Divide this expense across multiple friends without leaving the current flow.
+          Divide this expense across multiple friends without leaving the
+          current flow.
         </p>
       </div>
     </div>

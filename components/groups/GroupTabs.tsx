@@ -40,8 +40,12 @@ export function GroupTabs({
             style={{
               flex: active ? "1.7 1 0%" : "1 1 0%",
               padding: "10px 6px",
-              background: active ? "var(--evven-accent-primary)" : "transparent",
-              color: active ? "var(--evven-text-inverse)" : "var(--evven-text-muted)",
+              background: active
+                ? "var(--evven-accent-primary)"
+                : "transparent",
+              color: active
+                ? "var(--evven-text-inverse)"
+                : "var(--evven-text-muted)",
               boxShadow: active
                 ? "0 3px 10px -3px color-mix(in srgb, var(--evven-accent-primary) 40%, transparent)"
                 : "none",

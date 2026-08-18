@@ -25,8 +25,10 @@ export function CategoryPicker({
               onClick={() => onChange(value === cat.value ? "" : cat.value)}
               className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-all"
               style={{
-                background: value === cat.value ? cat.bg : "var(--evven-surface)",
-                color: value === cat.value ? cat.text : "var(--evven-text-muted)",
+                background:
+                  value === cat.value ? cat.bg : "var(--evven-surface)",
+                color:
+                  value === cat.value ? cat.text : "var(--evven-text-muted)",
                 border: `1px solid ${
                   value === cat.value ? cat.bg : "var(--evven-border)"
                 }`,

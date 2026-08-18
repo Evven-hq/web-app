@@ -16,61 +16,61 @@
   --evven-error: #c0392b;
 
   /* Status colors */
-  --evven-success-bg: #E1F5EE;
-  --evven-success-text: #0F6E56;
+  --evven-success-bg: #e1f5ee;
+  --evven-success-text: #0f6e56;
 
-  --evven-warning-bg: #FFF8E7;
-  --evven-warning-border: #F3D08A;
-  --evven-warning-text: #7A4A00;
+  --evven-warning-bg: #fff8e7;
+  --evven-warning-border: #f3d08a;
+  --evven-warning-text: #7a4a00;
 
-  --evven-error-bg: #FEF2F2;
-  --evven-error-border: #FECACA;
-  --evven-error-text: #B91C1C;
+  --evven-error-bg: #fef2f2;
+  --evven-error-border: #fecaca;
+  --evven-error-text: #b91c1c;
 
-  --evven-destructive-bg: #FEF2F2;
-  --evven-destructive-text: #A32D2D;
+  --evven-destructive-bg: #fef2f2;
+  --evven-destructive-text: #a32d2d;
 
   /* Selection / active state */
-  --evven-selected-bg: #EEEDFE;
-  --evven-selected-text: #534AB7;
+  --evven-selected-bg: #eeedfe;
+  --evven-selected-text: #534ab7;
 
   /* Avatar palette (rotates by member index) */
-  --evven-avatar-1-bg: #EEEDFE;
-  --evven-avatar-1-text: #534AB7;
-  --evven-avatar-2-bg: #E1F5EE;
-  --evven-avatar-2-text: #0F6E56;
-  --evven-avatar-3-bg: #FAECE7;
-  --evven-avatar-3-text: #993C1D;
-  --evven-avatar-4-bg: #FBEAF0;
+  --evven-avatar-1-bg: #eeedfe;
+  --evven-avatar-1-text: #534ab7;
+  --evven-avatar-2-bg: #e1f5ee;
+  --evven-avatar-2-text: #0f6e56;
+  --evven-avatar-3-bg: #faece7;
+  --evven-avatar-3-text: #993c1d;
+  --evven-avatar-4-bg: #fbeaf0;
   --evven-avatar-4-text: #993556;
-  --evven-avatar-5-bg: #E6F1FB;
-  --evven-avatar-5-text: #185FA5;
-  --evven-avatar-6-bg: #FEF9E7;
-  --evven-avatar-6-text: #8A6C0A;
+  --evven-avatar-5-bg: #e6f1fb;
+  --evven-avatar-5-text: #185fa5;
+  --evven-avatar-6-bg: #fef9e7;
+  --evven-avatar-6-text: #8a6c0a;
 
   /* Expense category colors */
-  --evven-category-food-bg: #FAEEDA;
-  --evven-category-food-text: #854F0B;
-  --evven-category-travel-bg: #E6F1FB;
-  --evven-category-travel-text: #185FA5;
-  --evven-category-home-bg: #EAF3DE;
-  --evven-category-home-text: #3B6D11;
-  --evven-category-entertainment-bg: #FBEAF0;
+  --evven-category-food-bg: #faeeda;
+  --evven-category-food-text: #854f0b;
+  --evven-category-travel-bg: #e6f1fb;
+  --evven-category-travel-text: #185fa5;
+  --evven-category-home-bg: #eaf3de;
+  --evven-category-home-text: #3b6d11;
+  --evven-category-entertainment-bg: #fbeaf0;
   --evven-category-entertainment-text: #993556;
-  --evven-category-utilities-bg: #FEF6E0;
-  --evven-category-utilities-text: #8A6C0A;
-  --evven-category-shopping-bg: #EEEDFE;
-  --evven-category-shopping-text: #534AB7;
-  --evven-category-health-bg: #E1F5EE;
-  --evven-category-health-text: #0F6E56;
-  --evven-category-other-bg: #EEEDFE;
-  --evven-category-other-text: #534AB7;
+  --evven-category-utilities-bg: #fef6e0;
+  --evven-category-utilities-text: #8a6c0a;
+  --evven-category-shopping-bg: #eeedfe;
+  --evven-category-shopping-text: #534ab7;
+  --evven-category-health-bg: #e1f5ee;
+  --evven-category-health-text: #0f6e56;
+  --evven-category-other-bg: #eeedfe;
+  --evven-category-other-text: #534ab7;
 
   /* Payment mode colors */
-  --evven-payment-upi-bg: #E6F1FB;
-  --evven-payment-upi-text: #185FA5;
-  --evven-payment-cash-bg: #EAF3DE;
-  --evven-payment-cash-text: #3B6D11;
+  --evven-payment-upi-bg: #e6f1fb;
+  --evven-payment-upi-text: #185fa5;
+  --evven-payment-cash-bg: #eaf3de;
+  --evven-payment-cash-text: #3b6d11;
 
   --evven-modal-page-blur: 20px;
   --evven-modal-page-opacity: 0.72;
@@ -534,7 +534,7 @@
   --font-sans: "Satoshi", sans-serif;
   --font-heading: "Xanh Mono", monospace;
   --font-mono: "JetBrains Mono", monospace;
-  --font-hero-heading : "Baskervville", latin;
+  --font-hero-heading: "Baskervville", latin;
 }
 
 ::selection {
@@ -563,16 +563,16 @@
   body {
     overflow-x: hidden;
   }
-  
+
   html.native-shell,
   html.native-shell body {
-    scrollbar-width: none;   /* Firefox */
+    scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none; /* old Edge/IE */
   }
   html.native-shell::-webkit-scrollbar,
   html.native-shell body::-webkit-scrollbar {
     display: none;
-   width: 0;
+    width: 0;
     height: 0;
   }
 
@@ -622,7 +622,12 @@
 
   * {
     scrollbar-width: thin;
-    scrollbar-color: color-mix(in srgb, var(--evven-accent-primary) 55%, transparent) transparent;
+    scrollbar-color: color-mix(
+        in srgb,
+        var(--evven-accent-primary) 55%,
+        transparent
+      )
+      transparent;
   }
 
   *::-webkit-scrollbar {
@@ -638,12 +643,21 @@
     border: 2px solid transparent;
     border-radius: 999px;
     background-clip: content-box;
-    background-color: color-mix(in srgb, var(--evven-accent-primary) 58%, var(--evven-border));
-    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--evven-text-primary) 8%, transparent);
+    background-color: color-mix(
+      in srgb,
+      var(--evven-accent-primary) 58%,
+      var(--evven-border)
+    );
+    box-shadow: inset 0 0 0 1px
+      color-mix(in srgb, var(--evven-text-primary) 8%, transparent);
   }
 
   *::-webkit-scrollbar-thumb:hover {
-    background-color: color-mix(in srgb, var(--evven-accent-primary) 78%, var(--evven-text-primary));
+    background-color: color-mix(
+      in srgb,
+      var(--evven-accent-primary) 78%,
+      var(--evven-text-primary)
+    );
   }
 
   *::-webkit-scrollbar-corner {
@@ -689,11 +703,21 @@
   position: relative;
   overflow: hidden;
   background:
-    radial-gradient(circle at 50% 35%, rgba(250, 248, 245, 0.22), transparent 28rem),
-    radial-gradient(circle at 50% 100%, rgba(45, 90, 79, 0.18), transparent 34rem),
+    radial-gradient(
+      circle at 50% 35%,
+      rgba(250, 248, 245, 0.22),
+      transparent 28rem
+    ),
+    radial-gradient(
+      circle at 50% 100%,
+      rgba(45, 90, 79, 0.18),
+      transparent 34rem
+    ),
     linear-gradient(180deg, rgba(250, 248, 245, 0.28), rgba(26, 24, 22, 0.28));
-  -webkit-backdrop-filter: blur(var(--evven-modal-backdrop-blur)) saturate(180%) contrast(88%) brightness(98%);
-  backdrop-filter: blur(var(--evven-modal-backdrop-blur)) saturate(180%) contrast(88%) brightness(98%);
+  -webkit-backdrop-filter: blur(var(--evven-modal-backdrop-blur)) saturate(180%)
+    contrast(88%) brightness(98%);
+  backdrop-filter: blur(var(--evven-modal-backdrop-blur)) saturate(180%)
+    contrast(88%) brightness(98%);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.22),
     inset 0 0 180px rgba(26, 24, 22, 0.18);
@@ -734,13 +758,16 @@ body:has(.modal-backdrop) .app-modal-blur-target {
 @keyframes modal-backdrop-in {
   from {
     opacity: 0;
-    -webkit-backdrop-filter: blur(0) saturate(100%) contrast(100%) brightness(100%);
+    -webkit-backdrop-filter: blur(0) saturate(100%) contrast(100%)
+      brightness(100%);
     backdrop-filter: blur(0) saturate(100%) contrast(100%) brightness(100%);
   }
   to {
     opacity: 1;
-    -webkit-backdrop-filter: blur(var(--evven-modal-backdrop-blur)) saturate(180%) contrast(88%) brightness(98%);
-    backdrop-filter: blur(var(--evven-modal-backdrop-blur)) saturate(180%) contrast(88%) brightness(98%);
+    -webkit-backdrop-filter: blur(var(--evven-modal-backdrop-blur))
+      saturate(180%) contrast(88%) brightness(98%);
+    backdrop-filter: blur(var(--evven-modal-backdrop-blur)) saturate(180%)
+      contrast(88%) brightness(98%);
   }
 }
 
@@ -796,14 +823,14 @@ body:has(.modal-backdrop) .app-modal-blur-target {
   color: var(--evven-text-muted);
 }
 ::selection {
-  background-color: #2d5a4f; 
-  color: #f9f7f4;            
+  background-color: #2d5a4f;
+  color: #f9f7f4;
 }
 
 @media (max-width: 768px) {
   html {
-    scrollbar-width: none;      /* Firefox */
-    -ms-overflow-style: none;   /* IE/old Edge */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/old Edge */
   }
 
   html::-webkit-scrollbar,

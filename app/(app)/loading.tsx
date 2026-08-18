@@ -7,7 +7,10 @@ export default function AppLoading() {
       >
         <span
           className="inline-block size-5 animate-spin rounded-full border-2 border-t-transparent"
-          style={{ borderColor: "var(--evven-accent-primary)", borderTopColor: "transparent" }}
+          style={{
+            borderColor: "var(--evven-accent-primary)",
+            borderTopColor: "transparent",
+          }}
         />
       </div>
     </div>

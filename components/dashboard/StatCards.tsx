@@ -37,7 +37,11 @@ export function StatCards({
         value={topCategory ? topCategory[0] : "—"}
         sub={topCategory ? formatAmount(topCategory[1]) : "no data yet"}
         progress={topCategoryShare}
-        color={topCategory ? getCategoryMeta(topCategory[0]).text : "var(--evven-accent-primary)"}
+        color={
+          topCategory
+            ? getCategoryMeta(topCategory[0]).text
+            : "var(--evven-accent-primary)"
+        }
       />
     </div>
   );

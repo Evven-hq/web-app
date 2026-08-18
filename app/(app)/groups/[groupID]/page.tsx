@@ -104,14 +104,20 @@ export default function GroupDetailPage() {
 
   if (error || !group) {
     return (
-      <div className="max-w-2xl mx-auto px-4 py-8 text-sm" style={{ color: "var(--evven-error)" }}>
+      <div
+        className="max-w-2xl mx-auto px-4 py-8 text-sm"
+        style={{ color: "var(--evven-error)" }}
+      >
         {error ?? "Group not found."}
       </div>
     );
   }
 
   return (
-    <div className="h-full overflow-hidden" style={{ background: "var(--evven-background)" }}>
+    <div
+      className="h-full overflow-hidden"
+      style={{ background: "var(--evven-background)" }}
+    >
       <div className="mx-auto flex h-full max-w-2xl flex-col px-4 py-6">
         <div className="shrink-0">
           <GroupHeader
@@ -247,7 +253,9 @@ export default function GroupDetailPage() {
         memberName={memberToRemove ? userName(memberToRemove.user_id) : ""}
         onClose={() => setMemberToRemove(null)}
         onConfirm={confirmRemoveMember}
-        removing={Boolean(memberToRemove && removingMemberId === memberToRemove.user_id)}
+        removing={Boolean(
+          memberToRemove && removingMemberId === memberToRemove.user_id,
+        )}
       />
 
       <SettleModal
@@ -265,7 +273,11 @@ export default function GroupDetailPage() {
       />
 
       {success ? (
-        <ExpenseSuccessScreen open {...success} onDone={() => setSuccess(null)} />
+        <ExpenseSuccessScreen
+          open
+          {...success}
+          onDone={() => setSuccess(null)}
+        />
       ) : null}
     </div>
   );

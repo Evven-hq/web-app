@@ -37,7 +37,7 @@ export function FriendsWorkspace() {
   const [copied, setCopied] = useState(false);
   const [activeTab, setActiveTab] = useState<FriendTab>("friend");
   const [selectedFriendId, setSelectedFriendId] = useState<string | null>(
-    () => searchParams.get("friend_id") ?? searchParams.get("ghost_id") ?? null
+    () => searchParams.get("friend_id") ?? searchParams.get("ghost_id") ?? null,
   );
 
   const friendsQuery = useQuery({
@@ -57,8 +57,12 @@ export function FriendsWorkspace() {
 
     return [...source]
       .sort((a, b) => {
-        const aTime = new Date(a.last_activity_at ?? a.updated_at ?? a.created_at ?? 0).getTime();
-        const bTime = new Date(b.last_activity_at ?? b.updated_at ?? b.created_at ?? 0).getTime();
+        const aTime = new Date(
+          a.last_activity_at ?? a.updated_at ?? a.created_at ?? 0,
+        ).getTime();
+        const bTime = new Date(
+          b.last_activity_at ?? b.updated_at ?? b.created_at ?? 0,
+        ).getTime();
         if (aTime !== bTime) return bTime - aTime;
         return a.name.localeCompare(b.name);
       })
@@ -66,7 +70,8 @@ export function FriendsWorkspace() {
   }, [friendsQuery.data, search]);
 
   useEffect(() => {
-    const nextParam = searchParams.get("friend_id") ?? searchParams.get("ghost_id");
+    const nextParam =
+      searchParams.get("friend_id") ?? searchParams.get("ghost_id");
     if (nextParam) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setSelectedFriendId(nextParam);
@@ -81,8 +86,10 @@ export function FriendsWorkspace() {
   }, [friends, selectedFriendId]);
 
   const selectedFriendFromList = useMemo(
-    () => friendsQuery.data?.find((friend) => friend.id === selectedFriendId) ?? null,
-    [friendsQuery.data, selectedFriendId]
+    () =>
+      friendsQuery.data?.find((friend) => friend.id === selectedFriendId) ??
+      null,
+    [friendsQuery.data, selectedFriendId],
   );
 
   const detailQuery = useQuery({
@@ -96,17 +103,23 @@ export function FriendsWorkspace() {
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (document.visibilityState === "visible" && selectedFriendId) {
-        void queryClient.invalidateQueries({ queryKey: ["friend-detail", selectedFriendId] });
+        void queryClient.invalidateQueries({
+          queryKey: ["friend-detail", selectedFriendId],
+        });
       }
     };
 
     document.addEventListener("visibilitychange", handleVisibilityChange);
-    return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
+    return () =>
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
   }, [selectedFriendId, queryClient]);
 
-  const selectedFriend: FriendDetail | null = detailQuery.data ?? selectedFriendFromList;
+  const selectedFriend: FriendDetail | null =
+    detailQuery.data ?? selectedFriendFromList;
   const friendBalance = selectedFriend ? getFriendBalance(selectedFriend) : 0;
-  const friendBalanceState = selectedFriend ? getFriendBalanceState(selectedFriend) : null;
+  const friendBalanceState = selectedFriend
+    ? getFriendBalanceState(selectedFriend)
+    : null;
   const requests = requestsQuery.data ?? { incoming: [], outgoing: [] };
 
   const acceptMutation = useMutation({
@@ -115,7 +128,9 @@ export function FriendsWorkspace() {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ["friends"] }),
         queryClient.invalidateQueries({ queryKey: ["friend-requests"] }),
-        queryClient.invalidateQueries({ queryKey: ["friend-detail", friend.id] }),
+        queryClient.invalidateQueries({
+          queryKey: ["friend-detail", friend.id],
+        }),
       ]);
       setSelectedFriendId(friend.id);
       setActiveTab("friend");
@@ -148,9 +163,15 @@ export function FriendsWorkspace() {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ["friends"] }),
         queryClient.invalidateQueries({ queryKey: ["friend-requests"] }),
-        removedId ? queryClient.invalidateQueries({ queryKey: ["friend-detail", removedId] }) : Promise.resolve(),
+        removedId
+          ? queryClient.invalidateQueries({
+              queryKey: ["friend-detail", removedId],
+            })
+          : Promise.resolve(),
       ]);
-      const remaining = (friendsQuery.data ?? []).filter((friend) => friend.id !== removedId);
+      const remaining = (friendsQuery.data ?? []).filter(
+        (friend) => friend.id !== removedId,
+      );
       setSelectedFriendId(remaining[0]?.id ?? null);
       setActiveTab(remaining[0] ? "friend" : "friends");
     },
@@ -169,7 +190,9 @@ export function FriendsWorkspace() {
 
   const handleOpenSettlement = () => {
     if (!selectedFriend) return;
-    router.push(`/expenses/new?friend_id=${selectedFriend.id}&direction=${getDefaultSettlementDirection(friendBalance)}`);
+    router.push(
+      `/expenses/new?friend_id=${selectedFriend.id}&direction=${getDefaultSettlementDirection(friendBalance)}`,
+    );
   };
 
   const selectFriend = (friendId: string) => {
@@ -190,7 +213,10 @@ export function FriendsWorkspace() {
         />
 
         <div className="rounded-[32px] bg-[var(--evven-card-background)] p-4 shadow-[0_12px_40px_rgba(26,24,22,0.04)] sm:p-5 lg:p-6">
-          <div key={activeTab} className="animate-[evven-tab-panel-in_220ms_ease-out]">
+          <div
+            key={activeTab}
+            className="animate-[evven-tab-panel-in_220ms_ease-out]"
+          >
             {activeTab === "friend" && (
               <FriendDetailTab
                 selectedFriend={selectedFriend}

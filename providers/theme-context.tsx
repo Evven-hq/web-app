@@ -11,7 +11,10 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { ThemeAnimationType, useModeAnimation } from "react-theme-switch-animation";
+import {
+  ThemeAnimationType,
+  useModeAnimation,
+} from "react-theme-switch-animation";
 import { getRefreshToken, isDesktop } from "@/lib/desktop";
 import { updateCurrentUser } from "@/services/users";
 import { useAuthStore } from "@/store/auth-store";
@@ -50,7 +53,9 @@ const THEME_MIGRATION: Record<string, ThemeName> = {
   "OLED-forest-green": "grove-night",
 };
 
-export function isThemeName(value: string | null | undefined): value is ThemeName {
+export function isThemeName(
+  value: string | null | undefined,
+): value is ThemeName {
   if (typeof value !== "string") return false;
   if (THEME_SET.has(value)) return true;
   return value in THEME_MIGRATION;
@@ -115,7 +120,9 @@ export function ThemeProvider({
 
   const [theme, setThemeState] = useState<ThemeName | null>(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const [animationType, setAnimationType] = useState<ThemeAnimationType>(ThemeAnimationType.GIF);
+  const [animationType, setAnimationType] = useState<ThemeAnimationType>(
+    ThemeAnimationType.GIF,
+  );
   const pendingThemeRef = useRef<ThemeName | null | undefined>(undefined);
   const transitionTimerRef = useRef<number | null>(null);
 
@@ -261,8 +268,12 @@ export function ThemeProvider({
 
       const canAnimate =
         typeof document !== "undefined" &&
-        typeof (document as Document & { startViewTransition?: unknown }).startViewTransition === "function" &&
-        !(typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+        typeof (document as Document & { startViewTransition?: unknown })
+          .startViewTransition === "function" &&
+        !(
+          typeof window !== "undefined" &&
+          window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        );
 
       if (!canAnimate) {
         commitTheme(nextTheme, true);

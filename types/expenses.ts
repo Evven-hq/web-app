@@ -115,26 +115,26 @@ export interface GhostBalance extends FriendBalance {
 export interface GhostDetail extends FriendDetail {
   expenses: FriendActivity[];
 }
- 
+
 export interface GroupExpense {
   id: string;
   group_id: string;
   paid_by: string;
   title: string;
-  category? : string;
+  category?: string;
   amount: string;
   split_type: "equal" | "exact" | "percentage";
   payment_method?: PaymentMethod | null;
   created_at: string;
 }
- 
+
 export interface ExpenseSplit {
   id: string;
   expense_id: string;
   user_id: string;
   amount: string;
 }
- 
+
 export interface PersonalExpenseCreate {
   title: string;
   amount: number;
@@ -147,7 +147,7 @@ export interface PersonalExpenseCreate {
   settlement_direction?: SettlementDirection;
   settlement_amount?: number;
 }
- 
+
 export interface PersonalExpenseUpdate {
   title?: string;
   amount?: number;
@@ -160,12 +160,12 @@ export interface PersonalExpenseUpdate {
   settlement_direction?: SettlementDirection | null;
   settlement_amount?: number | null;
 }
- 
+
 export interface GroupExpenseCreate {
   title: string;
   amount: number;
   split_type: "equal" | "exact" | "percentage";
-  category? : string;
+  category?: string;
   payment_method?: PaymentMethod;
   splits_input?: Record<string, number>;
   participant_ids?: string[];
@@ -175,7 +175,7 @@ export interface GroupExpenseUpdate {
   title?: string;
   amount?: number;
   split_type?: "equal" | "exact" | "percentage";
-  category? : string;
+  category?: string;
   payment_method?: PaymentMethod;
   splits_input?: Record<string, number>;
   participant_ids?: string[];

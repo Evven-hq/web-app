@@ -48,9 +48,7 @@ export function RecentExpensesPanel({
                   ? "0.5px solid var(--evven-border)"
                   : "0.5px solid transparent",
               background:
-                activeTab === tab
-                  ? "var(--evven-surface)"
-                  : "transparent",
+                activeTab === tab ? "var(--evven-surface)" : "transparent",
               fontWeight: activeTab === tab ? 500 : 400,
               color:
                 activeTab === tab
@@ -96,15 +94,15 @@ export function RecentExpensesPanel({
                     style={{ borderColor: "var(--evven-border)" }}
                   >
                     <div
-                        className="w-8 h-8 rounded-2xl flex items-center justify-center shrink-0"
-                        style={{ background: catMeta.bg }}
-                      >
-                        {typeof catMeta.icon === "string" ? (
-                          <span className="text-base">{catMeta.icon}</span>
-                        ) : (
-                          <catMeta.icon size={16} />
-                        )}
-                      </div>
+                      className="w-8 h-8 rounded-2xl flex items-center justify-center shrink-0"
+                      style={{ background: catMeta.bg }}
+                    >
+                      {typeof catMeta.icon === "string" ? (
+                        <span className="text-base">{catMeta.icon}</span>
+                      ) : (
+                        <catMeta.icon size={16} />
+                      )}
+                    </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm truncate">{exp.title}</p>
                       <p

@@ -52,7 +52,6 @@ export function DashboardHeader({
         <Plus size={15} />
         Add expense
       </Link>
-
     </div>
   );
 }

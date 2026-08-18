@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { splitEvenly, splitByPercentage, remainderAmount } from "../split-utils";
+import {
+  splitEvenly,
+  splitByPercentage,
+  remainderAmount,
+} from "../split-utils";
 
 describe("splitEvenly", () => {
   it("returns empty array when count is 0", () => {

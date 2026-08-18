@@ -74,7 +74,9 @@ export default function VerifyOtpPage() {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setNotice("We sent a verification code to your inbox.");
     } else if (reason === "unverified") {
-      setNotice("This account still needs to be verified. Enter the code we sent.");
+      setNotice(
+        "This account still needs to be verified. Enter the code we sent.",
+      );
     }
   }, [searchParams]);
 
@@ -123,7 +125,9 @@ export default function VerifyOtpPage() {
         });
       }, 1000);
     } catch (err: unknown) {
-      setError(getApiErrorMessage(err, "We couldn't resend the code right now."));
+      setError(
+        getApiErrorMessage(err, "We couldn't resend the code right now."),
+      );
     } finally {
       setIsResending(false);
     }
@@ -201,7 +205,10 @@ export default function VerifyOtpPage() {
 
         <div className="text-muted-foreground">
           Wrong account?{" "}
-          <Link href="/signup" className="font-semibold text-primary transition-colors hover:text-primary/80">
+          <Link
+            href="/signup"
+            className="font-semibold text-primary transition-colors hover:text-primary/80"
+          >
             Start over
           </Link>
         </div>

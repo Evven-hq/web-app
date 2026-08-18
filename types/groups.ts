@@ -4,7 +4,7 @@ export interface Group {
   created_by: string;
   created_at: string;
 }
- 
+
 export interface GroupMember {
   id: string;
   group_id: string;

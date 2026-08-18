@@ -20,11 +20,7 @@ function useIsDesktop() {
   return isDesktop;
 }
 
-export function AuthShell({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export function AuthShell({ children }: { children: React.ReactNode }) {
   const landingUrl = process.env.NEXT_PUBLIC_LANDING_URL;
   const pathname = usePathname();
   const isLogin = pathname === "/login";
@@ -68,9 +64,23 @@ export function AuthShell({
             </div>
 
             <div className="pb-6 text-center text-xs text-muted-foreground">
-              <a href={`${landingUrl}/privacy`} target="_blank" rel="noopener noreferrer" className="hover:underline">Privacy</a>
+              <a
+                href={`${landingUrl}/privacy`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:underline"
+              >
+                Privacy
+              </a>
               <span className="mx-2">·</span>
-              <a href={`${landingUrl}/terms`} target="_blank" rel="noopener noreferrer" className="hover:underline">Terms</a>
+              <a
+                href={`${landingUrl}/terms`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:underline"
+              >
+                Terms
+              </a>
             </div>
           </div>
         </div>
@@ -81,9 +91,23 @@ export function AuthShell({
       {showDesktop && (
         <div className="relative flex min-h-[100svh] md:overflow-y-auto">
           <div className="fixed bottom-4 left-1/2 z-50 -translate-x-1/2 text-xs text-muted-foreground">
-            <a href={`${landingUrl}/privacy`} target="_blank" rel="noopener noreferrer" className="hover:underline">Privacy</a>
+            <a
+              href={`${landingUrl}/privacy`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:underline"
+            >
+              Privacy
+            </a>
             <span className="mx-2">·</span>
-            <a href={`${landingUrl}/terms`} target="_blank" rel="noopener noreferrer" className="hover:underline">Terms</a>
+            <a
+              href={`${landingUrl}/terms`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:underline"
+            >
+              Terms
+            </a>
           </div>
           <div className="fixed left-8 top-6 z-50">
             <a href={landingUrl}>

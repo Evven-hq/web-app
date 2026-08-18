@@ -182,7 +182,7 @@ export function GoogleSignInButton() {
   }, [buttonWidth, clientId]);
 
   useEffect(() => {
-    if (isNativeApp) return; 
+    if (isNativeApp) return;
     if (!clientId || !buttonRef.current) return;
     if (window.google?.accounts?.id) {
       initializeGoogle();
@@ -195,7 +195,8 @@ export function GoogleSignInButton() {
     setError("");
     setIsSigningIn(true);
     try {
-      const { GoogleSignIn } = await import("@capawesome/capacitor-google-sign-in");
+      const { GoogleSignIn } =
+        await import("@capawesome/capacitor-google-sign-in");
 
       if (!nativeGoogleSignInInitialized) {
         await GoogleSignIn.initialize({ clientId });
@@ -260,7 +261,11 @@ export function GoogleSignInButton() {
       <div className="relative min-h-11">
         <div
           ref={buttonRef}
-          className={isSigningIn ? "flex min-h-11 justify-center opacity-0" : "flex min-h-11 justify-center"}
+          className={
+            isSigningIn
+              ? "flex min-h-11 justify-center opacity-0"
+              : "flex min-h-11 justify-center"
+          }
           aria-hidden={isSigningIn}
         />
         {isSigningIn && (

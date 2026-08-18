@@ -1,12 +1,17 @@
-import { useState, useEffect, RefObject } from 'react';
+import { useState, useEffect, RefObject } from "react";
 
 interface Dimensions {
   width: number;
   height: number;
 }
 
-export function useDimensions(ref: RefObject<HTMLElement | SVGElement | null>): Dimensions {
-  const [dimensions, setDimensions] = useState<Dimensions>({ width: 0, height: 0 });
+export function useDimensions(
+  ref: RefObject<HTMLElement | SVGElement | null>,
+): Dimensions {
+  const [dimensions, setDimensions] = useState<Dimensions>({
+    width: 0,
+    height: 0,
+  });
 
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
@@ -26,14 +31,13 @@ export function useDimensions(ref: RefObject<HTMLElement | SVGElement | null>): 
     // Initial measurement
     updateDimensions();
 
-    window.addEventListener('resize', debouncedUpdateDimensions);
+    window.addEventListener("resize", debouncedUpdateDimensions);
 
     return () => {
-      window.removeEventListener('resize', debouncedUpdateDimensions);
+      window.removeEventListener("resize", debouncedUpdateDimensions);
       clearTimeout(timeoutId);
     };
+  }, [ref]);
 
-}, [ref]);
-
-return dimensions;
+  return dimensions;
 }

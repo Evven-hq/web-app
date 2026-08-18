@@ -16,7 +16,11 @@ import { ExpensePageHeader } from "@/components/expenses/list/ExpensePageHeader"
 import { ExpenseToolbar } from "@/components/expenses/list/ExpenseToolbar";
 import { DeleteExpenseDialog } from "@/components/expenses/DeleteExpenseDialog";
 import { filterExpenses } from "@/components/expenses/list/expense-list-utils";
-import { createPersonalExpense, deletePersonalExpense, getPersonalExpenses } from "@/services/expenses";
+import {
+  createPersonalExpense,
+  deletePersonalExpense,
+  getPersonalExpenses,
+} from "@/services/expenses";
 import {
   buildPersonalSuccess,
   ExpenseSuccessScreen,
@@ -30,11 +34,14 @@ export default function ExpensesPage() {
   const [query, setQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
   const [showAddExpense, setShowAddExpense] = useState(false);
-  const [selectedExpense, setSelectedExpense] = useState<PersonalExpense | null>(null);
-  const [pendingDeleteExpense, setPendingDeleteExpense] = useState<PersonalExpense | null>(null);
+  const [selectedExpense, setSelectedExpense] =
+    useState<PersonalExpense | null>(null);
+  const [pendingDeleteExpense, setPendingDeleteExpense] =
+    useState<PersonalExpense | null>(null);
   const [deleteError, setDeleteError] = useState("");
   const [success, setSuccess] = useState<ExpenseSuccessState | null>(null);
-  const splitEnabled = searchParams.get("split") === "1" || searchParams.get("split") === "true";
+  const splitEnabled =
+    searchParams.get("split") === "1" || searchParams.get("split") === "true";
 
   const initialExpenseValues = useMemo<ExpenseFormValues>(() => {
     const direction = searchParams.get("direction");
@@ -46,16 +53,23 @@ export default function ExpensesPage() {
       date: new Date().toISOString().slice(0, 10),
       notes: "",
       payment_method: "upi",
-      friend_id: searchParams.get("friend_id") ?? searchParams.get("ghost_id") ?? "",
+      friend_id:
+        searchParams.get("friend_id") ?? searchParams.get("ghost_id") ?? "",
       settlement_direction:
-        direction === "you_owe" || direction === "they_owe" ? direction : "they_owe",
+        direction === "you_owe" || direction === "they_owe"
+          ? direction
+          : "they_owe",
       settlement_amount: "",
       split_mode: "equal",
       split_participants:
-        splitEnabled && (searchParams.get("friend_id") ?? searchParams.get("ghost_id"))
+        splitEnabled &&
+        (searchParams.get("friend_id") ?? searchParams.get("ghost_id"))
           ? [
               {
-                friend_id: searchParams.get("friend_id") ?? searchParams.get("ghost_id") ?? "",
+                friend_id:
+                  searchParams.get("friend_id") ??
+                  searchParams.get("ghost_id") ??
+                  "",
               },
             ]
           : [],
@@ -83,7 +97,11 @@ export default function ExpensesPage() {
     }
   };
 
-  const { data: expenses = [], isLoading, error } = useQuery({
+  const {
+    data: expenses = [],
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ["expenses"],
     queryFn: getPersonalExpenses,
   });
@@ -92,7 +110,7 @@ export default function ExpensesPage() {
     mutationFn: deletePersonalExpense,
     onSuccess: (_, id) => {
       queryClient.setQueryData<PersonalExpense[]>(["expenses"], (prev) =>
-        prev ? prev.filter((e) => e.id !== id) : []
+        prev ? prev.filter((e) => e.id !== id) : [],
       );
       toast.success("Expense deleted");
     },
@@ -100,10 +118,13 @@ export default function ExpensesPage() {
 
   const filteredExpenses = useMemo(
     () => filterExpenses(expenses, query, categoryFilter),
-    [expenses, query, categoryFilter]
+    [expenses, query, categoryFilter],
   );
 
-  const total = filteredExpenses.reduce((sum, expense) => sum + Number(expense.amount), 0);
+  const total = filteredExpenses.reduce(
+    (sum, expense) => sum + Number(expense.amount),
+    0,
+  );
 
   const handleRequestDelete = (expense: PersonalExpense) => {
     setSelectedExpense(null);
@@ -134,10 +155,16 @@ export default function ExpensesPage() {
 
         <ExpenseToolbar query={query} onQueryChange={setQuery} total={total} />
 
-        <CategoryFilterBar value={categoryFilter} onChange={setCategoryFilter} />
+        <CategoryFilterBar
+          value={categoryFilter}
+          onChange={setCategoryFilter}
+        />
 
         {error && (
-          <div className="card mb-4 rounded-(--evven-radius-card) p-4 text-sm" style={{ color: "var(--evven-error)" }}>
+          <div
+            className="card mb-4 rounded-(--evven-radius-card) p-4 text-sm"
+            style={{ color: "var(--evven-error)" }}
+          >
             Could not load your expenses.
           </div>
         )}
@@ -186,7 +213,9 @@ export default function ExpensesPage() {
           onSubmit={async (expense) => {
             let created: PersonalExpense | PersonalExpense[];
             if (Array.isArray(expense)) {
-              created = await Promise.all(expense.map((item) => createPersonalExpense(item)));
+              created = await Promise.all(
+                expense.map((item) => createPersonalExpense(item)),
+              );
             } else {
               created = await createPersonalExpense(expense);
             }
@@ -198,7 +227,11 @@ export default function ExpensesPage() {
       ) : null}
 
       {success ? (
-        <ExpenseSuccessScreen open {...success} onDone={() => setSuccess(null)} />
+        <ExpenseSuccessScreen
+          open
+          {...success}
+          onDone={() => setSuccess(null)}
+        />
       ) : null}
 
       <DeleteExpenseDialog

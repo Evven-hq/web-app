@@ -60,12 +60,18 @@ export function DesktopIdentityChip({
       </div>
 
       <div className="min-w-0">
-        <p className="truncate text-sm font-medium" style={{ color: "var(--evven-text-primary)" }}>
+        <p
+          className="truncate text-sm font-medium"
+          style={{ color: "var(--evven-text-primary)" }}
+        >
           {user?.name ?? ""}
         </p>
         <p
           className="truncate text-xs"
-          style={{ color: "var(--evven-text-muted)", fontFamily: "var(--font-mono)" }}
+          style={{
+            color: "var(--evven-text-muted)",
+            fontFamily: "var(--font-mono)",
+          }}
         >
           {user?.user_code ?? ""}
         </p>

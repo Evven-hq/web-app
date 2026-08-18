@@ -40,9 +40,14 @@ export function SignupProfileStep({
       <form onSubmit={onSubmit} className="space-y-4 sm:space-y-5">
         <div
           className="rounded-2xl border px-4 py-3 text-sm"
-          style={{ background: "var(--evven-background)", borderColor: "var(--evven-border)" }}
+          style={{
+            background: "var(--evven-background)",
+            borderColor: "var(--evven-border)",
+          }}
         >
-          <p className="font-medium text-[var(--evven-text-primary)]">Verified email</p>
+          <p className="font-medium text-[var(--evven-text-primary)]">
+            Verified email
+          </p>
           <p className="mt-1 text-muted-foreground">{email}</p>
         </div>
 
@@ -81,11 +86,18 @@ export function SignupProfileStep({
 
           <div
             className="space-y-2 rounded-2xl border px-4 py-3"
-            style={{ background: "var(--evven-background)", borderColor: "var(--evven-border)" }}
+            style={{
+              background: "var(--evven-background)",
+              borderColor: "var(--evven-border)",
+            }}
           >
             <div className="flex items-center justify-between gap-3 text-xs font-medium">
-              <span style={{ color: passwordStrength.color }}>{passwordStrength.label}</span>
-              <span className="text-muted-foreground">{password.length}/16</span>
+              <span style={{ color: passwordStrength.color }}>
+                {passwordStrength.label}
+              </span>
+              <span className="text-muted-foreground">
+                {password.length}/16
+              </span>
             </div>
             <div className="grid grid-cols-4 gap-1.5">
               {Array.from({ length: 4 }).map((_, index) => (
@@ -101,7 +113,9 @@ export function SignupProfileStep({
                 />
               ))}
             </div>
-            <p className="text-xs leading-5 text-muted-foreground">{passwordStrength.helper}</p>
+            <p className="text-xs leading-5 text-muted-foreground">
+              {passwordStrength.helper}
+            </p>
           </div>
         </div>
 

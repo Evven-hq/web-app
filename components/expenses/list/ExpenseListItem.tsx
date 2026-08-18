@@ -53,8 +53,16 @@ export function ExpenseListItem({
               transition: { duration: 0.2, ease: ROW_EASE },
             }
       }
-      whileHover={reduce ? undefined : { y: -2, transition: { duration: 0.18, ease: ROW_EASE } }}
-      whileTap={reduce ? undefined : { scale: 0.99, transition: { duration: 0.12, ease: ROW_EASE } }}
+      whileHover={
+        reduce
+          ? undefined
+          : { y: -2, transition: { duration: 0.18, ease: ROW_EASE } }
+      }
+      whileTap={
+        reduce
+          ? undefined
+          : { scale: 0.99, transition: { duration: 0.12, ease: ROW_EASE } }
+      }
       onClick={() => onSelect(expense)}
       onKeyDown={(event) => {
         if (event.key === "Enter" || event.key === " ") {
@@ -67,21 +75,32 @@ export function ExpenseListItem({
       <motion.div
         className="flex size-10 shrink-0 items-center justify-center rounded-xl"
         style={{ background: categoryMeta.bg }}
-        whileHover={reduce ? undefined : { scale: 1.05, transition: { duration: 0.18, ease: ROW_EASE } }}
+        whileHover={
+          reduce
+            ? undefined
+            : { scale: 1.05, transition: { duration: 0.18, ease: ROW_EASE } }
+        }
       >
         <CategoryIcon size={16} />
       </motion.div>
       <div className="min-w-0 flex-1">
         <p className="text-sm font-medium sm:truncate">{expense.title}</p>
         <p className="mt-0.5 truncate text-xs text-muted-foreground">
-          {categoryMeta.label} · {formatDate(expense.date ?? expense.created_at)}
+          {categoryMeta.label} ·{" "}
+          {formatDate(expense.date ?? expense.created_at)}
         </p>
         <FriendSummaryLine expense={expense} />
       </div>
-      <span className="shrink-0 text-sm font-semibold" style={{ fontFamily: "var(--font-mono)" }}>
+      <span
+        className="shrink-0 text-sm font-semibold"
+        style={{ fontFamily: "var(--font-mono)" }}
+      >
         {formatAmount(expense.amount)}
       </span>
-      <ChevronRight size={16} className="shrink-0 text-muted-foreground sm:hidden" />
+      <ChevronRight
+        size={16}
+        className="shrink-0 text-muted-foreground sm:hidden"
+      />
       <div className="hidden items-center gap-1 sm:flex">
         <button
           type="button"
@@ -114,7 +133,9 @@ export function ExpenseListItem({
           disabled={deletePending}
           aria-label={`Delete ${expense.title}`}
           className="rounded-lg p-2 text-muted-foreground hover:bg-(--evven-surface) disabled:opacity-50"
-          style={{ color: deletePending ? "var(--evven-text-muted)" : undefined }}
+          style={{
+            color: deletePending ? "var(--evven-text-muted)" : undefined,
+          }}
         >
           {deletePending ? (
             <Loader2 size={14} className="animate-spin" />

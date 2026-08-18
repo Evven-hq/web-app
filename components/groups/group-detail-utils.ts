@@ -16,7 +16,10 @@ export function formatAmount(n: string | number) {
 }
 
 export function formatDate(d: string) {
-  return new Date(d).toLocaleDateString("en-IN", { day: "numeric", month: "short" });
+  return new Date(d).toLocaleDateString("en-IN", {
+    day: "numeric",
+    month: "short",
+  });
 }
 
 export function splitEvenly(total: number, count: number) {
@@ -27,6 +30,6 @@ export function splitEvenly(total: number, count: number) {
   const remainder = cents - base * count;
 
   return Array.from({ length: count }, (_, index) =>
-    ((base + (index < remainder ? 1 : 0)) / 100).toFixed(2)
+    ((base + (index < remainder ? 1 : 0)) / 100).toFixed(2),
   );
 }

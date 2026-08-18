@@ -40,7 +40,10 @@ export function MembersTab({
             className="card flex items-center gap-3 px-4 py-3.5 rounded-2xl"
           >
             <Avatar className="size-9" aria-label={userName(member.user_id)}>
-              <AvatarImage src={userAvatar(member.user_id) ?? undefined} alt={userName(member.user_id)} />
+              <AvatarImage
+                src={userAvatar(member.user_id) ?? undefined}
+                alt={userName(member.user_id)}
+              />
               <AvatarFallback
                 className="text-xs font-semibold"
                 style={{ background: color.bg, color: color.text }}
@@ -49,7 +52,10 @@ export function MembersTab({
               </AvatarFallback>
             </Avatar>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium truncate" style={{ color: "var(--evven-text-primary)" }}>
+              <p
+                className="text-sm font-medium truncate"
+                style={{ color: "var(--evven-text-primary)" }}
+              >
                 {userName(member.user_id)}
                 {member.user_id === currentUserId ? " (you)" : ""}
               </p>
@@ -64,8 +70,12 @@ export function MembersTab({
                   {memberCode}
                 </p>
               )}
-              <p className="text-xs mt-0.5" style={{ color: "var(--evven-text-muted)" }}>
-                {isCreatorMember ? "Admin" : "Member"} · Joined {formatDate(member.joined_at)}
+              <p
+                className="text-xs mt-0.5"
+                style={{ color: "var(--evven-text-muted)" }}
+              >
+                {isCreatorMember ? "Admin" : "Member"} · Joined{" "}
+                {formatDate(member.joined_at)}
               </p>
             </div>
             {isCreator && !isCreatorMember && (
@@ -76,7 +86,11 @@ export function MembersTab({
                 className="p-1.5 rounded-lg transition-colors hover:bg-red-50 disabled:opacity-50 shrink-0"
               >
                 {removingMemberId === member.user_id ? (
-                  <Loader2 size={14} className="animate-spin" style={{ color: "var(--evven-text-muted)" }} />
+                  <Loader2
+                    size={14}
+                    className="animate-spin"
+                    style={{ color: "var(--evven-text-muted)" }}
+                  />
                 ) : (
                   <Trash2 size={14} style={{ color: "#A32D2D" }} />
                 )}
@@ -88,7 +102,10 @@ export function MembersTab({
       <button
         onClick={onAddMember}
         className="w-full flex items-center justify-center gap-2 py-3 rounded-2xl border text-sm font-medium border-dashed transition-all hover:opacity-70"
-        style={{ borderColor: "var(--evven-border)", color: "var(--evven-text-muted)" }}
+        style={{
+          borderColor: "var(--evven-border)",
+          color: "var(--evven-text-muted)",
+        }}
       >
         <UserPlus size={15} />
         Add member

@@ -34,7 +34,9 @@ async function checkBackendReachability() {
 
 export function useConnectivity() {
   const [browserOnline, setBrowserOnline] = useState(true);
-  const [backendReachable, setBackendReachable] = useState<boolean | null>(null);
+  const [backendReachable, setBackendReachable] = useState<boolean | null>(
+    null,
+  );
 
   useEffect(() => {
     const updateBrowserState = () => {

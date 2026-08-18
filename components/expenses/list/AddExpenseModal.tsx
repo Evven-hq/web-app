@@ -2,7 +2,10 @@
 
 import { createPortal } from "react-dom";
 import { X } from "lucide-react";
-import { ExpenseForm, type ExpenseFormValues } from "@/components/expenses/ExpenseForm";
+import {
+  ExpenseForm,
+  type ExpenseFormValues,
+} from "@/components/expenses/ExpenseForm";
 import type { PersonalExpenseCreate } from "@/types";
 
 export function AddExpenseModal({
@@ -13,7 +16,9 @@ export function AddExpenseModal({
 }: {
   initialValues: ExpenseFormValues;
   initialSplitEnabled: boolean;
-  onSubmit: (expense: PersonalExpenseCreate | PersonalExpenseCreate[]) => Promise<void>;
+  onSubmit: (
+    expense: PersonalExpenseCreate | PersonalExpenseCreate[],
+  ) => Promise<void>;
   onClose: () => void;
 }) {
   if (typeof document === "undefined") return null;
@@ -47,6 +52,6 @@ export function AddExpenseModal({
         />
       </div>
     </div>,
-    document.body
+    document.body,
   );
 }

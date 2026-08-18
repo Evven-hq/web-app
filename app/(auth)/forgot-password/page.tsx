@@ -20,7 +20,9 @@ export default function ForgotPasswordPage() {
       await requestPasswordReset(email);
       setSent(true);
     } catch {
-      setError("Could not send a reset email. Check the address and try again.");
+      setError(
+        "Could not send a reset email. Check the address and try again.",
+      );
     } finally {
       setSaving(false);
     }

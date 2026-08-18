@@ -33,7 +33,10 @@ export function GroupHeader({
   onAddExpense: () => void;
 }) {
   const visibleMembers = members.slice(0, 4);
-  const hiddenMembersCount = Math.max(0, members.length - visibleMembers.length);
+  const hiddenMembersCount = Math.max(
+    0,
+    members.length - visibleMembers.length,
+  );
 
   return (
     <div className="mb-6">
@@ -47,11 +50,18 @@ export function GroupHeader({
       </Link>
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-medium" style={{ color: "var(--evven-text-primary)" }}>
+          <h1
+            className="text-2xl font-medium"
+            style={{ color: "var(--evven-text-primary)" }}
+          >
             {group.name}
           </h1>
-          <p className="text-xs mt-1" style={{ color: "var(--evven-text-muted)" }}>
-            {membersCount} member{membersCount !== 1 ? "s" : ""} · {expensesCount} expense
+          <p
+            className="text-xs mt-1"
+            style={{ color: "var(--evven-text-muted)" }}
+          >
+            {membersCount} member{membersCount !== 1 ? "s" : ""} ·{" "}
+            {expensesCount} expense
             {expensesCount !== 1 ? "s" : ""}
           </p>
           {visibleMembers.length > 0 && (
@@ -60,8 +70,15 @@ export function GroupHeader({
                 const color = COLORS[index % COLORS.length];
 
                 return (
-                  <Avatar key={member.id} size="sm" aria-label={userName(member.user_id)}>
-                    <AvatarImage src={userAvatar(member.user_id) ?? undefined} alt={userName(member.user_id)} />
+                  <Avatar
+                    key={member.id}
+                    size="sm"
+                    aria-label={userName(member.user_id)}
+                  >
+                    <AvatarImage
+                      src={userAvatar(member.user_id) ?? undefined}
+                      alt={userName(member.user_id)}
+                    />
                     <AvatarFallback
                       className="text-[10px] font-semibold"
                       style={{ background: color.bg, color: color.text }}

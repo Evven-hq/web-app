@@ -25,8 +25,19 @@ export function RingStat({
         border: "0.5px solid var(--evven-border)",
       }}
     >
-      <svg className="size-12 shrink-0 -rotate-90" viewBox="0 0 44 44" aria-hidden="true">
-        <circle cx="22" cy="22" r={radius} fill="none" stroke="var(--evven-border)" strokeWidth="4" />
+      <svg
+        className="size-12 shrink-0 -rotate-90"
+        viewBox="0 0 44 44"
+        aria-hidden="true"
+      >
+        <circle
+          cx="22"
+          cy="22"
+          r={radius}
+          fill="none"
+          stroke="var(--evven-border)"
+          strokeWidth="4"
+        />
         <circle
           cx="22"
           cy="22"
@@ -40,13 +51,22 @@ export function RingStat({
         />
       </svg>
       <div className="min-w-0">
-        <p className="truncate text-lg font-medium leading-none" style={{ fontFamily: "var(--font-mono)" }}>
+        <p
+          className="truncate text-lg font-medium leading-none"
+          style={{ fontFamily: "var(--font-mono)" }}
+        >
           {value}
         </p>
-        <p className="mt-1 text-xs font-medium" style={{ color: "var(--evven-text-primary)" }}>
+        <p
+          className="mt-1 text-xs font-medium"
+          style={{ color: "var(--evven-text-primary)" }}
+        >
           {label}
         </p>
-        <p className="mt-0.5 truncate text-xs" style={{ color: "var(--evven-text-muted)" }}>
+        <p
+          className="mt-0.5 truncate text-xs"
+          style={{ color: "var(--evven-text-muted)" }}
+        >
           {sub}
         </p>
       </div>

@@ -32,7 +32,7 @@ export function useAvatarGenerator(initialSeed?: string | null) {
     return generated;
   });
   const [selectedSeed, setSelectedSeed] = useState<string>(
-    initialSeed || options[0].seed
+    initialSeed || options[0].seed,
   );
 
   const shuffle = useCallback(() => {

@@ -38,6 +38,7 @@ The other piece that sets Evven apart is **ghost users** — placeholder people 
 ## Core features
 
 **Groups**
+
 - Create, rename, and delete groups; add and remove members by user code
 - Add expenses with equal, exact, or percentage splits
 - Per-group tabs for balances, expenses, members, and settlements
@@ -45,40 +46,44 @@ The other piece that sets Evven apart is **ghost users** — placeholder people 
 - Record settlements between members to close out balances
 
 **Friends & personal ledger**
+
 - A friends workspace for one-on-one balances outside of groups
 - Personal expenses that can be tied to a friend, a group, or neither
 - Ghost users, as described above — no account required to start tracking a debt
 
 **Auth**
+
 - Email/password login and signup, plus Google Sign-In
 - Forgot/reset password flow
 - Access + refresh token pair, with silent refresh on 401 and automatic desktop-login redirect if refresh fails
 
 **Dashboard & profile**
+
 - Hero insight cards and SVG ring stat components summarizing balances at a glance
 - Editable profile, including profile picture
 
 **Deployment split**
+
 - This repo is the authenticated app deployed at `app.evven.xyz`
 - Marketing, legal, and public content live in the separate landing repo deployed at `evven.xyz`
 - Auth links in this app can point back to the landing site through `NEXT_PUBLIC_LANDING_URL`
 
 ## Tech stack
 
-| Layer | Choice |
-|---|---|
-| Framework | [Next.js 16](https://nextjs.org) (App Router, React 19) |
-| Language | TypeScript |
-| Styling | Tailwind CSS v4 + CSS custom properties (`--evven-*` design tokens) |
-| Component primitives | Radix UI / shadcn-style components (`components/ui`) |
-| Icons | lucide-react |
-| Animation | Framer Motion, GSAP |
-| Forms | react-hook-form + zod resolvers |
-| State | Zustand (`store/auth-store.ts`) |
-| Server state / caching | TanStack Query |
-| HTTP client | Axios, shared instance + interceptors (`lib/api.ts`) |
-| Notifications | sonner (toasts) |
-| Package manager | npm (`package-lock.json`) |
+| Layer                  | Choice                                                              |
+| ---------------------- | ------------------------------------------------------------------- |
+| Framework              | [Next.js 16](https://nextjs.org) (App Router, React 19)             |
+| Language               | TypeScript                                                          |
+| Styling                | Tailwind CSS v4 + CSS custom properties (`--evven-*` design tokens) |
+| Component primitives   | Radix UI / shadcn-style components (`components/ui`)                |
+| Icons                  | lucide-react                                                        |
+| Animation              | Framer Motion, GSAP                                                 |
+| Forms                  | react-hook-form + zod resolvers                                     |
+| State                  | Zustand (`store/auth-store.ts`)                                     |
+| Server state / caching | TanStack Query                                                      |
+| HTTP client            | Axios, shared instance + interceptors (`lib/api.ts`)                |
+| Notifications          | sonner (toasts)                                                     |
+| Package manager        | npm (`package-lock.json`)                                           |
 
 ## Architecture
 
@@ -180,10 +185,10 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Environment variables
 
-| Variable | Required | Default | Purpose |
-|---|---|---|---|
-| `NEXT_PUBLIC_API_URL` | No | `http://localhost:8000` | Base URL for the FastAPI backend used by `lib/api.ts` |
-| `NEXT_PUBLIC_LANDING_URL` | Yes | None | External origin for the marketing site, used by auth-flow logo links. Use `https://evven.xyz` in production and a local landing URL such as `http://localhost:3001` in development. |
+| Variable                  | Required | Default                 | Purpose                                                                                                                                                                             |
+| ------------------------- | -------- | ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `NEXT_PUBLIC_API_URL`     | No       | `http://localhost:8000` | Base URL for the FastAPI backend used by `lib/api.ts`                                                                                                                               |
+| `NEXT_PUBLIC_LANDING_URL` | Yes      | None                    | External origin for the marketing site, used by auth-flow logo links. Use `https://evven.xyz` in production and a local landing URL such as `http://localhost:3001` in development. |
 
 ## Scripts
 

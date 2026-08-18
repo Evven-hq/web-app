@@ -70,10 +70,14 @@ export function CharacterAnimation({
     };
 
     const handle = (e: MouseEvent) => {
-      if (purpleRef.current) setPurplePos(calcPos(purpleRef.current, e.clientX, e.clientY));
-      if (blackRef.current)  setBlackPos(calcPos(blackRef.current,  e.clientX, e.clientY));
-      if (yellowRef.current) setYellowPos(calcPos(yellowRef.current, e.clientX, e.clientY));
-      if (orangeRef.current) setOrangePos(calcPos(orangeRef.current, e.clientX, e.clientY));
+      if (purpleRef.current)
+        setPurplePos(calcPos(purpleRef.current, e.clientX, e.clientY));
+      if (blackRef.current)
+        setBlackPos(calcPos(blackRef.current, e.clientX, e.clientY));
+      if (yellowRef.current)
+        setYellowPos(calcPos(yellowRef.current, e.clientX, e.clientY));
+      if (orangeRef.current)
+        setOrangePos(calcPos(orangeRef.current, e.clientX, e.clientY));
     };
 
     window.addEventListener("mousemove", handle);
@@ -86,7 +90,9 @@ export function CharacterAnimation({
 
   useEffect(() => {
     const rand = () => Math.random() * 4000 + 3000;
-    const schedule = (set: (v: boolean) => void): ReturnType<typeof setTimeout> => {
+    const schedule = (
+      set: (v: boolean) => void,
+    ): ReturnType<typeof setTimeout> => {
       return setTimeout(() => {
         set(true);
         setTimeout(() => {
@@ -143,7 +149,6 @@ export function CharacterAnimation({
   // ── Render ─────────────────────────────────────────────────────────────────
   return (
     <div className="relative" style={{ width: "550px", height: "400px" }}>
-
       {/* ── Purple – back layer ─────────────────────────────────────────────── */}
       <div
         ref={purpleRef}
@@ -189,13 +194,21 @@ export function CharacterAnimation({
               isBlinking={isPurpleBlinking}
               forceLookX={
                 passwordVisible
-                  ? isPurplePeeking ? 4 : -4
-                  : isLookingAtEachOther ? 3 : undefined
+                  ? isPurplePeeking
+                    ? 4
+                    : -4
+                  : isLookingAtEachOther
+                    ? 3
+                    : undefined
               }
               forceLookY={
                 passwordVisible
-                  ? isPurplePeeking ? 5 : -4
-                  : isLookingAtEachOther ? 4 : undefined
+                  ? isPurplePeeking
+                    ? 5
+                    : -4
+                  : isLookingAtEachOther
+                    ? 4
+                    : undefined
               }
             />
           ))}
@@ -247,8 +260,12 @@ export function CharacterAnimation({
               eyeColor="white"
               pupilColor="#2D2D2D"
               isBlinking={isBlackBlinking}
-              forceLookX={passwordVisible ? -4 : isLookingAtEachOther ? 0 : undefined}
-              forceLookY={passwordVisible ? -4 : isLookingAtEachOther ? -4 : undefined}
+              forceLookX={
+                passwordVisible ? -4 : isLookingAtEachOther ? 0 : undefined
+              }
+              forceLookY={
+                passwordVisible ? -4 : isLookingAtEachOther ? -4 : undefined
+              }
             />
           ))}
         </div>

@@ -37,7 +37,9 @@ export function UnfriendDialog({
       setError("");
     },
     onError: (err) => {
-      setError(getApiErrorMessage(err, "Could not remove this friend right now."));
+      setError(
+        getApiErrorMessage(err, "Could not remove this friend right now."),
+      );
     },
   });
 
@@ -64,7 +66,9 @@ export function UnfriendDialog({
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>{blocked ? "Settle first" : "Remove friend?"}</DialogTitle>
+          <DialogTitle>
+            {blocked ? "Settle first" : "Remove friend?"}
+          </DialogTitle>
           <DialogDescription>
             {blocked
               ? `You still have a balance of ${formatMoney(balance)}. Settle up before removing ${friend.name}.`
@@ -93,8 +97,10 @@ export function UnfriendDialog({
           <div
             className="rounded-2xl border px-4 py-3 text-sm"
             style={{
-              background: "color-mix(in srgb, var(--evven-error) 8%, var(--evven-background))",
-              borderColor: "color-mix(in srgb, var(--evven-error) 24%, var(--evven-border))",
+              background:
+                "color-mix(in srgb, var(--evven-error) 8%, var(--evven-background))",
+              borderColor:
+                "color-mix(in srgb, var(--evven-error) 24%, var(--evven-border))",
               color: "var(--evven-error)",
             }}
           >

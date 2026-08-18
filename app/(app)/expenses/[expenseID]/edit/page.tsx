@@ -4,13 +4,18 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { ArrowLeft, Loader2 } from "lucide-react";
-import { ExpenseForm, type ExpenseFormValues } from "@/components/expenses/ExpenseForm";
+import {
+  ExpenseForm,
+  type ExpenseFormValues,
+} from "@/components/expenses/ExpenseForm";
 import { getPersonalExpense, updatePersonalExpense } from "@/services/expenses";
 
 export default function EditExpensePage() {
   const { expenseID } = useParams<{ expenseID: string }>();
   const router = useRouter();
-  const [initialValues, setInitialValues] = useState<ExpenseFormValues | null>(null);
+  const [initialValues, setInitialValues] = useState<ExpenseFormValues | null>(
+    null,
+  );
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -23,7 +28,12 @@ export default function EditExpensePage() {
           date: expense.date ? expense.date.slice(0, 10) : "",
           notes: expense.notes ?? "",
           payment_method: expense.payment_method ?? "upi",
-          friend_id: expense.friend_id ?? expense.friend?.id ?? expense.ghost_id ?? expense.ghost?.id ?? "",
+          friend_id:
+            expense.friend_id ??
+            expense.friend?.id ??
+            expense.ghost_id ??
+            expense.ghost?.id ??
+            "",
           settlement_direction: expense.settlement_direction ?? "they_owe",
           settlement_amount: expense.settlement_amount ?? "",
           split_mode: "equal",
@@ -51,7 +61,9 @@ export default function EditExpensePage() {
         </div>
 
         {error ? (
-          <div className="rounded-xl bg-red-50 p-4 text-sm text-destructive">{error}</div>
+          <div className="rounded-xl bg-red-50 p-4 text-sm text-destructive">
+            {error}
+          </div>
         ) : !initialValues ? (
           <div className="flex h-48 items-center justify-center">
             <Loader2 size={20} className="animate-spin text-primary" />

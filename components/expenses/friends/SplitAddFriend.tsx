@@ -55,7 +55,11 @@ export function SplitAddFriend({
           onClick={() => setShowAddFriend(true)}
           disabled={availableFriends.length === 0 || isLoading}
         >
-          {isLoading ? <Loader2 size={14} className="animate-spin" /> : <UserRoundPlus size={14} />}
+          {isLoading ? (
+            <Loader2 size={14} className="animate-spin" />
+          ) : (
+            <UserRoundPlus size={14} />
+          )}
           Add another friend
         </Button>
       )}

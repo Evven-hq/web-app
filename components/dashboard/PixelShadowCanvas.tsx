@@ -158,11 +158,13 @@ export default function PixelShadowCanvas({
 
     const DOE =
       typeof window !== "undefined"
-        ? (window as unknown as {
-            DeviceOrientationEvent?: {
-              requestPermission?: () => Promise<"granted" | "denied">;
-            };
-          }).DeviceOrientationEvent
+        ? (
+            window as unknown as {
+              DeviceOrientationEvent?: {
+                requestPermission?: () => Promise<"granted" | "denied">;
+              };
+            }
+          ).DeviceOrientationEvent
         : undefined;
     const requiresPermission =
       isCoarsePointer && !!DOE && typeof DOE.requestPermission === "function";
@@ -202,7 +204,12 @@ export default function PixelShadowCanvas({
           let v = grid[idx];
           if (v <= 0) continue;
           ctx.fillStyle = `rgba(255,255,255,${v * maxOpacity})`;
-          ctx.fillRect(x * pixelSize + 1, y * pixelSize + 1, pixelSize - 2, pixelSize - 2);
+          ctx.fillRect(
+            x * pixelSize + 1,
+            y * pixelSize + 1,
+            pixelSize - 2,
+            pixelSize - 2,
+          );
           v -= fade;
           grid[idx] = v > 0 ? v : 0;
         }
@@ -233,7 +240,12 @@ export default function PixelShadowCanvas({
           if (dist > blobRad) continue;
           const strength = 1 - dist / blobRad;
           ctx.fillStyle = `rgba(255,255,255,${strength * strength * maxOpacity})`;
-          ctx.fillRect(x * pixelSize + 1, y * pixelSize + 1, pixelSize - 2, pixelSize - 2);
+          ctx.fillRect(
+            x * pixelSize + 1,
+            y * pixelSize + 1,
+            pixelSize - 2,
+            pixelSize - 2,
+          );
         }
       }
     };
@@ -245,7 +257,8 @@ export default function PixelShadowCanvas({
     };
 
     const tryStart = () => {
-      if (isVisible && isPageVisible && raf === 0) raf = requestAnimationFrame(loop);
+      if (isVisible && isPageVisible && raf === 0)
+        raf = requestAnimationFrame(loop);
     };
     const tryStop = () => {
       if (raf !== 0) {
@@ -257,15 +270,23 @@ export default function PixelShadowCanvas({
     const io = new IntersectionObserver(
       ([entry]) => {
         isVisible = entry.isIntersecting;
-        if (isVisible) { tryStart(); } else { tryStop(); }
+        if (isVisible) {
+          tryStart();
+        } else {
+          tryStop();
+        }
       },
-      { threshold: 0 }
+      { threshold: 0 },
     );
     io.observe(host);
 
     const onVisibility = () => {
       isPageVisible = !document.hidden;
-      if (isPageVisible) { tryStart(); } else { tryStop(); }
+      if (isPageVisible) {
+        tryStart();
+      } else {
+        tryStop();
+      }
     };
     document.addEventListener("visibilitychange", onVisibility);
 
@@ -282,7 +303,10 @@ export default function PixelShadowCanvas({
         host.removeEventListener("touchmove", handleTouchMove);
         host.removeEventListener("touchend", handleTouchEnd);
         window.removeEventListener("deviceorientation", handleOrientation);
-        window.removeEventListener("evven:motion-granted", enableMotionListener);
+        window.removeEventListener(
+          "evven:motion-granted",
+          enableMotionListener,
+        );
       }
       document.removeEventListener("visibilitychange", onVisibility);
     };

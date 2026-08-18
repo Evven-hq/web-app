@@ -13,4 +13,8 @@ export { ToCollectPanel } from "./ToCollectPanel";
 export { BreakdownPanel } from "./BreakdownPanel";
 export { SettlementEmptyState } from "./SettlementEmptyState";
 export type { Tab } from "./GroupTabs";
-export type { SettlementsSubTab, SettlementRow, BreakdownRow } from "./settlements-utils";
+export type {
+  SettlementsSubTab,
+  SettlementRow,
+  BreakdownRow,
+} from "./settlements-utils";

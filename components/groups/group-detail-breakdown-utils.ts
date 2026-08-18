@@ -26,15 +26,23 @@ function normalizeMatrix(matrix?: AmountMatrix | null) {
   return normalized;
 }
 
-export function subtractMatrix(base?: AmountMatrix | null, settled?: AmountMatrix | null) {
+export function subtractMatrix(
+  base?: AmountMatrix | null,
+  settled?: AmountMatrix | null,
+) {
   const normalizedBase = normalizeMatrix(base);
   const normalizedSettled = normalizeMatrix(settled);
   const remaining: AmountMatrix = {};
 
   for (const [sourceId, targets] of Object.entries(normalizedBase)) {
     for (const [targetId, amount] of Object.entries(targets)) {
-      const settledAmount = toPositiveAmount(normalizedSettled[sourceId]?.[targetId] ?? 0);
-      const remainingAmount = Math.max(0, toPositiveAmount(amount) - settledAmount);
+      const settledAmount = toPositiveAmount(
+        normalizedSettled[sourceId]?.[targetId] ?? 0,
+      );
+      const remainingAmount = Math.max(
+        0,
+        toPositiveAmount(amount) - settledAmount,
+      );
 
       if (remainingAmount <= 0.01) continue;
 

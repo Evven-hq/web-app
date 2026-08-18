@@ -43,7 +43,10 @@ export function AddFriendDialog({
       if (isActiveFriendDetail(result as FriendDetail)) {
         router.push(`/friends?friend_id=${result.id}`);
         setSuccess("");
-      } else if ("status" in result && String(result.status ?? "").toUpperCase() === "ACTIVE") {
+      } else if (
+        "status" in result &&
+        String(result.status ?? "").toUpperCase() === "ACTIVE"
+      ) {
         router.push(`/friends?friend_id=${result.id}`);
       } else {
         setSuccess("Request sent. They’ll appear here once they accept.");
@@ -87,7 +90,8 @@ export function AddFriendDialog({
         <DialogHeader>
           <DialogTitle>Add a friend</DialogTitle>
           <DialogDescription>
-            Enter their user code. If they already have you pending, the relationship activates immediately.
+            Enter their user code. If they already have you pending, the
+            relationship activates immediately.
           </DialogDescription>
         </DialogHeader>
 
@@ -111,7 +115,9 @@ export function AddFriendDialog({
             <input
               autoFocus
               value={userCode}
-              onChange={(event) => setUserCode(event.target.value.toUpperCase())}
+              onChange={(event) =>
+                setUserCode(event.target.value.toUpperCase())
+              }
               placeholder="E.g. EVV-4821"
               className="w-full rounded-2xl border px-4 py-3 text-sm outline-none transition focus:ring-2"
               style={{
@@ -125,8 +131,10 @@ export function AddFriendDialog({
             <div
               className="rounded-2xl border px-4 py-3 text-sm"
               style={{
-                background: "color-mix(in srgb, var(--evven-accent-secondary) 18%, var(--evven-background))",
-                borderColor: "color-mix(in srgb, var(--evven-accent-primary) 20%, var(--evven-border))",
+                background:
+                  "color-mix(in srgb, var(--evven-accent-secondary) 18%, var(--evven-background))",
+                borderColor:
+                  "color-mix(in srgb, var(--evven-accent-primary) 20%, var(--evven-border))",
               }}
             >
               {success}
@@ -137,8 +145,10 @@ export function AddFriendDialog({
             <div
               className="rounded-2xl border px-4 py-3 text-sm"
               style={{
-                background: "color-mix(in srgb, var(--evven-error) 8%, var(--evven-background))",
-                borderColor: "color-mix(in srgb, var(--evven-error) 24%, var(--evven-border))",
+                background:
+                  "color-mix(in srgb, var(--evven-error) 8%, var(--evven-background))",
+                borderColor:
+                  "color-mix(in srgb, var(--evven-error) 24%, var(--evven-border))",
                 color: "var(--evven-error)",
               }}
             >
@@ -152,7 +162,11 @@ export function AddFriendDialog({
               disabled={mutation.isPending}
               className="w-full sm:w-auto"
             >
-              {mutation.isPending ? <Loader2 className="animate-spin" /> : <Plus />}
+              {mutation.isPending ? (
+                <Loader2 className="animate-spin" />
+              ) : (
+                <Plus />
+              )}
               {mutation.isPending ? "Sending..." : "Send request"}
             </Button>
           </DialogFooter>

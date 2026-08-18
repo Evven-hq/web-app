@@ -11,7 +11,7 @@ const AVATAR_STYLE = "notionists-neutral";
 
 export function buildAvatarUrl(seed: string): string {
   return `https://api.dicebear.com/${DICEBEAR_VERSION}/${AVATAR_STYLE}/svg?seed=${encodeURIComponent(
-    seed
+    seed,
   )}`;
 }
 
@@ -28,7 +28,10 @@ export function randomAvatarSeed(): string {
  */
 export function isDicebearAvatarUrl(url: string | null | undefined): boolean {
   if (!url) return false;
-  return url.startsWith(`https://api.dicebear.com/`) && url.includes(`/${AVATAR_STYLE}/`);
+  return (
+    url.startsWith(`https://api.dicebear.com/`) &&
+    url.includes(`/${AVATAR_STYLE}/`)
+  );
 }
 
 /**
@@ -36,7 +39,9 @@ export function isDicebearAvatarUrl(url: string | null | undefined): boolean {
  * can pre-select the user's actual current avatar (not just a name-derived
  * placeholder). Returns null for non-DiceBear URLs (e.g. a Google photo).
  */
-export function extractSeedFromAvatarUrl(url: string | null | undefined): string | null {
+export function extractSeedFromAvatarUrl(
+  url: string | null | undefined,
+): string | null {
   if (!isDicebearAvatarUrl(url)) return null;
   try {
     const seed = new URL(url as string).searchParams.get("seed");
@@ -47,13 +52,13 @@ export function extractSeedFromAvatarUrl(url: string | null | undefined): string
 }
 
 const WASH_TINTS: readonly string[] = [
-  "var(--evven-accent-primary)", 
-  "var(--evven-error)", 
-  "#1E3A5F", 
-  "#6E1F2E", 
+  "var(--evven-accent-primary)",
+  "var(--evven-error)",
+  "#1E3A5F",
+  "#6E1F2E",
   "var(--evven-text-muted)",
 ];
- 
+
 export function seedToGradient(seed: string): string {
   let hash = 0;
   for (let i = 0; i < seed.length; i++) {

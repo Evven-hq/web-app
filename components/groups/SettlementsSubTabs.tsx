@@ -1,6 +1,12 @@
 "use client";
 
-import { ArrowLeftRight, CheckCircle, Receipt, Split, type LucideIcon } from "lucide-react";
+import {
+  ArrowLeftRight,
+  CheckCircle,
+  Receipt,
+  Split,
+  type LucideIcon,
+} from "lucide-react";
 import type { SettlementsSubTab } from "./settlements-utils";
 
 export function SettlementsSubTabs({
@@ -27,7 +33,10 @@ export function SettlementsSubTabs({
     // stacked tab bar.
     <div
       className="shrink-0 mb-4 grid grid-cols-4 gap-1 rounded-2xl p-1"
-      style={{ background: "var(--evven-surface)", border: "1px solid var(--evven-border)" }}
+      style={{
+        background: "var(--evven-surface)",
+        border: "1px solid var(--evven-border)",
+      }}
       role="tablist"
     >
       {subTabs.map(({ key, label, icon: Icon }) => {
@@ -41,8 +50,12 @@ export function SettlementsSubTabs({
             onClick={() => onChange(key)}
             className="flex flex-col items-center justify-center gap-1 rounded-xl py-2 px-1 text-[10.5px] font-medium leading-tight transition-all"
             style={{
-              background: active ? "var(--evven-accent-secondary)" : "transparent",
-              color: active ? "var(--evven-warning-text)" : "var(--evven-text-muted)",
+              background: active
+                ? "var(--evven-accent-secondary)"
+                : "transparent",
+              color: active
+                ? "var(--evven-warning-text)"
+                : "var(--evven-text-muted)",
             }}
           >
             <Icon size={14} />

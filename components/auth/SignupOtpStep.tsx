@@ -31,9 +31,14 @@ export function SignupOtpStep({
       <form onSubmit={onSubmit} className="space-y-4 sm:space-y-5">
         <div
           className="rounded-2xl border px-4 py-3 text-sm"
-          style={{ background: "var(--evven-background)", borderColor: "var(--evven-border)" }}
+          style={{
+            background: "var(--evven-background)",
+            borderColor: "var(--evven-border)",
+          }}
         >
-          <p className="font-medium text-[var(--evven-text-primary)]">Code sent</p>
+          <p className="font-medium text-[var(--evven-text-primary)]">
+            Code sent
+          </p>
           <p className="mt-1 text-muted-foreground">{email}</p>
         </div>
 

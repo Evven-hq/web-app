@@ -33,10 +33,16 @@ export class ErrorBoundary extends Component<Props, State> {
             className="w-full max-w-sm rounded-3xl p-8 text-center"
             style={{ background: "var(--evven-card-background)" }}
           >
-            <p className="mb-2 text-sm font-medium uppercase tracking-widest" style={{ color: "var(--evven-text-muted)" }}>
+            <p
+              className="mb-2 text-sm font-medium uppercase tracking-widest"
+              style={{ color: "var(--evven-text-muted)" }}
+            >
               Something went wrong
             </p>
-            <p className="mb-6 text-sm" style={{ color: "var(--evven-text-muted)" }}>
+            <p
+              className="mb-6 text-sm"
+              style={{ color: "var(--evven-text-muted)" }}
+            >
               An unexpected error occurred. Please try again.
             </p>
             <button

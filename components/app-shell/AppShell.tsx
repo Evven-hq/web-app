@@ -46,7 +46,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <div className="flex h-screen items-center justify-center bg-background">
         <div
           className="size-5 animate-spin rounded-full border-2 border-r-transparent"
-          style={{ borderColor: "var(--evven-accent-primary)", borderRightColor: "transparent" }}
+          style={{
+            borderColor: "var(--evven-accent-primary)",
+            borderRightColor: "transparent",
+          }}
         />
       </div>
     );
@@ -57,10 +60,16 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <RouteProgressBar />
       <div className="app-modal-blur-target flex min-w-0 flex-1 flex-col overflow-hidden">
         <OfflineBanner isOnline={isOnline} />
-        <MobileFloatingChrome user={user} showAddExpense={pathname === "/dashboard"} />
+        <MobileFloatingChrome
+          user={user}
+          showAddExpense={pathname === "/dashboard"}
+        />
         <DesktopIdentityChip user={user} />
 
-        <main id="app-scroll-container" className="flex-1 overflow-y-auto pb-24 pt-16 md:pb-32 md:pt-24">
+        <main
+          id="app-scroll-container"
+          className="flex-1 overflow-y-auto pb-24 pt-16 md:pb-32 md:pt-24"
+        >
           <PageTransition>{children}</PageTransition>
         </main>
 

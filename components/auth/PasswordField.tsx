@@ -31,7 +31,11 @@ export function PasswordField({
       placeholder={placeholder}
       value={value}
       onChange={(event) =>
-        onChange(maxLength ? event.target.value.slice(0, maxLength) : event.target.value)
+        onChange(
+          maxLength
+            ? event.target.value.slice(0, maxLength)
+            : event.target.value,
+        )
       }
       required
       minLength={minLength}
@@ -48,7 +52,11 @@ export function PasswordField({
       aria-label={showPassword ? "Hide password" : "Show password"}
       className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
     >
-      {showPassword ? <EyeOff className="size-5" /> : <Eye className="size-5" />}
+      {showPassword ? (
+        <EyeOff className="size-5" />
+      ) : (
+        <Eye className="size-5" />
+      )}
     </button>
   );
 

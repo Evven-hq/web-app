@@ -18,22 +18,29 @@ export function ToSettlePanel({
       {rows.length > 0 ? (
         <div className="space-y-3">
           {rows.map(({ sourceId, entries, total }) => (
-            <div
-              key={sourceId}
-              className="card rounded-2xl p-4"
-            >
+            <div key={sourceId} className="card rounded-2xl p-4">
               <div className="flex items-start justify-between gap-3 mb-3">
                 <div>
-                  <p className="text-sm font-semibold" style={{ color: "var(--evven-text-primary)" }}>
+                  <p
+                    className="text-sm font-semibold"
+                    style={{ color: "var(--evven-text-primary)" }}
+                  >
                     {displayName(sourceId)}
                   </p>
-                  <p className="text-xs mt-0.5" style={{ color: "var(--evven-text-muted)" }}>
-                    Needs to settle with {entries.length} member{entries.length !== 1 ? "s" : ""}
+                  <p
+                    className="text-xs mt-0.5"
+                    style={{ color: "var(--evven-text-muted)" }}
+                  >
+                    Needs to settle with {entries.length} member
+                    {entries.length !== 1 ? "s" : ""}
                   </p>
                 </div>
                 <span
                   className="text-xs font-medium px-2.5 py-1 rounded-full"
-                  style={{ background: "var(--evven-surface)", color: "var(--evven-text-muted)" }}
+                  style={{
+                    background: "var(--evven-surface)",
+                    color: "var(--evven-text-muted)",
+                  }}
                 >
                   {formatAmount(total)}
                 </span>
@@ -46,10 +53,16 @@ export function ToSettlePanel({
                     className="flex items-center justify-between gap-3 rounded-xl px-3 py-2.5"
                     style={{ background: "var(--evven-surface)" }}
                   >
-                    <p className="text-sm font-medium" style={{ color: "var(--evven-text-primary)" }}>
+                    <p
+                      className="text-sm font-medium"
+                      style={{ color: "var(--evven-text-primary)" }}
+                    >
                       {line(sourceId, targetId)}
                     </p>
-                    <span className="text-sm font-semibold shrink-0" style={{ color: "var(--evven-text-primary)" }}>
+                    <span
+                      className="text-sm font-semibold shrink-0"
+                      style={{ color: "var(--evven-text-primary)" }}
+                    >
                       {formatAmount(amount)}
                     </span>
                   </div>
@@ -59,7 +72,10 @@ export function ToSettlePanel({
           ))}
         </div>
       ) : (
-        <SettlementEmptyState title="No payments to settle" description="Unsettled payments will show up here." />
+        <SettlementEmptyState
+          title="No payments to settle"
+          description="Unsettled payments will show up here."
+        />
       )}
     </div>
   );

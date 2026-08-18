@@ -7,7 +7,10 @@ import { surfaceCard } from "./profile-utils";
 export function ProfileQuickLinks() {
   return (
     <div className="card rounded-3xl p-5" style={surfaceCard()}>
-      <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: "var(--evven-text-muted)" }}>
+      <p
+        className="text-xs font-semibold uppercase tracking-widest"
+        style={{ color: "var(--evven-text-muted)" }}
+      >
         Quick links
       </p>
       <div className="mt-3 space-y-2">
@@ -18,13 +21,19 @@ export function ProfileQuickLinks() {
         >
           <span
             className="flex size-9 shrink-0 items-center justify-center rounded-full"
-            style={{ background: "var(--evven-accent-secondary)", color: "var(--evven-accent-primary)" }}
+            style={{
+              background: "var(--evven-accent-secondary)",
+              color: "var(--evven-accent-primary)",
+            }}
           >
             <HandCoins size={16} />
           </span>
           <span className="min-w-0 flex-1">
             <span className="block text-sm font-medium">Friends</span>
-            <span className="block text-xs" style={{ color: "var(--evven-text-muted)" }}>
+            <span
+              className="block text-xs"
+              style={{ color: "var(--evven-text-muted)" }}
+            >
               See who paid what
             </span>
           </span>
@@ -36,13 +45,19 @@ export function ProfileQuickLinks() {
         >
           <span
             className="flex size-9 shrink-0 items-center justify-center rounded-full"
-            style={{ background: "var(--evven-accent-secondary)", color: "var(--evven-accent-primary)" }}
+            style={{
+              background: "var(--evven-accent-secondary)",
+              color: "var(--evven-accent-primary)",
+            }}
           >
             <ReceiptText size={16} />
           </span>
           <span className="min-w-0 flex-1">
             <span className="block text-sm font-medium">Expenses</span>
-            <span className="block text-xs" style={{ color: "var(--evven-text-muted)" }}>
+            <span
+              className="block text-xs"
+              style={{ color: "var(--evven-text-muted)" }}
+            >
               Review your spending
             </span>
           </span>

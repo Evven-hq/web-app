@@ -3,136 +3,139 @@ import api from "@/lib/api";
 import { getAccessToken } from "@/lib/desktop";
 import { User } from "@/types/user";
 import {
-    AuthResponse,
-    RegisterResponse,
-    SendOtpRequest,
-    SendOtpResponse,
-    TokenResponse,
-    VerifyOtpRequest,
-    VerifyOtpResponse,
+  AuthResponse,
+  RegisterResponse,
+  SendOtpRequest,
+  SendOtpResponse,
+  TokenResponse,
+  VerifyOtpRequest,
+  VerifyOtpResponse,
 } from "@/types/auth";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 const authClient = axios.create({
-    baseURL: API_URL,
-    timeout: 10000,
+  baseURL: API_URL,
+  timeout: 10000,
 });
 
 export async function login(
-            email: string, 
-            password: string
-        ): Promise<AuthResponse> {
-        
-            const response = await api.post("/auth/login", {email,password});
-            return response.data;
-    }
+  email: string,
+  password: string,
+): Promise<AuthResponse> {
+  const response = await api.post("/auth/login", { email, password });
+  return response.data;
+}
 
 export async function getCurrentUser(): Promise<User> {
-
-        const response = await api.get("/auth/me");
-        return response.data;
+  const response = await api.get("/auth/me");
+  return response.data;
 }
 
 export async function register(
-    name: string,
-    email: string,
-    password: string,
-    signupToken?: string | null,
+  name: string,
+  email: string,
+  password: string,
+  signupToken?: string | null,
 ): Promise<RegisterResponse> {
-    const response = await api.post("/auth/register", {
-        email,
-        password,
-        name,
-        signup_token: signupToken,
-    });
-    return response.data;
+  const response = await api.post("/auth/register", {
+    email,
+    password,
+    name,
+    signup_token: signupToken,
+  });
+  return response.data;
 }
 
 export async function requestPasswordReset(email: string): Promise<void> {
-    await api.post("/auth/forgot-password", { email });
+  await api.post("/auth/forgot-password", { email });
 }
 
-export async function resetPassword(token: string, password: string): Promise<void> {
-    await api.put("/auth/reset-password", { token, password });
+export async function resetPassword(
+  token: string,
+  password: string,
+): Promise<void> {
+  await api.put("/auth/reset-password", { token, password });
 }
 
 export async function googleLogin(credential: string): Promise<AuthResponse> {
-    const response = await api.post("/auth/google", { token: credential });
-    return response.data;
+  const response = await api.post("/auth/google", { token: credential });
+  return response.data;
 }
 
 export async function sendOtp(
-    email: string,
-    purpose = "email_verification"
+  email: string,
+  purpose = "email_verification",
 ): Promise<SendOtpResponse> {
-    const payload: SendOtpRequest = { email, purpose };
-    const response = await api.post("/auth/send-otp", payload);
-    return response.data;
+  const payload: SendOtpRequest = { email, purpose };
+  const response = await api.post("/auth/send-otp", payload);
+  return response.data;
 }
 
 export async function verifyOtp(
-    email: string,
-    otp: string,
-    purpose = "email_verification"
+  email: string,
+  otp: string,
+  purpose = "email_verification",
 ): Promise<VerifyOtpResponse> {
-    const payload: VerifyOtpRequest = { email, otp, purpose };
-    const response = await api.post("/auth/verify-otp", payload);
-    return response.data;
+  const payload: VerifyOtpRequest = { email, otp, purpose };
+  const response = await api.post("/auth/verify-otp", payload);
+  return response.data;
 }
 
 export async function verifySignupOtp(
-    email: string,
-    otp: string,
-    challengeToken: string,
+  email: string,
+  otp: string,
+  challengeToken: string,
 ): Promise<VerifyOtpResponse> {
-    const payload: VerifyOtpRequest = {
-        email,
-        otp,
-        purpose: "signup",
-        challenge_token: challengeToken,
-    };
-    const response = await api.post("/auth/verify-otp", payload);
-    return response.data;
+  const payload: VerifyOtpRequest = {
+    email,
+    otp,
+    purpose: "signup",
+    challenge_token: challengeToken,
+  };
+  const response = await api.post("/auth/verify-otp", payload);
+  return response.data;
 }
 
-export async function refreshSession(refreshToken: string): Promise<{ tokens: TokenResponse }> {
-    const response = await authClient.post("/auth/refresh", {
-        refresh_token: refreshToken,
-    });
-    const tokens = response.data?.tokens ?? response.data;
-    return { tokens };
+export async function refreshSession(
+  refreshToken: string,
+): Promise<{ tokens: TokenResponse }> {
+  const response = await authClient.post("/auth/refresh", {
+    refresh_token: refreshToken,
+  });
+  const tokens = response.data?.tokens ?? response.data;
+  return { tokens };
 }
 
 export async function logoutSession(refreshToken: string): Promise<void> {
-    let accessToken = getAccessToken();
-    let refreshTokenToRevoke = refreshToken;
+  let accessToken = getAccessToken();
+  let refreshTokenToRevoke = refreshToken;
 
-    const revoke = () =>
-        authClient.post(
-            "/auth/logout",
-            { refresh_token: refreshTokenToRevoke },
-            accessToken
-                ? { headers: { Authorization: `Bearer ${accessToken}` } }
-                : undefined
-        );
+  const revoke = () =>
+    authClient.post(
+      "/auth/logout",
+      { refresh_token: refreshTokenToRevoke },
+      accessToken
+        ? { headers: { Authorization: `Bearer ${accessToken}` } }
+        : undefined,
+    );
 
-    if (!accessToken) {
-        const refreshed = await refreshSession(refreshTokenToRevoke);
-        accessToken = refreshed.tokens.access_token;
-        refreshTokenToRevoke = refreshed.tokens.refresh_token;
+  if (!accessToken) {
+    const refreshed = await refreshSession(refreshTokenToRevoke);
+    accessToken = refreshed.tokens.access_token;
+    refreshTokenToRevoke = refreshed.tokens.refresh_token;
+  }
+
+  try {
+    await revoke();
+  } catch (error) {
+    if (!axios.isAxiosError(error) || error.response?.status !== 401) {
+      throw error;
     }
 
-    try {
-        await revoke();
-    } catch (error) {
-        if (!axios.isAxiosError(error) || error.response?.status !== 401) {
-            throw error;
-        }
-
-        const refreshed = await refreshSession(refreshTokenToRevoke);
-        accessToken = refreshed.tokens.access_token;
-        refreshTokenToRevoke = refreshed.tokens.refresh_token;
-        await revoke();
-    }
+    const refreshed = await refreshSession(refreshTokenToRevoke);
+    accessToken = refreshed.tokens.access_token;
+    refreshTokenToRevoke = refreshed.tokens.refresh_token;
+    await revoke();
+  }
 }
